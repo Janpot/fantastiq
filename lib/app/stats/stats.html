@@ -1,0 +1,15 @@
+<md-toolbar layout="row" layout-align="space-between center">
+  <div class="md-toolbar-tools" layout="row">
+    <menu-button></menu-button>
+    <span flex></span>
+    Stats
+    <span flex></span>
+  </div>
+</md-toolbar>
+
+<md-content>
+  <div layout="column" layout-margin>
+    <highchart title="Jobs" class="md-whiteframe-z2" series="::metrics.jobs"></highchart>
+    <highchart title="Memory" class="md-whiteframe-z2" series="::metrics.memory"></highchart>
+  </div>
+</md-content>

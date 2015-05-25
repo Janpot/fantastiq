@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-aria.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.js"></script>
+
+    <script src="http://code.highcharts.com/adapters/standalone-framework.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ascetic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+
+    <script src="./app.js"></script>
+
+    <script src="./components/hljs/hljs.js"></script>
+    <script src="./components/highchart/highchart.js"></script>
+    <script src="./components/menuButton/menuButton.js"></script>
+
+    <script src="./stats/stats.js"></script>
+    <script src="./jobs/jobs.js"></script>
+
+    <link rel="stylesheet" href="./app.css">
+
+    <script>angular.module('fantastiq').constant('config', __CONFIG__);</script>
+
+    <title>queue</title>
+    <meta name="viewport" content="initial-scale=1" />
+    </style>
+  </head>
+  <body ng-app="fantastiq" ng-controller="AppCtrl" layout="row">
+
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2"
+              md-component-id="left"
+              md-is-locked-open="$mdMedia('gt-md')"
+              layout="column"
+              layout-fill>
+      <md-toolbar>
+        <h1 class="md-toolbar-tools">
+          <a ng-href="#/">Fantastiq</a>
+        </h1>
+      </md-toolbar>
+      <md-content flex>
+        <md-list>
+          <md-list-item layout="row" ng-click="showJobs('inactive')">
+            Inactive
+            <span flex></span>
+            {{stats.inactiveCount | number}}
+          </md-list-item>
+          <md-list-item layout="row" ng-click="showJobs('active')">
+            Active
+            <span flex></span>
+            {{stats.activeCount | number}}
+          </md-list-item>
+          <md-list-item layout="row" ng-click="showJobs('failed')">
+            Failed
+            <span flex></span>
+            {{stats.failedCount | number}}
+          </md-list-item>
+          <md-list-item layout="row" ng-click="showJobs('completed')">
+            Completed
+            <span flex></span>
+            {{stats.completedCount | number}}
+          </md-list-item>
+        </md-list>
+      </md-content>
+    </md-sidenav>
+
+    <ng-view layout="column" flex></ng-view>
+
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<md-toolbar layout="row" layout-align="space-between center">
+  <div class="md-toolbar-tools" layout="row">
+    <menu-button></menu-button>
+    <md-button ng-href="#/{{::state}}?before={{::first.id}}" ng-disabled="!first">Prev</md-button>
+    <span flex></span>
+    <h2>
+      <a ng-href="#/{{::state}}">{{::state}}</a>
+    </h2>
+    <span flex></span>
+    <md-button ng-href="#/{{::state}}?after={{::last.id}}" ng-disabled="!last">Next</md-button>
+  </div>
+</md-toolbar>
+
+<md-content>
+  <md-list>
+    <md-list-item class="md-3-line" ng-repeat="job in jobs track by job.id" ng-click="showDetails($event, job)">
+      <div class="md-list-item-text">
+        <h3>{{::job.id}}</h3>
+        <h4>{{::job.created | date:'medium'}}</h4>
+        <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{::job.data | json}}</p>
+      </div>
+    </md-list-item>
+  </md-list>
+</md-content>

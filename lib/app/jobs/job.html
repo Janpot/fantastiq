@@ -1,0 +1,32 @@
+<md-dialog>
+  <md-dialog-content layout="column">
+    <md-content>
+      <div layout="column" layout-margin>
+        <div flex><span class="md-body-2">Job id:</span> {{::job.id}}</div>
+        <div flex ng-show="job.created">
+          <span class="md-body-2">Created:</span> {{::job.created | date:'medium'}}
+        </div>
+        <div flex ng-show="job.started">
+          <span class="md-body-2">Started:</span> {{::job.started | date:'medium'}}
+        </div>
+        <div flex ng-show="job.finished">
+          <span class="md-body-2">Finished:</span> {{::job.finished | date:'medium'}}
+        </div>
+        <div flex>
+          <span class="md-body-2">Priority:</span> {{::job.priority}}
+        </div>
+        <div flex><span class="md-body-2">Data:</span></div>
+        <hljs flex code="::formatJson(job.data)" format="json"></hljs>
+        <div flex><span class="md-body-2">Result:</span></div>
+        <hljs flex code="::formatJson(job.result)" format="json"></hljs>
+        <div flex><span class="md-body-2">Error:</span></div>
+        <hljs flex code="::formatJson(job.error)" format="json"></hljs>
+      </div>
+    </md-content>
+    <div class="md-actions" layout="row">
+      <md-button ng-click="close()">
+        Close
+      </md-button>
+    </div>
+  </md-dialog-content>
+</md-dialog>
