@@ -1,4 +1,10 @@
-# fantastiq
+# fantastiq [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+
+[travis-url]: http://travis-ci.org/Janpot/fantastiq
+[travis-image]: http://img.shields.io/travis/Janpot/fantastiq.svg?style=flat
+
+[depstat-url]: https://david-dm.org/Janpot/fantastiq
+[depstat-image]: http://img.shields.io/david/Janpot/fantastiq.svg?style=flat
 
 Reliable job queue in Redis, guaranteed atomic handling of all operations, promises based, provides a REST API and a user interface.
 Inspired heavily by [kue](https://www.npmjs.com/package/kue) but with different semantics.
@@ -45,7 +51,8 @@ Or
       // ...
       return queue.acknowledge(job.id);
     })
-    .then(Promise.delay(1000))
+    .catch(function (err) { console.log(err.message); })
+    .delay(1000)
     .then(tick)
 }())
 ```
@@ -75,6 +82,8 @@ Or
   - [`.stop()` -> `Promise<null>`](#stop---promisenull)
   - [`.unthrottle()` -> `null`](#unthrottle---null)
 
+
+<hr>
 
 #####`fantastiq(RedisClient client, [Object options])` -> `Queue`
 
@@ -460,7 +469,7 @@ Make sure the request body is `JSON.parse` parseable. This returns an object wit
 ######`GET /failed`
 ######`GET /completed`
 
-These return a range of jobs always ina scending order. Parameters include:
+These return a range of jobs always ina scending order. Query parameters include:
 
 - `count`: the amount of jobs to be returned
 - `start`: the id to be the first in the result
@@ -477,7 +486,7 @@ Returns metrics for this queue as if returned from [`.metrics`](#metrics---promi
 
 ######`.ui()` -> `express.Router uiRouter`
 
-returns an express Router with a user intervace for the queue.
+returns an express Router with a user interface for the queue.
 Additionally the API will be served under the same root.
 
 Example:
@@ -488,6 +497,13 @@ var app = express();
 app.use('/ui', queue.ui());
 app.listen(3000);
 ```
+
+Screenshots:
+
+![overview](./screenshots/overview.png)
+
+![jobs](./screenshots/jobs.png)
+
 
 <hr>
 
@@ -507,13 +523,13 @@ Stops this worker. This returns a promise that resolves when the worker has stop
 
 #####`.unthrottle()` -> `null`
 
-Force the worker to fetch the next item ignoring the throttle time.
+Force the worker to fetch the next item ignoring the throttle.
 
 
 ## Roadmap
 
 - Extending the REST API
-- Extending teh UI
+- Extending the UI
 - delayed jobs
 - multiple attempts
 

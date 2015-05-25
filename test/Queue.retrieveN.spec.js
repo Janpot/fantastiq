@@ -1,13 +1,14 @@
 var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
-var config = require('./config');
 var Promise = require('bluebird');
 var util = require('./util');
 
 describe('Queue.retrieveN', function () {
 
-  var client = redis.createClient(config.redis);
+  var client = redis.createClient({
+    host: process.env.REDIS_HOST
+  });
   var queue = new Queue('test', client);
 
   beforeEach(function () {

@@ -3,13 +3,14 @@
 var redis = require('then-redis');
 var metrics = require('../lib/metrics');
 var assert = require('chai').assert;
-var config = require('./config');
 var Promise = require('bluebird');
 var sinon = require('sinon');
 
 describe('metrics', function () {
 
-  var client = redis.createClient(config.redis);
+  var client = redis.createClient({
+    host: process.env.REDIS_HOST
+  });
   var tracker = metrics(client);
   var clock = null;
 

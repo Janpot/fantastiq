@@ -14,7 +14,7 @@ var client = redis.createClient({
 var queue = fantastiq(client);
 
 queue.config({
-  removeCompletedAfter: 0
+  removeCompletedAfter: 5 * 60 * 1000
 });
 
 var app = express();
@@ -48,9 +48,9 @@ queue.config({
 
 queue.process(function (job) {
   // console.log('processing...', job.to);
-  return Promise.delay(Math.random() * 100)
+  return Promise.delay(Math.random() * 1000)
     .then(function () {
-      if (Math.random() < 0.1) {
+      if (Math.random() < 0.01) {
         throw new Error('Job failed');
       }
       return {
@@ -60,4 +60,4 @@ queue.process(function (job) {
     });
 });
 
-startQueueProducer(queue, 100);
+startQueueProducer(queue, 1700);

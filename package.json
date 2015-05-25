@@ -1,10 +1,11 @@
 {
   "name": "fantastiq",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
-    "test": "mocha ./test"
+    "test": "mocha ./test",
+    "test-b2d": "REDIS_HOST=192.168.59.103 npm test"
   },
   "keywords": [
     "redis",

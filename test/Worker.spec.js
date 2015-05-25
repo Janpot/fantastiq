@@ -1,6 +1,5 @@
 var Worker = require('../lib/Worker');
 var assert = require('chai').assert;
-var config = require('./config');
 var sinon = require('sinon');
 var Promise = require('bluebird');
 
@@ -69,19 +68,6 @@ describe('Worker', function () {
       return Promise.resolve(job);
     });
     worker.start();
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
-    clock.tick(1);
 
   });
 
