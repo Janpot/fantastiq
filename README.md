@@ -85,7 +85,7 @@ Or
 
 <hr>
 
-#####`fantastiq(RedisClient client, [Object options])` -> `Queue`
+##### `fantastiq(RedisClient client, [Object options])` -> `Queue`
 
 Construct a queue. The passed in [then-redis](https://www.npmjs.com/package/then-redis) client will be used to connect to Redis.
 The returned object can be used to manage the queue.
@@ -102,16 +102,16 @@ var queue = fantastiq(client, {
 });
 ```
 
-######Option: `String prefix`
+###### Option: `String prefix`
 
 You can specify a prefix for theis queue. Use this in case you want to run multiple queues on the same Redis.
 By default fantastiq will namespace its keys under `{fantastiq}:`.
 
 <hr>
 
-####`Queue`
+#### `Queue`
 
-#####`.config([Object configuration])` -> `Promise<Object configuration>`
+##### `.config([Object configuration])` -> `Promise<Object configuration>`
 
 Used to configure the queue. Configuration is centralized in Redis so multiple workers always act on the same configuration.
 
@@ -130,22 +130,22 @@ queue.config({
   });
 ```
 
-######Option: `Number timeout`
+###### Option: `Number timeout`
 
 Time in milliseconds before an active job times out. It will be marked as 'failed' with an error specifying the timeout.
 By default jobs time out after 30 seconds.
 
-######Option: `Number removeCompletedAfter`
+###### Option: `Number removeCompletedAfter`
 
 Time in milliseconds before a job that has the state 'completed' will be deleted.
 By default fantastiq will not delete any job.
 
-######Option: `Number removeFailedAfter`
+###### Option: `Number removeFailedAfter`
 
 Time in milliseconds before a job that has the state 'failed' will be deleted.
 By default fantastiq will not delete any job.
 
-######Option: `Number throttle`
+###### Option: `Number throttle`
 
 Minimum time in milliseconds between two retrieves.
 The queue will not activate a job until this time has elapsed since the last retrieve.
@@ -153,7 +153,7 @@ By default will not use throttling
 
 <hr>
 
-#####`.add(dynamic job, [Object options])` -> `Promise<String id>`
+##### `.add(dynamic job, [Object options])` -> `Promise<String id>`
 
 Adds a job to the queue. The type can be anything like objects, strings and numbers.
 The job will have an id assigned by the queue which is returned in the resulting promise.
@@ -172,14 +172,14 @@ queue.add(job, { priority: 10 })
   });
 ```
 
-######Option: `Number priority`
+###### Option: `Number priority`
 
 The prority for this job. Lowest values for priority will be processed first.
 By default fantastiq assigns a priority of `0`.
 
 <hr>
 
-#####`.addN(Array<dynamic> jobs, [Object options])` -> `Promise<Array<String> ids>`
+##### `.addN(Array<dynamic> jobs, [Object options])` -> `Promise<Array<String> ids>`
 
 Same as [`.add`](#adddynamic-job-object-options---promisestring-id) but with multiple jobs. Will return a promise of an array of ids instead.
 
@@ -199,7 +199,7 @@ queue.addN([
 
 <hr>
 
-#####`.get(String id)` -> `Promise<dynamic job>`
+##### `.get(String id)` -> `Promise<dynamic job>`
 
 Fetches all the properties associated with a job. Will return `null` if the job doesn't exist.
 
@@ -227,7 +227,7 @@ The resulting object contains following properties:
 
 <hr>
 
-#####`.getN(Array<String> ids)` -> `Promise<Array<dynamic> jobs>`
+##### `.getN(Array<String> ids)` -> `Promise<Array<dynamic> jobs>`
 
 Same as [`.get`](#getstring-id---promisedynamic-job) but for multiple jobs. Will return an array of job objects instead.
 
@@ -243,7 +243,7 @@ queue.getN(['0000000000001', '0000000000002', '0000000000003'])
 
 <hr>
 
-#####`.remove(String id)` -> `Promise<Number removedCount>`
+##### `.remove(String id)` -> `Promise<Number removedCount>`
 
 Deletes a job from the queue. This will remove the job and all of its associated data.
 returns the amount of jobs that were removed.
@@ -260,7 +260,7 @@ queue.remove('0000000000001')
 
 <hr>
 
-#####`.removeN(Array<String> ids)` -> `Promise<Number removedCount>`
+##### `.removeN(Array<String> ids)` -> `Promise<Number removedCount>`
 
 Same as [`.remove`](#removestring-id---promisenumber-removedcount) but for multiple jobs.
 
@@ -276,7 +276,7 @@ queue.removeN(['0000000000001', '0000000000002', '0000000000003'])
 
 <hr>
 
-#####`.retrieve([Object options])` -> `Promise<Object retrieveResult>`
+##### `.retrieve([Object options])` -> `Promise<Object retrieveResult>`
 
 Activates a job. This will set the state of the next job to 'active' and return its id.
 
@@ -295,7 +295,7 @@ queue.retrieve()
   })
 ```
 
-######Option: `Boolean unthrottle`
+###### Option: `Boolean unthrottle`
 
 Set this to `true` if you want to reset the throttle and activate a job regardless.
 
@@ -311,7 +311,7 @@ queue.retrieve({ unthrottle: true })
 
 <hr>
 
-#####`.retrieveN(Number count, [Object options])` -> `Promise<Object retrieveResult>`
+##### `.retrieveN(Number count, [Object options])` -> `Promise<Object retrieveResult>`
 
 Same as [`.retrieve`](#retrieveobject-options---promiseobject-retrieveresult) but for multiple jobs. When the queue is throttled this will always return 1 job.
 The resulting object will contain an `ids` property with an array of retrieved job ids instead of the `id` property.
@@ -326,7 +326,7 @@ queue.retrieveN()
 
 <hr>
 
-#####`.acknowledge(String id, [Error error], [dynamic result])` -> `Promise<String id>`
+##### `.acknowledge(String id, [Error error], [dynamic result])` -> `Promise<String id>`
 
 Signals the queue a job is completed. This will tarnsition the job from the 'active' stated to either 'failed' or 'completed'.
 When it gets called with an `Error` object, the job is assumed to have 'failed', else it is 'completed'.
@@ -340,7 +340,7 @@ queue.acknowledge('0000000000001', null, { path: __dirname + '/finished/image.pn
 
 <hr>
 
-#####`.range(String state, [Object options])` -> `Promise<Array<String id>>`
+##### `.range(String state, [Object options])` -> `Promise<Array<String id>>`
 
 Queries the queue for a range of jobs for a certain state. state can either be `'inactive'`, `'active'`, `'completed'` or `'failed'`.
 The options object can be used to further specify the query. It returns with a promise for an array of ids.
@@ -360,21 +360,21 @@ queue.range('completed', {
   })
 ```
 
-######option: `Number count`
+###### option: `Number count`
 
 The amount of jobs that is expected to be returned. By default `.range` will return 10 jobs.
 
-######option: `String start`
+###### option: `String start`
 
 The id of the jobs to start the result with. By default the first element is assumed.
 
-######option: `String order`
+###### option: `String order`
 
 The order in which to return results. Can either be `asc` or `desc`
 
 <hr>
 
-#####`.stat()` -> `Promise<Object stats>`
+##### `.stat()` -> `Promise<Object stats>`
 
 Returns a promise with statistics on the current job count. The resulting object contains following properties:
 
@@ -395,7 +395,7 @@ queue.stat()
 
 <hr>
 
-#####`.metrics()` -> `Promise<Object metrics>`
+##### `.metrics()` -> `Promise<Object metrics>`
 
 Returns an object with some metrics about the queue. this is intended for display in the ui.
 The resulting object contains following properties:
@@ -410,7 +410,7 @@ A `metric` object has following properties:
 
 <hr>
 
-#####`.process(Function doWorkFn, [Object options])` -> `Worker`
+##### `.process(Function doWorkFn, [Object options])` -> `Worker`
 
 Performs processing of the queue. The actual work is done in the function that is passed as a first argument.
 This function is expected to return a promise signalling when the job is complete.
@@ -420,7 +420,7 @@ the returng promise of this method call is for a [`Worker`](#worker) object.
 
 Further options can be specified in the second argument:
 
-######Option: `Number pollTime`
+###### Option: `Number pollTime`
 
 The time in milliseconds between two consecutive polls to the queue when the worker is idle and no more jobs are available.
 By default fantastiq will poll at a rate of 1 second.
@@ -437,7 +437,7 @@ var worker = queue.process(function (job) {
 
 <hr>
 
-#####`.api()` -> `express.Router apiRouter`
+##### `.api()` -> `express.Router apiRouter`
 
 Returns an express Router with a REST API to the queue.
 
@@ -450,24 +450,24 @@ app.use('/api', queue.api());
 app.listen(3000);
 ```
 
-######`GET /`
+###### `GET /`
 
 Returns the [`.stats`](#stat---promiseobject-stats) for this queue.
 
-######`GET /jobs/:jobId`
+###### `GET /jobs/:jobId`
 
 Returns an object with job properties by `jobId`. See [`.get`](#getstring-id---promisedynamic-job)
 
-######`POST /jobs`
+###### `POST /jobs`
 
 Adds a job to the queue. the request body is considered to contain the job data.
 Priortiy can be specified through the `priority` query parameter.
 Make sure the request body is `JSON.parse` parseable. This returns an object with all the job's properties
 
-######`GET /inactive`
-######`GET /active`
-######`GET /failed`
-######`GET /completed`
+###### `GET /inactive`
+###### `GET /active`
+###### `GET /failed`
+###### `GET /completed`
 
 These return a range of jobs always ina scending order. Query parameters include:
 
@@ -478,13 +478,13 @@ These return a range of jobs always ina scending order. Query parameters include
 
 This returns an object with a `Array<Object job> jobs` property. The items in this array are like the ones from `GEt /jobs/:jobId`.
 
-######`GET /metrics`
+###### `GET /metrics`
 
 Returns metrics for this queue as if returned from [`.metrics`](#metrics---promiseobject-metrics)
 
 <hr>
 
-######`.ui()` -> `express.Router uiRouter`
+###### `.ui()` -> `express.Router uiRouter`
 
 returns an express Router with a user interface for the queue.
 Additionally the API will be served under the same root.
@@ -507,21 +507,21 @@ Screenshots:
 
 <hr>
 
-####`Worker`
+#### `Worker`
 
-#####`.start()` -> `Worker`
+##### `.start()` -> `Worker`
 
 Start the worker when it's stopped. Workers return from [`.process`](#processfunction-doworkfn-object-options---worker) started.
 
 <hr>
 
-#####`.stop()` -> `Promise<null>`
+##### `.stop()` -> `Promise<null>`
 
 Stops this worker. This returns a promise that resolves when the worker has stopped.
 
 <hr>
 
-#####`.unthrottle()` -> `null`
+##### `.unthrottle()` -> `null`
 
 Force the worker to fetch the next item ignoring the throttle.
 
