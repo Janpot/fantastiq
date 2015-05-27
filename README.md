@@ -455,26 +455,26 @@ app.use('/api', queue.api());
 app.listen(3000);
 ```
 
-**`GET`** `/`
+- **`GET`** `/`
 
 Returns the [`.stats`](#stat---promiseobject-stats) for this queue.
 
-**`GET`** `/jobs/:jobId`
+- **`GET`** `/jobs/:jobId`
 
 Returns an object with job properties by `jobId`. See [`.get`](#getstring-id---promisedynamic-job)
 
-**`POST`** `/jobs`
+- **`POST`** `/jobs`
 
 Adds a job to the queue. the request body is considered to contain the job data.
 Priortiy can be specified through the `priority` query parameter.
 Make sure the request body is `JSON.parse` parseable. This returns an object with all the job's properties
 
-**`GET`** `/inactive`
-**`GET`** `/active`
-**`GET`** `/failed`
-**`GET`** `/completed`
+- **`GET`** `/inactive`
+- **`GET`** `/active`
+- **`GET`** `/failed`
+- **`GET`** `/completed`
 
-These return a range of jobs always ina scending order. Query parameters include:
+These return a range of jobs always in ascending order. Query parameters include:
 
 - `count`: the amount of jobs to be returned
 - `start`: the id to be the first in the result
@@ -483,7 +483,7 @@ These return a range of jobs always ina scending order. Query parameters include
 
 This returns an object with a `Array<Object job> jobs` property. The items in this array are like the ones from `GEt /jobs/:jobId`.
 
-**`GET`** `/metrics`
+- **`GET`** `/metrics`
 
 Returns metrics for this queue as if returned from [`.metrics`](#metrics---promiseobject-metrics)
 
