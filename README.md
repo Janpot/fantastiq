@@ -1,16 +1,64 @@
 # fantastiq
 
-[travis-url]: http://travis-ci.org/Janpot/fantastiq
-[travis-image]: http://img.shields.io/travis/Janpot/fantastiq.svg?style=flat
+[travis-url]: https://travis-ci.org/Janpot/fantastiq
+[travis-image]: https://img.shields.io/travis/Janpot/fantastiq.svg?style=flat
 
 [depstat-url]: https://david-dm.org/Janpot/fantastiq
-[depstat-image]: http://img.shields.io/david/Janpot/fantastiq.svg?style=flat
+[depstat-image]: https://img.shields.io/david/Janpot/fantastiq.svg?style=flat
 
 Reliable job queue in Redis, guaranteed atomic handling of all operations, promises based, provides a REST API and a user interface.
 Inspired heavily by [kue](https://www.npmjs.com/package/kue) but with different semantics.
 This library contains a full set of primitives to construct your own worker (`retrieve` + `acknowledge`) as well as a `process` function to automatically handle the queue.
 
 [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+
+## Features
+
+- Atomic operations
+- promises based ([bluebird](https://www.npmjs.com/package/bluebird))
+- Job priority
+- worker
+- REST API
+- UI
+- Throttling
+
+## Usage
+
+```js
+var redis = require('then-redis');
+var fantastiq = require('fantastiq');
+
+var client = redis.createClient();
+var queue = fantastiq(client);
+
+// Use pocess function to automatically handle jobs
+queue.process(function (job) {
+  // ...
+  // return a promise here
+});
+
+queue.add({
+  // ...
+});
+```
+
+Or
+
+```js
+(function tick() {
+  queue.retrieve()
+    .then(function (result) {
+      return queue.get(result.id);
+    })
+    .then(function (job) {
+      // ... do something with job.data
+      return queue.acknowledge(job.id);
+    })
+    .catch(function (err) { console.error(err.message); })
+    .delay(1000)
+    .then(tick)
+}())
+```
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -54,53 +102,6 @@ This library contains a full set of primitives to construct your own worker (`re
 - [Roadmap](#roadmap)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Features
-
-- Atomic operations
-- promises based ([bluebird](https://www.npmjs.com/package/bluebird))
-- Job priority
-- worker
-- REST API
-- UI
-
-## Usage
-
-```js
-var redis = require('then-redis');
-var fantastiq = require('fantastiq');
-
-var client = redis.createClient();
-var queue = fantastiq(client);
-
-// Use pocess function to automatically handle jobs
-queue.process(function (job) {
-  // ...
-  // return a promise here
-});
-
-queue.add({
-  // ...
-});
-```
-
-Or
-
-```js
-(function tick() {
-  queue.retrieve()
-    .then(function (result) {
-      return queue.get(result.id);
-    })
-    .then(function (job) {
-      // ... do something with job.data
-      return queue.acknowledge(job.id);
-    })
-    .catch(function (err) { console.error(err.message); })
-    .delay(1000)
-    .then(tick)
-}())
-```
 
 ## API
 
