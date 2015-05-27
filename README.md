@@ -19,38 +19,38 @@ This library contains a full set of primitives to construct your own worker (`re
 - [Features](#features)
 - [Usage](#usage)
 - [API](#api)
-    - [`fantastiq(RedisClient client, [Object options])` -> `Queue`](#fantastiqredisclient-client-object-options---queue)
+    - [`fantastiq(RedisClient client, [Object options])`](#fantastiqredisclient-client-object-options)
         - [Option: `String prefix`](#option-string-prefix)
     - [`Queue`](#queue)
-      - [`.config([Object configuration])` -> `Promise<Object configuration>`](#configobject-configuration---promiseobject-configuration)
+      - [`.config([Object configuration])`](#configobject-configuration)
         - [Option: `Number timeout`](#option-number-timeout)
         - [Option: `Number removeCompletedAfter`](#option-number-removecompletedafter)
         - [Option: `Number removeFailedAfter`](#option-number-removefailedafter)
         - [Option: `Number throttle`](#option-number-throttle)
-      - [`.add(dynamic job, [Object options])` -> `Promise<String id>`](#adddynamic-job-object-options---promisestring-id)
+      - [`.add(dynamic job, [Object options])`](#adddynamic-job-object-options)
         - [Option: `Number priority`](#option-number-priority)
-      - [`.addN(Array<dynamic> jobs, [Object options])` -> `Promise<Array<String> ids>`](#addnarraydynamic-jobs-object-options---promisearraystring-ids)
-      - [`.get(String id)` -> `Promise<dynamic job>`](#getstring-id---promisedynamic-job)
-      - [`.getN(Array<String> ids)` -> `Promise<Array<dynamic> jobs>`](#getnarraystring-ids---promisearraydynamic-jobs)
-      - [`.remove(String id)` -> `Promise<Number removedCount>`](#removestring-id---promisenumber-removedcount)
-      - [`.removeN(Array<String> ids)` -> `Promise<Number removedCount>`](#removenarraystring-ids---promisenumber-removedcount)
-      - [`.retrieve([Object options])` -> `Promise<Object retrieveResult>`](#retrieveobject-options---promiseobject-retrieveresult)
+      - [`.addN(Array<dynamic> jobs, [Object options])`](#addnarraydynamic-jobs-object-options)
+      - [`.get(String id)`](#getstring-id)
+      - [`.getN(Array<String> ids)`](#getnarraystring-ids)
+      - [`.remove(String id)`](#removestring-id)
+      - [`.removeN(Array<String> ids)`](#removenarraystring-ids)
+      - [`.retrieve([Object options])`](#retrieveobject-options)
         - [Option: `Boolean unthrottle`](#option-boolean-unthrottle)
-      - [`.acknowledge(String id, [Error error], [dynamic result])` -> `Promise<String id>`](#acknowledgestring-id-error-error-dynamic-result---promisestring-id)
-      - [`.range(String state, [Object options])` -> `Promise<Array<String id>>`](#rangestring-state-object-options---promisearraystring-id)
+      - [`.acknowledge(String id, [Error error], [dynamic result])`](#acknowledgestring-id-error-error-dynamic-result)
+      - [`.range(String state, [Object options])`](#rangestring-state-object-options)
         - [option: `Number count`](#option-number-count)
         - [option: `String start`](#option-string-start)
         - [option: `String order`](#option-string-order)
-      - [`.stat()` -> `Promise<Object stats>`](#stat---promiseobject-stats)
-      - [`.metrics()` -> `Promise<Object metrics>`](#metrics---promiseobject-metrics)
-      - [`.process(Function doWorkFn, [Object options])` -> `Worker`](#processfunction-doworkfn-object-options---worker)
+      - [`.stat()`](#stat)
+      - [`.metrics()`](#metrics)
+      - [`.process(Function doWorkFn, [Object options])`](#processfunction-doworkfn-object-options)
         - [Option: `Number pollTime`](#option-number-polltime)
-      - [`.api()` -> `express.Router apiRouter`](#api---expressrouter-apirouter)
-      - [`.ui()` -> `express.Router uiRouter`](#ui---expressrouter-uirouter)
+      - [`.api()`](#api)
+      - [`.ui()`](#ui)
     - [`Worker`](#worker)
-      - [`.start()` -> `Worker`](#start---worker)
-      - [`.stop()` -> `Promise<null>`](#stop---promisenull)
-      - [`.unthrottle()` -> `null`](#unthrottle---null)
+      - [`.start()`](#start)
+      - [`.stop()`](#stop)
+      - [`.unthrottle()`](#unthrottle)
 - [Roadmap](#roadmap)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -104,7 +104,9 @@ Or
 
 ## API
 
-#### `fantastiq(RedisClient client, [Object options])` -> `Queue`
+#### `fantastiq(RedisClient client, [Object options])`
+
+**Returns:** [`Queue`](#queue)
 
 Construct a queue. The passed in [then-redis](https://www.npmjs.com/package/then-redis) client will be used to connect to Redis.
 The returned object can be used to manage the queue.
@@ -130,7 +132,13 @@ By default fantastiq will namespace its keys under `{fantastiq}:`.
 
 #### `Queue`
 
-##### `.config([Object configuration])` -> `Promise<Object configuration>`
+The queue is the main object of this library. It has all the methods to interact with the queue.
+
+<hr>
+
+##### `.config([Object configuration])`
+
+**Returns:** `Promise<Object configuration>`
 
 Used to configure the queue. Configuration is centralized in Redis so multiple workers always act on the same configuration.
 
@@ -172,7 +180,9 @@ By default will not use throttling
 
 <hr>
 
-##### `.add(dynamic job, [Object options])` -> `Promise<String id>`
+##### `.add(dynamic job, [Object options])`
+
+**Returns:** `Promise<String id>`
 
 Adds a job to the queue. The type can be anything like objects, strings and numbers.
 The job will have an id assigned by the queue which is returned in the resulting promise.
@@ -198,7 +208,9 @@ By default fantastiq assigns a priority of `0`.
 
 <hr>
 
-##### `.addN(Array<dynamic> jobs, [Object options])` -> `Promise<Array<String> ids>`
+##### `.addN(Array<dynamic> jobs, [Object options])`
+
+**Returns:** `Promise<Array<String> ids>`
 
 Same as [`.add`](#adddynamic-job-object-options---promisestring-id) but with multiple jobs. Will return a promise of an array of ids instead.
 
@@ -218,7 +230,9 @@ queue.addN([
 
 <hr>
 
-##### `.get(String id)` -> `Promise<dynamic job>`
+##### `.get(String id)`
+
+**Returns:** `Promise<dynamic job>`
 
 Fetches all the properties associated with a job. Will return `null` if the job doesn't exist.
 
@@ -246,7 +260,9 @@ The resulting object contains following properties:
 
 <hr>
 
-##### `.getN(Array<String> ids)` -> `Promise<Array<dynamic> jobs>`
+##### `.getN(Array<String> ids)`
+
+**Returns:** `Promise<Array<dynamic> jobs>`
 
 Same as [`.get`](#getstring-id---promisedynamic-job) but for multiple jobs. Will return an array of job objects instead.
 
@@ -262,7 +278,9 @@ queue.getN(['0000000000001', '0000000000002', '0000000000003'])
 
 <hr>
 
-##### `.remove(String id)` -> `Promise<Number removedCount>`
+##### `.remove(String id)`
+
+**Returns:** `Promise<Number removedCount>`
 
 Deletes a job from the queue. This will remove the job and all of its associated data.
 returns the amount of jobs that were removed.
@@ -279,7 +297,9 @@ queue.remove('0000000000001')
 
 <hr>
 
-##### `.removeN(Array<String> ids)` -> `Promise<Number removedCount>`
+##### `.removeN(Array<String> ids)`
+
+**Returns:** `Promise<Number removedCount>`
 
 Same as [`.remove`](#removestring-id---promisenumber-removedcount) but for multiple jobs.
 
@@ -295,7 +315,9 @@ queue.removeN(['0000000000001', '0000000000002', '0000000000003'])
 
 <hr>
 
-##### `.retrieve([Object options])` -> `Promise<Object retrieveResult>`
+##### `.retrieve([Object options])`
+
+**Returns:** `Promise<Object retrieveResult>`
 
 Activates a job. This will set the state of the next job to 'active' and return its id.
 
@@ -331,7 +353,9 @@ queue.retrieve({ unthrottle: true })
 
 <hr>
 
-##### `.acknowledge(String id, [Error error], [dynamic result])` -> `Promise<String id>`
+##### `.acknowledge(String id, [Error error], [dynamic result])`
+
+**Returns:** `Promise<String id>`
 
 Signals the queue a job is completed. This will tarnsition the job from the 'active' stated to either 'failed' or 'completed'.
 When it gets called with an `Error` object, the job is assumed to have 'failed', else it is 'completed'.
@@ -345,7 +369,9 @@ queue.acknowledge('0000000000001', null, { path: __dirname + '/finished/image.pn
 
 <hr>
 
-##### `.range(String state, [Object options])` -> `Promise<Array<String id>>`
+##### `.range(String state, [Object options])`
+
+**Returns:** `Promise<Array<String id>>`
 
 Queries the queue for a range of jobs for a certain state. state can either be `'inactive'`, `'active'`, `'completed'` or `'failed'`.
 The options object can be used to further specify the query. It returns with a promise for an array of ids.
@@ -379,7 +405,9 @@ The order in which to return results. Can either be `asc` or `desc`
 
 <hr>
 
-##### `.stat()` -> `Promise<Object stats>`
+##### `.stat()`
+
+**Returns:** `Promise<Object stats>`
 
 Returns a promise with statistics on the current job count. The resulting object contains following properties:
 
@@ -400,7 +428,9 @@ queue.stat()
 
 <hr>
 
-##### `.metrics()` -> `Promise<Object metrics>`
+##### `.metrics()`
+
+**Returns:** `Promise<Object metrics>`
 
 Returns an object with some metrics about the queue. this is intended for display in the ui.
 The resulting object contains following properties:
@@ -415,11 +445,13 @@ A `metric` object has following properties:
 
 <hr>
 
-##### `.process(Function doWorkFn, [Object options])` -> `Worker`
+##### `.process(Function doWorkFn, [Object options])`
+
+**Returns:** [`Worker`](#worker)
 
 Performs processing of the queue. The actual work is done in the function that is passed as a first argument.
 This function is expected to return a promise signalling when the job is complete.
-the returng promise of this method call is for a [`Worker`](#worker) object.
+The result this method call is promise for a [`Worker`](#worker) object.
 
 **!Attention:** Make sure this function always returns a promise. If not, the worker won't wait until the job is complete to continue processing.
 
@@ -442,7 +474,9 @@ var worker = queue.process(function (job) {
 
 <hr>
 
-##### `.api()` -> `express.Router apiRouter`
+##### `.api()`
+
+**Returns:** `express.Router apiRouter`
 
 Returns an express Router with a REST API to the queue.
 
@@ -489,7 +523,9 @@ Returns metrics for this queue as if returned from [`.metrics`](#metrics---promi
 
 <hr>
 
-##### `.ui()` -> `express.Router uiRouter`
+##### `.ui()`
+
+**Returns:** `express.Router uiRouter`
 
 returns an express Router with a user interface for the queue.
 Additionally the API will be served under the same root.
@@ -514,19 +550,27 @@ Screenshots:
 
 #### `Worker`
 
-##### `.start()` -> `Worker`
+<hr>
 
-Start the worker when it's stopped. Workers return from [`.process`](#processfunction-doworkfn-object-options---worker) started.
+##### `.start()`
+
+**Returns:** [`Worker`](#worker)
+
+Start the worker when it's stopped. Workers return from [`.process`](#processfunction-doworkfn-object-options---worker) in running state.
 
 <hr>
 
-##### `.stop()` -> `Promise<null>`
+##### `.stop()`
+
+**Returns:** `Promise<null>`
 
 Stops this worker. This returns a promise that resolves when the worker has stopped.
 
 <hr>
 
-##### `.unthrottle()` -> `null`
+##### `.unthrottle()`
+
+**Returns:** `null`
 
 Force the worker to fetch the next item ignoring the throttle.
 

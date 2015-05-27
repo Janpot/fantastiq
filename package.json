@@ -1,7 +1,7 @@
 {
   "name": "fantastiq",
   "version": "0.1.1",
-  "description": "Queue implementation on top of Redis",
+  "description": "Job queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
     "test": "mocha ./test",
