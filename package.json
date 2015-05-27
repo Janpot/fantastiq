@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha ./test",
     "test-b2d": "REDIS_HOST=192.168.59.103 npm test",
-    "toc": "doctoc --title '##Table of Contents' ./README.md"
+    "toc": "doctoc --title '\n##Table of Contents' ./README.md"
   },
   "keywords": [
     "redis",
