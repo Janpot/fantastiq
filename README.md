@@ -1,4 +1,4 @@
-# fantastiq [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+# fantastiq
 
 [travis-url]: http://travis-ci.org/Janpot/fantastiq
 [travis-image]: http://img.shields.io/travis/Janpot/fantastiq.svg?style=flat
@@ -9,6 +9,59 @@
 Reliable job queue in Redis, guaranteed atomic handling of all operations, promises based, provides a REST API and a user interface.
 Inspired heavily by [kue](https://www.npmjs.com/package/kue) but with different semantics.
 This library contains a full set of primitives to construct your own worker (`retrieve` + `acknowledge`) as well as a `process` function to automatically handle the queue.
+
+[![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+##Table of Contents
+
+- [Features](#features)
+- [Usage](#usage)
+- [API](#api)
+    - [`fantastiq(RedisClient client, [Object options])` -> `Queue`](#fantastiqredisclient-client-object-options---queue)
+        - [Option: `String prefix`](#option-string-prefix)
+    - [`Queue`](#queue)
+      - [`.config([Object configuration])` -> `Promise<Object configuration>`](#configobject-configuration---promiseobject-configuration)
+        - [Option: `Number timeout`](#option-number-timeout)
+        - [Option: `Number removeCompletedAfter`](#option-number-removecompletedafter)
+        - [Option: `Number removeFailedAfter`](#option-number-removefailedafter)
+        - [Option: `Number throttle`](#option-number-throttle)
+      - [`.add(dynamic job, [Object options])` -> `Promise<String id>`](#adddynamic-job-object-options---promisestring-id)
+        - [Option: `Number priority`](#option-number-priority)
+      - [`.addN(Array<dynamic> jobs, [Object options])` -> `Promise<Array<String> ids>`](#addnarraydynamic-jobs-object-options---promisearraystring-ids)
+      - [`.get(String id)` -> `Promise<dynamic job>`](#getstring-id---promisedynamic-job)
+      - [`.getN(Array<String> ids)` -> `Promise<Array<dynamic> jobs>`](#getnarraystring-ids---promisearraydynamic-jobs)
+      - [`.remove(String id)` -> `Promise<Number removedCount>`](#removestring-id---promisenumber-removedcount)
+      - [`.removeN(Array<String> ids)` -> `Promise<Number removedCount>`](#removenarraystring-ids---promisenumber-removedcount)
+      - [`.retrieve([Object options])` -> `Promise<Object retrieveResult>`](#retrieveobject-options---promiseobject-retrieveresult)
+        - [Option: `Boolean unthrottle`](#option-boolean-unthrottle)
+      - [`.acknowledge(String id, [Error error], [dynamic result])` -> `Promise<String id>`](#acknowledgestring-id-error-error-dynamic-result---promisestring-id)
+      - [`.range(String state, [Object options])` -> `Promise<Array<String id>>`](#rangestring-state-object-options---promisearraystring-id)
+        - [option: `Number count`](#option-number-count)
+        - [option: `String start`](#option-string-start)
+        - [option: `String order`](#option-string-order)
+      - [`.stat()` -> `Promise<Object stats>`](#stat---promiseobject-stats)
+      - [`.metrics()` -> `Promise<Object metrics>`](#metrics---promiseobject-metrics)
+      - [`.process(Function doWorkFn, [Object options])` -> `Worker`](#processfunction-doworkfn-object-options---worker)
+        - [Option: `Number pollTime`](#option-number-polltime)
+      - [`.api()` -> `express.Router apiRouter`](#api---expressrouter-apirouter)
+        - [`GET /`](#get-)
+        - [`GET /jobs/:jobId`](#get-jobsjobid)
+        - [`POST /jobs`](#post-jobs)
+        - [`GET /inactive`](#get-inactive)
+        - [`GET /active`](#get-active)
+        - [`GET /failed`](#get-failed)
+        - [`GET /completed`](#get-completed)
+        - [`GET /metrics`](#get-metrics)
+        - [`.ui()` -> `express.Router uiRouter`](#ui---expressrouter-uirouter)
+    - [`Worker`](#worker)
+      - [`.start()` -> `Worker`](#start---worker)
+      - [`.stop()` -> `Promise<null>`](#stop---promisenull)
+      - [`.unthrottle()` -> `null`](#unthrottle---null)
+- [Roadmap](#roadmap)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Features
 
@@ -44,14 +97,14 @@ Or
 ```js
 (function tick() {
   queue.retrieve()
-    .get('id')
-    .bind(queue)
-    .then(queue.get)
+    .then(function (result) {
+      return queue.get(result.id);
+    })
     .then(function (job) {
-      // ...
+      // ... do something with job.data
       return queue.acknowledge(job.id);
     })
-    .catch(function (err) { console.log(err.message); })
+    .catch(function (err) { console.error(err.message); })
     .delay(1000)
     .then(tick)
 }())
@@ -59,33 +112,7 @@ Or
 
 ## API
 
-- [`fantastiq(RedisClient client, [Object options])` -> `Queue`](#fantastiqredisclient-client-object-options---queue)
-- [`Queue`](#queue)
-  - [`.config([Object configuration])` -> `Promise<Object configuration>`](#configobject-configuration---promiseobject-configuration)
-  - [`.add(dynamic job, [Object options])` -> `Promise<String id>`](#adddynamic-job-object-options---promisestring-id)
-  - [`.addN(Array<dynamic> jobs, [Object options])` -> `Promise<Array<String> ids>`](#addnarraydynamic-jobs-object-options---promisearraystring-ids)
-  - [`.get(String id)` -> `Promise<dynamic job>`](#getstring-id---promisedynamic-job)
-  - [`.getN(Array<String> ids)` -> `Promise<Array<dynamic> jobs>`](#getnarraystring-ids---promisearraydynamic-jobs)
-  - [`.remove(String id)` -> `Promise<Number removedCount>`](#removestring-id---promisenumber-removedcount)
-  - [`.removeN(Array<String> ids)` -> `Promise<Number removedCount>`](#removenarraystring-ids---promisenumber-removedcount)
-  - [`.retrieve([Object options])` -> `Promise<Object retrieveResult>`](#retrieveobject-options---promiseobject-retrieveresult)
-  - [`.retrieveN(Number count, [Object options])` -> `Promise<Object retrieveResult>`](#retrievennumber-count-object-options---promiseobject-retrieveresult)
-  - [`.acknowledge(String id, [Error error], [dynamic result])` -> `Promise<String id>`](#acknowledgestring-id-error-error-dynamic-result---promisestring-id)
-  - [`.range(String state, [Object options])` -> `Promise<Array<String id>>`](#rangestring-state-object-options---promisearraystring-id)
-  - [`.stat()` -> `Promise<Object stats>`](#stat---promiseobject-stats)
-  - [`.metrics()` -> `Promise<Object metrics>`](#metrics---promiseobject-metrics)
-  - [`.process(Function doWorkFn, [Object options])` -> `Worker`](#processfunction-doworkfn-object-options---worker)
-  - [`.api()` -> `express.Router apiRouter`](#api---expressrouter-apirouter)
-  - [`.ui()` -> `express.Router uiRouter`](#ui---expressrouter-uirouter)
-- [`Worker`](#worker)
-  - [`.start()` -> `Worker`](#start---worker)
-  - [`.stop()` -> `Promise<null>`](#stop---promisenull)
-  - [`.unthrottle()` -> `null`](#unthrottle---null)
-
-
-<hr>
-
-##### `fantastiq(RedisClient client, [Object options])` -> `Queue`
+#### `fantastiq(RedisClient client, [Object options])` -> `Queue`
 
 Construct a queue. The passed in [then-redis](https://www.npmjs.com/package/then-redis) client will be used to connect to Redis.
 The returned object can be used to manage the queue.
@@ -283,7 +310,8 @@ Activates a job. This will set the state of the next job to 'active' and return 
 The resulting object contains following properties:
 
 - `String id`: The id of the job that was activated. `null` if there are no jobs available.
-- `Number wait`: in case a [throttle](#option-number-throttle) is configured it will suggest a time to wait before attempting a new retrieve, else it will be `null`.
+- `dynamic data`: The data associated with this job or `null` if there's no job returned.
+- `Number wait`: in case a [throttle](#option-number-throttle) is configured it will suggest a time to wait before attempting a new retrieve, else it will be `0`.
 
 Example:
 
@@ -306,21 +334,6 @@ queue.retrieve({ unthrottle: true })
   .then(function (result) {
     // This will return a job id even when the queue is throttled
     console.log(result.id);
-  })
-```
-
-<hr>
-
-##### `.retrieveN(Number count, [Object options])` -> `Promise<Object retrieveResult>`
-
-Same as [`.retrieve`](#retrieveobject-options---promiseobject-retrieveresult) but for multiple jobs. When the queue is throttled this will always return 1 job.
-The resulting object will contain an `ids` property with an array of retrieved job ids instead of the `id` property.
-
-```js
-queue.retrieveN()
-  .then(function (result) {
-    // this prints the ids of the activated jobs
-    console.log(result.ids);
   })
 ```
 

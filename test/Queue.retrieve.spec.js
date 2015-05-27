@@ -3,21 +3,30 @@ var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
 var Promise = require('bluebird');
 var util = require('./util');
+var sinon = require('sinon');
 
 describe('Queue.retrieve', function () {
 
-  var client = redis.createClient({
-    host: process.env.REDIS_HOST
-  });
+  var client = redis.createClient({ host: process.env.REDIS_HOST });
   var queue = new Queue('test', client);
+  var clock = null;
 
   beforeEach(function () {
     return client.flushall();
   });
 
+  afterEach(function () {
+    if (clock) {
+      clock.restore();
+      clock = null;
+    }
+  });
+
   it('should retrieve jobs', function () {
+    var ids;
     return queue.addN([1, 2, 3])
-      .then(function () {
+      .then(function (_ids) {
+        ids = _ids;
         return queue.stat();
       })
       .then(function (stats) {
@@ -25,11 +34,15 @@ describe('Queue.retrieve', function () {
         assert.propertyVal(stats, 'activeCount', 0);
         return queue.retrieve();
       })
-      .get('id').bind(queue).then(queue.get)
+      .then(function (result) {
+        assert.propertyVal(result, 'id', ids[0]);
+        assert.propertyVal(result, 'data', 1);
+        assert.propertyVal(result, 'wait', 0);
+        return queue.get(result.id);
+      })
       .then(function (job) {
         assert.strictEqual(job.state, 'active');
         assert.typeOf(job.started, 'number');
-        assert.strictEqual(job.data, 1);
         return queue.stat();
       })
       .then(function (stats) {
@@ -53,6 +66,7 @@ describe('Queue.retrieve', function () {
     return queue.retrieve()
       .then(function (result) {
         assert.isNull(result.id);
+        assert.isNull(result.data);
       });
   });
 
@@ -130,38 +144,110 @@ describe('Queue.retrieve', function () {
       })
       .then(function (result) {
         assert.isNotNull(result.id);
-        assert.isNull(result.wait);
+        assert.propertyVal(result, 'wait', 0);
       });
   });
 
   it('should throttle when configured', function () {
+    clock = sinon.useFakeTimers(Date.now());
+    var ids = null;
     return queue.addN([0, 1, 2, 3, 4, 5])
-      .then(function () {
-        queue.config({
-          throttle: 10000
-        });
+      .then(function (_ids) {
+        ids = _ids;
+        return queue.config({ throttle: 10000 });
       })
       .then(function () {
         return queue.retrieve();
       })
       .then(function (result) {
-        assert.isNotNull(result.id);
-        assert.isNotNull(result.wait);
+        assert.propertyVal(result, 'id', ids[0]);
+        assert.propertyVal(result, 'wait', 10000);
+        clock.tick(1);
         return queue.retrieve();
       })
       .then(function (result) {
         assert.isNull(result.id);
-        assert.isNotNull(result.wait);
+        assert.propertyVal(result, 'wait', 9999);
+        clock.tick(9998);
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.isNull(result.id);
+        assert.propertyVal(result, 'wait', 1);
+        clock.tick(2);
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.propertyVal(result, 'id', ids[1]);
+        assert.propertyVal(result, 'wait', 10000);
+      });
+  });
+
+  it('should unthrottle when asked', function () {
+    clock = sinon.useFakeTimers(Date.now());
+    var ids = null;
+    return queue.addN([0, 1, 2, 3, 4, 5])
+      .then(function (_ids) {
+        ids = _ids;
+        return queue.config({ throttle: 10000 });
+      })
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.propertyVal(result, 'id', ids[0]);
+        assert.propertyVal(result, 'wait', 10000);
+        clock.tick(5000);
         return queue.retrieve({ unthrottle: true });
       })
       .then(function (result) {
-        assert.isNotNull(result.id);
-        assert.isNotNull(result.wait);
+        assert.propertyVal(result, 'id', ids[1]);
+        assert.propertyVal(result, 'wait', 10000);
+        clock.tick(5000);
+        return queue.retrieve({ unthrottle: 'true-like' });
+      })
+      .then(function (result) {
+        assert.propertyVal(result, 'id', ids[2]);
+        assert.propertyVal(result, 'wait', 10000);
+        clock.tick(5500);
         return queue.retrieve({ unthrottle: false });
       })
       .then(function (result) {
         assert.isNull(result.id);
-        assert.isNotNull(result.wait);
+        assert.propertyVal(result, 'wait', 4500);
+      });
+  });
+
+  it('shouldn\'t throttle when no items retrieved', function () {
+    var ids = null;
+    return queue.config({ throttle: 10000 })
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.isNull(result.id);
+        assert.propertyVal(result, 'wait', 0);
+      });
+  });
+
+  it('should throttle even when no item retrieved', function () {
+    clock = sinon.useFakeTimers(Date.now());
+    var id = null;
+    return queue.add(0)
+      .then(function (_id) {
+        id = _id;
+        return queue.config({ throttle: 10000 });
+      })
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        clock.tick(5500);
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.isNull(result.id);
+        assert.propertyVal(result, 'wait', 4500);
       });
   });
 
