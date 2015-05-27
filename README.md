@@ -46,15 +46,7 @@ This library contains a full set of primitives to construct your own worker (`re
       - [`.process(Function doWorkFn, [Object options])` -> `Worker`](#processfunction-doworkfn-object-options---worker)
         - [Option: `Number pollTime`](#option-number-polltime)
       - [`.api()` -> `express.Router apiRouter`](#api---expressrouter-apirouter)
-        - [`GET /`](#get-)
-        - [`GET /jobs/:jobId`](#get-jobsjobid)
-        - [`POST /jobs`](#post-jobs)
-        - [`GET /inactive`](#get-inactive)
-        - [`GET /active`](#get-active)
-        - [`GET /failed`](#get-failed)
-        - [`GET /completed`](#get-completed)
-        - [`GET /metrics`](#get-metrics)
-        - [`.ui()` -> `express.Router uiRouter`](#ui---expressrouter-uirouter)
+      - [`.ui()` -> `express.Router uiRouter`](#ui---expressrouter-uirouter)
     - [`Worker`](#worker)
       - [`.start()` -> `Worker`](#start---worker)
       - [`.stop()` -> `Promise<null>`](#stop---promisenull)
@@ -463,24 +455,24 @@ app.use('/api', queue.api());
 app.listen(3000);
 ```
 
-###### `GET /`
+**`GET`** `/`
 
 Returns the [`.stats`](#stat---promiseobject-stats) for this queue.
 
-###### `GET /jobs/:jobId`
+**`GET`** `/jobs/:jobId`
 
 Returns an object with job properties by `jobId`. See [`.get`](#getstring-id---promisedynamic-job)
 
-###### `POST /jobs`
+**`POST`** `/jobs`
 
 Adds a job to the queue. the request body is considered to contain the job data.
 Priortiy can be specified through the `priority` query parameter.
 Make sure the request body is `JSON.parse` parseable. This returns an object with all the job's properties
 
-###### `GET /inactive`
-###### `GET /active`
-###### `GET /failed`
-###### `GET /completed`
+**`GET`** `/inactive`
+**`GET`** `/active`
+**`GET`** `/failed`
+**`GET`** `/completed`
 
 These return a range of jobs always ina scending order. Query parameters include:
 
@@ -491,13 +483,13 @@ These return a range of jobs always ina scending order. Query parameters include
 
 This returns an object with a `Array<Object job> jobs` property. The items in this array are like the ones from `GEt /jobs/:jobId`.
 
-###### `GET /metrics`
+**`GET`** `/metrics`
 
 Returns metrics for this queue as if returned from [`.metrics`](#metrics---promiseobject-metrics)
 
 <hr>
 
-###### `.ui()` -> `express.Router uiRouter`
+##### `.ui()` -> `express.Router uiRouter`
 
 returns an express Router with a user interface for the queue.
 Additionally the API will be served under the same root.
