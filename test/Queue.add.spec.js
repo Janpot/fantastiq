@@ -46,4 +46,14 @@ describe('Queue.add', function () {
       });
   });
 
+  it('should add a job with priority', function () {
+    return queue.add(1, { priority: 5 })
+      .then(function (id) {
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.strictEqual(job.priority, 5);
+      });
+  });
+
 });

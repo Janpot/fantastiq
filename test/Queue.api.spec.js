@@ -67,19 +67,7 @@ describe('Queue.api', function () {
         assert.propertyVal(res.body, 'activeCount', 0);
         assert.propertyVal(res.body, 'completedCount', 0);
         assert.propertyVal(res.body, 'failedCount', 0);
-      });
-  });
-
-  it('should return stats', function () {
-    return request(app)
-      .get('/api')
-      .expect(200)
-      .then(function (res) {
-        assert.propertyVal(res.body, 'totalCount', 0);
-        assert.propertyVal(res.body, 'inactiveCount', 0);
-        assert.propertyVal(res.body, 'activeCount', 0);
-        assert.propertyVal(res.body, 'completedCount', 0);
-        assert.propertyVal(res.body, 'failedCount', 0);
+        assert.propertyVal(res.body, 'delayedCount', 0);
       });
   });
 

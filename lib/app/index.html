@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-route.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-animate.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-aria.js"></script>
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-aria.js"></script>
+
+    <!-- Angular Material -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.js"></script>
 
+    <!-- Highcharts -->
     <script src="http://code.highcharts.com/adapters/standalone-framework.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
 
+    <!-- Highlight.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ascetic.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+
 
     <script src="./app.js"></script>
 
@@ -31,6 +38,12 @@
 
     <title>queue</title>
     <meta name="viewport" content="initial-scale=1" />
+    <style>
+      /* hack to make icons work. If icons are visible without this, remove: */
+      .material-icons {
+        letter-spacing: initial;
+        vertical-align: middle;
+      }
     </style>
   </head>
   <body ng-app="fantastiq" ng-controller="AppCtrl" layout="row">
@@ -66,6 +79,11 @@
             Completed
             <span flex></span>
             {{stats.completedCount | number}}
+          </md-list-item>
+          <md-list-item layout="row" ng-click="showJobs('delayed')">
+            Delayed
+            <span flex></span>
+            {{stats.delayedCount | number}}
           </md-list-item>
         </md-list>
       </md-content>

@@ -15,12 +15,13 @@ This library contains a full set of primitives to construct your own worker (`re
 ## Features
 
 - Atomic operations
-- promises based ([bluebird](https://www.npmjs.com/package/bluebird))
+- Promises based ([bluebird](https://www.npmjs.com/package/bluebird))
 - Job priority
-- worker
+- Worker
 - REST API
 - UI
-- Throttling
+- Built-in throttling
+- Delayed jobs
 
 ## Usage
 
@@ -76,6 +77,7 @@ Or
         - [Option: `Number throttle`](#option-number-throttle)
       - [`.add(dynamic job, [Object options])`](#adddynamic-job-object-options)
         - [Option: `Number priority`](#option-number-priority)
+        - [Option: `Number runAt`](#option-number-runat)
       - [`.addN(Array<dynamic> jobs, [Object options])`](#addnarraydynamic-jobs-object-options)
       - [`.get(String id)`](#getstring-id)
       - [`.getN(Array<String> ids)`](#getnarraystring-ids)
@@ -205,6 +207,10 @@ queue.add(job, { priority: 10 })
 
 The prority for this job. Lowest values for priority will be processed first.
 By default fantastiq assigns a priority of `0`.
+
+###### Option: `Number runAt`
+
+Delay this job until the time specified in `runAt` as a timestamp.
 
 <hr>
 
@@ -507,6 +513,7 @@ Make sure the request body is `JSON.parse` parseable. This returns an object wit
 - **`GET`** `/active`
 - **`GET`** `/failed`
 - **`GET`** `/completed`
+- **`GET`** `/delayed`
 
 These return a range of jobs always in ascending order. Query parameters include:
 
