@@ -1,5 +1,5 @@
-local key_active,
-      key_inactive,
+local key_inactive,
+      key_active,
       key_completed,
       key_failed,
       key_delayed,
