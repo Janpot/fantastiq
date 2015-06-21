@@ -3,6 +3,7 @@
   - Support delayed jobs.
   - Support multiple attempts.
   - Add `DELETE /jobs/:id` to API.
+  - Add 'Remove' button to job ui.
 
 ## 0.2.0
 
