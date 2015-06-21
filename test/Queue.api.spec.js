@@ -35,6 +35,29 @@ describe('Queue.api', function () {
       });
   });
 
+  it('should remove an existing job', function () {
+    var id;
+    return queue.add('job')
+      .then(function (_id) {
+        id = _id;
+        return request(app)
+          .delete('/api/jobs/' + id)
+          .expect(200);
+      })
+      .then(function () {
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.isNull(job);
+      });
+  });
+
+  it('should 404 on removing a non-existing job', function () {
+    return request(app)
+      .delete('/api/jobs/non-existing')
+      .expect(404);
+  });
+
   it('should add a job', function () {
     return request(app)
       .post('/api/jobs')

@@ -532,6 +532,10 @@ These return a range of jobs always in ascending order. Query parameters include
 
 This returns an object with a `Array<Object job> jobs` property. The items in this array are like the ones from `GEt /jobs/:jobId`.
 
+- **`DELETE`** `/jobs/:jobId`
+
+Removes a job from the queue by `jobId`. See [`.remove`](#removestring-id)
+
 - **`GET`** `/metrics`
 
 Returns metrics for this queue as if returned from [`.metrics`](#metrics---promiseobject-metrics)
