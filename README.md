@@ -22,6 +22,7 @@ This library contains a full set of primitives to construct your own worker (`re
 - UI
 - Built-in throttling
 - Delayed jobs
+- Multiple attempts
 
 ## Usage
 
@@ -61,7 +62,7 @@ Or
 }())
 ```
 
-##Table of Contents
+## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -598,7 +599,6 @@ Force the worker to fetch the next item ignoring the throttle.
 
 - Extending the REST API
 - Extending the UI
-- delayed jobs
-- multiple attempts
+- Delayed retries
 
 
