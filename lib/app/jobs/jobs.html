@@ -2,7 +2,7 @@
   <div class="md-toolbar-tools" layout="row">
     <menu-button></menu-button>
     <md-button ng-href="#/{{::state}}?before={{::first.id}}" ng-disabled="!first">
-      <i class="material-icons">arrow_back</i>
+      <md-icon>arrow_back</md-icon>
       Prev
     </md-button>
     <span flex></span>
@@ -12,7 +12,7 @@
     <span flex></span>
     <md-button ng-href="#/{{::state}}?after={{::last.id}}" ng-disabled="!last">
       Next
-      <i class="material-icons">arrow_forward</i>
+      <md-icon>arrow_forward</md-icon>
     </md-button>
   </div>
 </md-toolbar>

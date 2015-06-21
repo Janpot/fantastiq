@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha ./test",
     "test-b2d": "REDIS_HOST=192.168.59.103 npm test",
-    "toc": "doctoc --title '\n##Table of Contents' ./README.md"
+    "toc": "doctoc --notitle ./README.md"
   },
   "keywords": [
     "redis",
@@ -20,8 +20,8 @@
   "author": "Jan Potoms",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^2.3.0",
-    "doctoc": "^0.13.0",
+    "chai": "^3.0.0",
+    "doctoc": "^0.14.0",
     "faker": "^2.1.3",
     "mocha": "^2.2.5",
     "sinon": "^1.14.1",
