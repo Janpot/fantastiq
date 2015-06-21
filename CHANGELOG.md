@@ -1,6 +1,7 @@
 ## 0.3.0
 
-  - Support delayed jobs
+  - Support delayed jobs.
+  - Support multiple attempts.
 
 ## 0.2.0
 

@@ -133,4 +133,34 @@ describe('Queue._runTimeoutCycle', function () {
       });
   });
 
+  it('should handle multiple attempts', function () {
+    clock = sinon.useFakeTimers(Date.now());
+    var jobId;
+    return queue.config({
+      timeout: 1000,
+      attempts: 3
+    })
+      .then(function () {
+        return queue.addN([1, 2, 3, 4, 5]);
+      })
+      .then(function (id) {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        jobId = result.id;
+        clock.tick(1001);
+        return queue._runTimeoutCycle();
+      })
+      .then(function (canceled) {
+        assert.strictEqual(canceled, 1);
+        return queue.get(jobId);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'state', 'inactive');
+        assert.propertyVal(job, 'attempts', 1);
+        assert.propertyVal(job, 'started', null);
+        assert.propertyVal(job, 'finished', null);
+      });
+  });
+
 });

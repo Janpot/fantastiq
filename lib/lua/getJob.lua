@@ -6,7 +6,8 @@ local key_jobState,
       key_jobCreated,
       key_jobStarted,
       key_jobFinished,
-      key_jobRunAt = unpack(KEYS)
+      key_jobRunAt,
+      key_jobAttempts = unpack(KEYS)
 
 local timestamp = unpack(ARGV)
 local ids = {select(2, unpack(ARGV))}
@@ -21,5 +22,6 @@ return {
   redis.call('HMGET', key_jobCreated, unpack(ids)),
   redis.call('HMGET', key_jobStarted, unpack(ids)),
   redis.call('HMGET', key_jobFinished, unpack(ids)),
-  redis.call('HMGET', key_jobRunAt, unpack(ids))
+  redis.call('HMGET', key_jobRunAt, unpack(ids)),
+  redis.call('HMGET', key_jobAttempts, unpack(ids))
 }

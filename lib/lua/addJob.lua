@@ -5,7 +5,8 @@ local key_nextId,
       key_jobPriority,
       key_jobData,
       key_jobRunAt,
-      key_jobCreated = unpack(KEYS)
+      key_jobCreated,
+      key_jobAttempts = unpack(KEYS)
 
 local timestamp,
       priority,
@@ -31,6 +32,7 @@ for i, jobData in ipairs(jobDatas) do
   redis.call('HSET', key_jobPriority, jobId, priority)
   redis.call('HSET', key_jobData, jobId, jobData)
   redis.call('HSET', key_jobCreated, jobId, timestamp)
+  redis.call('HSET', key_jobAttempts, jobId, 0)
 end
 
 return jobIds

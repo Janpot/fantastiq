@@ -73,4 +73,75 @@ describe('Queue.acknowledge', function () {
       });
   });
 
+  it('should do multiple attempts', function () {
+    var id = null;
+    return queue.config({ attempts: 3 })
+      .then(function () {
+        return queue.add(1);
+      })
+      .then(function (_id) {
+        id = _id;
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'attempts', 0);
+      })
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.propertyVal(result, 'id', id);
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'attempts', 1);
+      })
+      .then(function () {
+        return queue.acknowledge(id, new Error('hello'));
+      })
+      .then(function () {
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'state', 'inactive');
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.propertyVal(result, 'id', id);
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'attempts', 2);
+        return queue.acknowledge(id, new Error('hello'));
+      })
+      .then(function () {
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'state', 'inactive');
+        assert.propertyVal(job, 'started', null);
+        assert.propertyVal(job, 'finished', null);
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.propertyVal(result, 'id', id);
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'attempts', 3);
+        return queue.acknowledge(id, new Error('hello'));
+      })
+      .then(function () {
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'state', 'failed');
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        assert.isNull(result.id);
+      });
+
+  });
+
 });

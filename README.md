@@ -61,10 +61,11 @@ Or
 }())
 ```
 
+##Table of Contents
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-##Table of Contents
 
 - [API](#api)
     - [`fantastiq(RedisClient client, [Object options])`](#fantastiqredisclient-client-object-options)
@@ -75,6 +76,7 @@ Or
         - [Option: `Number removeCompletedAfter`](#option-number-removecompletedafter)
         - [Option: `Number removeFailedAfter`](#option-number-removefailedafter)
         - [Option: `Number throttle`](#option-number-throttle)
+        - [Option: `Number attempts`](#option-number-attempts)
       - [`.add(dynamic job, [Object options])`](#adddynamic-job-object-options)
         - [Option: `Number priority`](#option-number-priority)
         - [Option: `Number runAt`](#option-number-runat)
@@ -151,7 +153,8 @@ queue.config({
   timeout: 10000,
   removeCompletedAfter: 3600000,
   removeFailedAfter: null,
-  throttle: null
+  throttle: null,
+  attempts: 3
 })
   .then(function (config) {
     // this will print '10000'
@@ -179,6 +182,10 @@ By default fantastiq will not delete any job.
 Minimum time in milliseconds between two retrieves.
 The queue will not activate a job until this time has elapsed since the last retrieve.
 By default will not use throttling
+
+###### Option: `Number attempts`
+
+Number of times a job has to be retried when it fails. After failing a job will be set to `inactive` again until it's picked up by a worker again.
 
 <hr>
 
@@ -260,6 +267,7 @@ The resulting object contains following properties:
 - `Number started`: Unix timestamp of when the job was activated
 - `Number finished`: Unix timestamp of when the job was completed
 - `Number priority`: The priority assigned to this job
+- `Number attempts`: The number of times this job has been started
 - `dynamic data`: The actual job content
 - `dynamic result`: The result that was returned when this job was completed
 - `Error error`: The error that was returned when this job was completed

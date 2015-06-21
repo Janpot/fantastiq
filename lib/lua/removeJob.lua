@@ -12,7 +12,8 @@ local key_inactive,
       key_jobStarted,
       key_jobFinished,
       key_markForDel,
-      key_jobRunAt = unpack(KEYS)
+      key_jobRunAt,
+      key_jobAttempts = unpack(KEYS)
 
 local timestamp = unpack(ARGV)
 local ids = {select(2, unpack(ARGV))}
@@ -32,6 +33,7 @@ redis.call('HDEL', key_jobCreated, unpack(ids))
 redis.call('HDEL', key_jobStarted, unpack(ids))
 redis.call('HDEL', key_jobFinished, unpack(ids))
 redis.call('HDEL', key_jobRunAt, unpack(ids))
+redis.call('HDEL', key_jobAttempts, unpack(ids))
 redis.call('ZREM', key_markForDel, unpack(ids))
 
 return totalRemoved

@@ -3,6 +3,7 @@ local key_inactive,
       key_jobState,
       key_started,
       key_jobData,
+      key_jobAttempts,
       key_config,
       key_lastRetrieve = unpack(KEYS)
 
@@ -40,6 +41,7 @@ if jobId then
   redis.call('ZADD', key_active, timestamp, jobId)
   redis.call('HSET', key_jobState, jobId, 'active')
   redis.call('HSET', key_started, jobId, timestamp)
+  redis.call('HINCRBY', key_jobAttempts, jobId, 1)
 
   jobData = redis.call('HGET', key_jobData, jobId)
 
