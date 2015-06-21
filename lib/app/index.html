@@ -39,7 +39,7 @@
     <title>Fantastiq</title>
     <meta name="viewport" content="initial-scale=1" />
   </head>
-  <body ng-app="fantastiq" ng-controller="AppCtrl" layout="row">
+  <body ng-app="fantastiq" ng-controller="AppController as app" layout="row">
 
     <md-sidenav class="md-sidenav-left md-whiteframe-z2"
               md-component-id="left"
@@ -53,30 +53,30 @@
       </md-toolbar>
       <md-content flex>
         <md-list>
-          <md-list-item layout="row" ng-click="showJobs('inactive')">
+          <md-list-item layout="row" ng-click="app.showJobs('inactive')">
             Inactive
             <span flex></span>
-            {{stats.inactiveCount | number}}
+            {{app.stats.inactiveCount | number}}
           </md-list-item>
-          <md-list-item layout="row" ng-click="showJobs('active')">
+          <md-list-item layout="row" ng-click="app.showJobs('active')">
             Active
             <span flex></span>
-            {{stats.activeCount | number}}
+            {{app.stats.activeCount | number}}
           </md-list-item>
-          <md-list-item layout="row" ng-click="showJobs('failed')">
+          <md-list-item layout="row" ng-click="app.showJobs('failed')">
             Failed
             <span flex></span>
-            {{stats.failedCount | number}}
+            {{app.stats.failedCount | number}}
           </md-list-item>
-          <md-list-item layout="row" ng-click="showJobs('completed')">
+          <md-list-item layout="row" ng-click="app.showJobs('completed')">
             Completed
             <span flex></span>
-            {{stats.completedCount | number}}
+            {{app.stats.completedCount | number}}
           </md-list-item>
-          <md-list-item layout="row" ng-click="showJobs('delayed')">
+          <md-list-item layout="row" ng-click="app.showJobs('delayed')">
             Delayed
             <span flex></span>
-            {{stats.delayedCount | number}}
+            {{app.stats.delayedCount | number}}
           </md-list-item>
         </md-list>
       </md-content>

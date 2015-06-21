@@ -2,29 +2,29 @@
   <md-dialog-content layout="column">
     <md-content>
       <div layout="column" layout-margin>
-        <div flex><span class="md-body-2">Job id:</span> {{::job.id}}</div>
-        <div flex ng-show="job.created">
-          <span class="md-body-2">Created:</span> {{::job.created | date:'medium'}}
+        <div flex><span class="md-body-2">Job id:</span> {{::job.props.id}}</div>
+        <div flex ng-show="job.props.created">
+          <span class="md-body-2">Created:</span> {{::job.props.created | date:'medium'}}
         </div>
-        <div flex ng-show="job.started">
-          <span class="md-body-2">Started:</span> {{::job.started | date:'medium'}}
+        <div flex ng-show="job.props.started">
+          <span class="md-body-2">Started:</span> {{::job.props.started | date:'medium'}}
         </div>
-        <div flex ng-show="job.finished">
-          <span class="md-body-2">Finished:</span> {{::job.finished | date:'medium'}}
+        <div flex ng-show="job.props.finished">
+          <span class="md-body-2">Finished:</span> {{::job.props.finished | date:'medium'}}
         </div>
         <div flex>
-          <span class="md-body-2">Priority:</span> {{::job.priority}}
+          <span class="md-body-2">Priority:</span> {{::job.props.priority}}
         </div>
         <div flex><span class="md-body-2">Data:</span></div>
-        <hljs flex code="::formatJson(job.data)" format="json"></hljs>
+        <hljs flex code="::job.jsonProperty('data')" format="json"></hljs>
         <div flex><span class="md-body-2">Result:</span></div>
-        <hljs flex code="::formatJson(job.result)" format="json"></hljs>
+        <hljs flex code="::job.jsonProperty('result')" format="json"></hljs>
         <div flex><span class="md-body-2">Error:</span></div>
-        <hljs flex code="::formatJson(job.error)" format="json"></hljs>
+        <hljs flex code="::job.jsonProperty('error')" format="json"></hljs>
       </div>
     </md-content>
     <div class="md-actions" layout="row">
-      <md-button ng-click="close()">
+      <md-button ng-click="job.close()">
         Close
       </md-button>
     </div>
