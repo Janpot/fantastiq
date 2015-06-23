@@ -49,9 +49,6 @@ Or
 ```js
 (function tick() {
   queue.retrieve()
-    .then(function (result) {
-      return queue.get(result.id);
-    })
     .then(function (job) {
       // ... do something with job.data
       return queue.acknowledge(job.id);
