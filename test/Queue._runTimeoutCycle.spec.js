@@ -158,8 +158,8 @@ describe('Queue._runTimeoutCycle', function () {
       .then(function (job) {
         assert.propertyVal(job, 'state', 'inactive');
         assert.propertyVal(job, 'attempts', 1);
-        assert.propertyVal(job, 'started', null);
-        assert.propertyVal(job, 'finished', null);
+        assert.notOk(job.started);
+        assert.notOk(job.finished);
       });
   });
 

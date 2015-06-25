@@ -1,18 +1,13 @@
 local key_inactive,
       key_active,
       key_failed,
-      key_jobStarted,
-      key_jobState,
-      key_jobError,
-      key_jobStarted,
-      key_jobFinished,
-      key_jobPriority,
-      key_jobAttempts,
+      key_jobDetails,
       key_config = unpack(KEYS)
 
 local timestamp,
       defaultTimeout = unpack(ARGV)
 
+timestamp = tonumber(timestamp)
 
 redis.call('HSETNX', key_config, 'timeout', defaultTimeout)
 local timeout = redis.call('HGET', key_config, 'timeout')
@@ -27,18 +22,22 @@ local allowedAttempts = tonumber(redis.call('HGET', key_config, 'attempts')) or 
 for i, jobId in ipairs(jobIds) do
   redis.call('ZREM', key_active, jobId)
 
-  local jobAttempts = tonumber(redis.call('HGET', key_jobAttempts, jobId))
+  local jobDetails = fantastiq.getJobDetails(key_jobDetails, jobId)
+
+  local jobAttempts = jobDetails['attempts']
   if jobAttempts < allowedAttempts then
-    local priority = tonumber(redis.call('HGET', key_jobPriority, jobId))
+    local priority = jobDetails['priority']
     redis.call('ZADD', key_inactive, priority, jobId)
-    redis.call('HSET', key_jobState, jobId, 'inactive')
-    redis.call('HDEL', key_jobStarted, jobId)
+    jobDetails['state'] = 'inactive'
+    jobDetails['started'] = nil
   else
     redis.call('ZADD', key_failed, timestamp, jobId)
-    redis.call('HSET', key_jobState, jobId, 'failed')
-    redis.call('HSET', key_jobError, jobId, '{\"message\":\"Job timed out\"}')
-    redis.call('HSET', key_jobFinished, jobId, timestamp)
+    jobDetails['state'] = 'failed'
+    jobDetails['error'] = '{\"message\":\"Job timed out\"}'
+    jobDetails['finished'] = timestamp
   end
+
+  fantastiq.setJobDetails(key_jobDetails, jobId, jobDetails)
 end
 
 

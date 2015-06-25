@@ -96,7 +96,7 @@ describe('Queue.addN', function () {
       .then(queue.getN)
       .each(function (job) {
         assert.propertyVal(job, 'state', 'inactive');
-        assert.propertyVal(job, 'runAt', null);
+        assert.notOk(job.runAt);
       });
   });
 

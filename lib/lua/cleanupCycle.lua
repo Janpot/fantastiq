@@ -6,6 +6,8 @@ local key_markedForDeletion,
 
 local timestamp = unpack(ARGV)
 
+timestamp = tonumber(timestamp)
+
 
 local function markOutOfDateJobs (key_source, cleanupTime)
   redis.call('DEL', key_tmp)

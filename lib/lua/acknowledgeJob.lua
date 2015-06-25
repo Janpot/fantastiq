@@ -2,42 +2,41 @@ local key_inactive,
       key_active,
       key_failed,
       key_completed,
-      key_jobPriority,
-      key_jobState,
-      key_jobError,
-      key_jobResult,
-      key_jobStarted,
-      key_jobFinished,
-      key_config,
-      key_jobAttempts = unpack(KEYS)
+      key_jobDetails,
+      key_config = unpack(KEYS)
 
 local timestamp,
       jobId,
       err,
       result = unpack(ARGV)
 
+timestamp = tonumber(timestamp)
+
 local keysRemoved = redis.call('ZREM', key_active, jobId)
 if keysRemoved == 1 then
+  local jobDetails = fantastiq.getJobDetails(key_jobDetails, jobId)
   if err == 'null' then
     redis.call('ZADD', key_completed, timestamp, jobId)
-    redis.call('HSET', key_jobState, jobId, 'completed')
-    redis.call('HSET', key_jobResult, jobId, result)
-    redis.call('HSET', key_jobFinished, jobId, timestamp)
+    jobDetails['state'] = 'completed'
+    jobDetails['result'] = result
+    jobDetails['finished'] = timestamp
   else
     local allowedAttempts = tonumber(redis.call('HGET', key_config, 'attempts')) or 1
-    local jobAttempts = tonumber(redis.call('HGET', key_jobAttempts, jobId))
+
+    local jobAttempts = jobDetails['attempts']
     if jobAttempts < allowedAttempts then
-      local priority = tonumber(redis.call('HGET', key_jobPriority, jobId))
+      local priority = jobDetails['priority']
       redis.call('ZADD', key_inactive, priority, jobId)
-      redis.call('HSET', key_jobState, jobId, 'inactive')
-      redis.call('HDEL', key_jobStarted, jobId)
+      jobDetails['state'] = 'inactive'
+      jobDetails['started'] = nil
     else
       redis.call('ZADD', key_failed, timestamp, jobId)
-      redis.call('HSET', key_jobState, jobId, 'failed')
-      redis.call('HSET', key_jobError, jobId, err)
-      redis.call('HSET', key_jobFinished, jobId, timestamp)
+      jobDetails['state'] = 'failed'
+      jobDetails['error'] = err
+      jobDetails['finished'] = timestamp
     end
   end
+  fantastiq.setJobDetails(key_jobDetails, jobId, jobDetails)
 else
   return redis.error_reply('Job not found')
 end

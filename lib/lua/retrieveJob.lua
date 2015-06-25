@@ -1,14 +1,13 @@
 local key_inactive,
       key_active,
-      key_jobState,
-      key_started,
-      key_jobData,
-      key_jobAttempts,
       key_config,
-      key_lastRetrieve = unpack(KEYS)
+      key_lastRetrieve,
+      key_jobDetails = unpack(KEYS)
 
 local timestamp,
       unthrottle = unpack(ARGV)
+
+timestamp = tonumber(timestamp)
 
 
 if unthrottle == 'true' then
@@ -39,11 +38,14 @@ local jobData = 'null'
 if jobId then
   redis.call('ZREM', key_inactive, jobId)
   redis.call('ZADD', key_active, timestamp, jobId)
-  redis.call('HSET', key_jobState, jobId, 'active')
-  redis.call('HSET', key_started, jobId, timestamp)
-  redis.call('HINCRBY', key_jobAttempts, jobId, 1)
 
-  jobData = redis.call('HGET', key_jobData, jobId)
+  local jobDetails = fantastiq.getJobDetails(key_jobDetails, jobId)
+  jobDetails['state'] = 'active'
+  jobDetails['started'] = timestamp
+  jobDetails['attempts'] = jobDetails['attempts'] + 1
+  fantastiq.setJobDetails(key_jobDetails, jobId, jobDetails)
+
+  jobData = jobDetails['data']
 
   -- an item was retrieved so prepare throttle for the next
   redis.call('SET', key_lastRetrieve, timestamp)

@@ -5,6 +5,8 @@ local timestamp,
       order,
       startId = unpack(ARGV)
 
+timestamp = tonumber(timestamp)
+
 
 local start = 0
 local command

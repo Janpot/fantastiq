@@ -26,7 +26,7 @@ describe('Queue.acknowledge', function () {
       .bind(queue).then(queue.get)
       .then(function (job) {
         assert.strictEqual(job.state, 'completed');
-        assert.isNull(job.error);
+        assert.notOk(job.error);
         assert.strictEqual(job.result, 'result-1');
         assert.typeOf(job.finished, 'number');
         return queue.stat();
@@ -50,7 +50,7 @@ describe('Queue.acknowledge', function () {
       .then(function (job) {
         assert.strictEqual(job.state, 'failed');
         assert.instanceOf(job.error, Error);
-        assert.isNull(job.result);
+        assert.notOk(job.result);
         assert.typeOf(job.finished, 'number');
         return queue.stat();
       })
@@ -119,8 +119,8 @@ describe('Queue.acknowledge', function () {
       })
       .then(function (job) {
         assert.propertyVal(job, 'state', 'inactive');
-        assert.propertyVal(job, 'started', null);
-        assert.propertyVal(job, 'finished', null);
+        assert.notOk(job.started);
+        assert.notOk(job.finished);
         return queue.retrieve();
       })
       .then(function (result) {
