@@ -4,7 +4,7 @@
   "description": "Job queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
-    "test": "mocha ./test",
+    "test": "mocha ./test/.setupBabel.js ./test",
     "test-b2d": "REDIS_HOST=192.168.59.103 npm test",
     "toc": "doctoc --notitle ./README.md"
   },
@@ -20,6 +20,7 @@
   "author": "Jan Potoms",
   "license": "MIT",
   "devDependencies": {
+    "babel": "^5.6.14",
     "chai": "^3.0.0",
     "doctoc": "^0.14.0",
     "faker": "^2.1.3",
