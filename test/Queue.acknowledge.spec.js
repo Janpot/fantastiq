@@ -2,6 +2,7 @@ var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
 var util = require('./util');
+var sinon = require('sinon');
 
 describe('Queue.acknowledge', function () {
 
@@ -9,10 +10,18 @@ describe('Queue.acknowledge', function () {
     host: process.env.REDIS_HOST
   });
   var queue = new Queue('test', client);
+  var clock = null;
 
 
   beforeEach(function () {
     return client.flushall();
+  });
+
+  afterEach(function () {
+    if (clock) {
+      clock.restore();
+      clock = null;
+    }
   });
 
   it('should acknowledge jobs with result', function () {
@@ -143,5 +152,50 @@ describe('Queue.acknowledge', function () {
       });
 
   });
+
+  it('should acknowledge with backoff time', function () {
+    var now = Date.now();
+    clock = sinon.useFakeTimers(now);
+    var id;
+    return queue.config({ attempts: 2, backoff: 10000 })
+      .then(function () {
+        return queue.add('data-1');
+      })
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        id = result.id;
+        clock.tick(5000);
+        return queue.acknowledge(id, new Error('failed'));
+      })
+      .bind(queue).then(queue.get)
+      .then(function (job) {
+        assert.strictEqual(job.state, 'delayed');
+        assert.notOk(job.error);
+        assert.strictEqual(job.runAt, now + 15000);
+        clock.tick(9999);
+        return queue._runDelayedCycle();
+      })
+      .then(function () {
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.strictEqual(job.state, 'delayed');
+        clock.tick(2);
+        return queue._runDelayedCycle();
+      })
+      .then(function () {
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.strictEqual(job.state, 'inactive');
+        return queue.retrieve(id);
+      })
+      .then(function (result) {
+        assert.strictEqual(result.data, 'data-1');
+      });
+  });
+
 
 });

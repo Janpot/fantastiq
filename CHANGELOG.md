@@ -1,3 +1,8 @@
+## 0.4.0
+
+  - BREAKING: format of job details is incompatible with previous versions.
+  - Support backoff delay before making new attempts.
+
 ## 0.3.0
 
   - Support delayed jobs.

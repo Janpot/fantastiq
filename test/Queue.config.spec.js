@@ -18,8 +18,11 @@ describe('Queue.config', function () {
     return queue.config()
       .then(function (config) {
         assert.propertyVal(config, 'timeout', 30000);
-        assert.propertyVal(config, 'removeFailedAfter', null);
-        assert.propertyVal(config, 'removeCompletedAfter', null);
+        assert.notOk(config.removeFailedAfter);
+        assert.notOk(config.removeCompletedAfter);
+        assert.notOk(config.throttle);
+        assert.notOk(config.attempts);
+        assert.notOk(config.backoff);
       });
   });
 
@@ -32,13 +35,17 @@ describe('Queue.config', function () {
       timeout: 1,
       removeFailedAfter: 2,
       removeCompletedAfter: 3,
-      throttle: 4
+      throttle: 4,
+      attempts: 5,
+      backoff: 6
     })
       .then(function (config) {
         assert.propertyVal(config, 'timeout', 1);
         assert.propertyVal(config, 'removeFailedAfter', 2);
         assert.propertyVal(config, 'removeCompletedAfter', 3);
         assert.propertyVal(config, 'throttle', 4);
+        assert.propertyVal(config, 'attempts', 5);
+        assert.propertyVal(config, 'backoff', 6);
       });
   });
 

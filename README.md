@@ -152,7 +152,8 @@ queue.config({
   removeCompletedAfter: 3600000,
   removeFailedAfter: null,
   throttle: null,
-  attempts: 3
+  attempts: 3,
+  backoff: 10000
 })
   .then(function (config) {
     // this will print '10000'
@@ -184,6 +185,10 @@ By default will not use throttling
 ###### Option: `Number attempts`
 
 Number of times a job has to be retried when it fails. After failing a job will be set to `inactive` again until it's picked up by a worker again.
+
+###### Option: `Number backoff`
+
+Time in milleseconds a job has to be delayed before attempting to execute it again.
 
 <hr>
 
