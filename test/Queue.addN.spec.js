@@ -39,6 +39,44 @@ describe('Queue.addN', function () {
       });
   });
 
+  it('should add multiple jobs with the same data', function () {
+    return queue.addN([1, 1, 1], { unique: false })
+      .then(function (ids) {
+        assert.lengthOf(ids, 3);
+        return queue.getN(ids);
+      })
+      .then(function (jobs) {
+        assert.propertyVal(jobs[0], 'data', 1);
+        assert.propertyVal(jobs[1], 'data', 1);
+        assert.propertyVal(jobs[2], 'data', 1);
+        return queue.stat();
+      })
+      .then(function (stats) {
+        assert.propertyVal(stats, 'inactiveCount', 3);
+      });
+  });
+
+  it('shouldn\'t add duplicate jobs when unique is configured', function () {
+    return queue.config({ unique: true })
+      .then(function () {
+        return queue.addN([1, 2, 1]);
+      })
+      .then(function (ids) {
+        assert.strictEqual(ids[0], ids[2]);
+        assert.lengthOf(ids, 3);
+        return queue.getN(ids);
+      })
+      .then(function (jobs) {
+        assert.propertyVal(jobs[0], 'data', 1);
+        assert.propertyVal(jobs[1], 'data', 2);
+        assert.propertyVal(jobs[2], 'data', 1);
+        return queue.stat();
+      })
+      .then(function (stats) {
+        assert.propertyVal(stats, 'inactiveCount', 2);
+      });
+  });
+
   it('should handle falsy values', function () {
     var values = [0, '', [], false, null, undefined];
     return queue.addN(values)

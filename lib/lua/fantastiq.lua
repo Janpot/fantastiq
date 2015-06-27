@@ -45,7 +45,7 @@ local fantastiq = (function ()
 
   function exports.acknowledge(
     key_inactive, key_active, key_failed, key_completed, key_delayed,
-    key_jobDetails, key_config, timestamp, jobId, err, result)
+    key_jobDetails, key_config, key_index, timestamp, jobId, err, result)
 
     local keysRemoved = redis.call('ZREM', key_active, jobId)
     if keysRemoved == 1 then
@@ -55,6 +55,7 @@ local fantastiq = (function ()
         jobDetails['state'] = 'completed'
         jobDetails['result'] = result
         jobDetails['finished'] = timestamp
+        redis.call('HDEL', key_index, jobDetails['data'])
       else
         local allowedAttempts = tonumber(redis.call('HGET', key_config, 'attempts')) or 1
 
@@ -78,6 +79,7 @@ local fantastiq = (function ()
           jobDetails['state'] = 'failed'
           jobDetails['error'] = err
           jobDetails['finished'] = timestamp
+          redis.call('HDEL', key_index, jobDetails['data'])
         end
       end
       exports.setJobDetails(key_jobDetails, jobId, jobDetails)

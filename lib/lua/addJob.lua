@@ -1,7 +1,9 @@
-local key_nextId,
+local key_config,
+      key_nextId,
       key_inactive,
       key_delayed,
-      key_jobDetails = unpack(KEYS)
+      key_jobDetails,
+      key_index = unpack(KEYS)
 
 local timestamp,
       priority,
@@ -12,10 +14,26 @@ timestamp = tonumber(timestamp)
 runAt = tonumber(runAt)
 priority = tonumber(priority)
 
+local unique = redis.call('HGET', key_config, 'unique')
+if unique then unique = cjson.decode(unique) end
+
 local jobIds = {}
 for i, jobData in ipairs(jobDatas) do
+
+  local uniqueId = jobData
+
+  if unique then
+    local existing = redis.call('HGET', key_index, uniqueId)
+    if existing then
+      jobIds[i] = existing
+      break
+    end
+  end
+
   local nextId = redis.call('INCR', key_nextId)
   local jobId = string.format('%013X', nextId)
+
+  redis.call('HSET', key_index, uniqueId, jobId)
   jobIds[i] = jobId
 
   local jobDetails = {

@@ -56,4 +56,85 @@ describe('Queue.add', function () {
       });
   });
 
+  it('should ignore duplicate job when active', function () {
+    var id1;
+    return queue.config({ unique: true })
+      .then(function () {
+        return queue.add(1);
+      })
+      .then(function (id) {
+        id1 = id;
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        return queue.add(1);
+      })
+      .then(function (id2) {
+        assert.strictEqual(id1, id2);
+      });
+  });
+
+  it('should ignore duplicate job when delayed', function () {
+    var id1;
+    return queue.config({ unique: true })
+      .then(function () {
+        return queue.add(1, {
+          runAt: Date.now() + 100000
+        });
+      })
+      .then(function (id) {
+        id1 = id;
+        return queue.add(1);
+      })
+      .then(function (id2) {
+        assert.strictEqual(id1, id2);
+      });
+  });
+
+  it('should allow duplicate job when failed', function () {
+    var id1;
+    return queue.config({ unique: true })
+      .then(function () {
+        return queue.add(1);
+      })
+      .then(function (id) {
+        id1 = id;
+      })
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        return queue.acknowledge(result.id, new Error('failed'));
+      })
+      .then(function () {
+        return queue.add(1);
+      })
+      .then(function (id2) {
+        assert.notStrictEqual(id1, id2);
+      });
+  });
+
+  it('should allow duplicate job when completed', function () {
+    var id1;
+    return queue.config({ unique: true })
+      .then(function () {
+        return queue.add(1);
+      })
+      .then(function (id) {
+        id1 = id;
+      })
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        return queue.acknowledge(result.id);
+      })
+      .then(function () {
+        return queue.add(1);
+      })
+      .then(function (id2) {
+        assert.notStrictEqual(id1, id2);
+      });
+  });
+
 });

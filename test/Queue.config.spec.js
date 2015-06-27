@@ -23,6 +23,7 @@ describe('Queue.config', function () {
         assert.notOk(config.throttle);
         assert.notOk(config.attempts);
         assert.notOk(config.backoff);
+        assert.notOk(config.unique);
       });
   });
 
@@ -37,7 +38,8 @@ describe('Queue.config', function () {
       removeCompletedAfter: 3,
       throttle: 4,
       attempts: 5,
-      backoff: 6
+      backoff: 6,
+      unique: true
     })
       .then(function (config) {
         assert.propertyVal(config, 'timeout', 1);
@@ -46,6 +48,7 @@ describe('Queue.config', function () {
         assert.propertyVal(config, 'throttle', 4);
         assert.propertyVal(config, 'attempts', 5);
         assert.propertyVal(config, 'backoff', 6);
+        assert.propertyVal(config, 'unique', true);
       });
   });
 

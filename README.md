@@ -188,7 +188,11 @@ Number of times a job has to be retried when it fails. After failing a job will 
 
 ###### Option: `Number backoff`
 
-Time in milleseconds a job has to be delayed before attempting to execute it again.
+Time in milliseconds a job has to be delayed before attempting to execute it again.
+
+###### Option: `Boolean unique`
+
+Only allow unique jobs to be added to the queue.
 
 <hr>
 

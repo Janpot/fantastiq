@@ -3,7 +3,8 @@ local key_inactive,
       key_failed,
       key_delayed,
       key_jobDetails,
-      key_config = unpack(KEYS)
+      key_config,
+      key_index = unpack(KEYS)
 
 local timestamp,
       defaultTimeout = unpack(ARGV)
@@ -29,6 +30,7 @@ for i, jobId in ipairs(jobIds) do
     key_delayed,
     key_jobDetails,
     key_config,
+    key_index,
     timestamp,
     jobId,
     '{\"message\":\"Job timed out\"}',

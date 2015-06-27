@@ -1,3 +1,7 @@
+## 0.5.0
+
+  - Add `unique` option to ignore duplicate jobs.
+
 ## 0.4.0
 
   - BREAKING: format of job details is incompatible with previous versions.
