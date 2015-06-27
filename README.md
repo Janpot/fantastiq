@@ -601,6 +601,6 @@ Force the worker to fetch the next item ignoring the throttle.
 
 - Extending the REST API
 - Extending the UI
-- Delayed retries
-
-
+- Separate worker, api and ui in different packages
+- Retrieve random jobs
+- Uniqueness
