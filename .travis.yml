@@ -5,6 +5,9 @@ node_js:
   - 'iojs'
 services:
   - redis-server
+cache:
+  directories:
+    - node_modules
 notifications:
   email: false
 
