@@ -75,6 +75,8 @@ Or
         - [Option: `Number removeFailedAfter`](#option-number-removefailedafter)
         - [Option: `Number throttle`](#option-number-throttle)
         - [Option: `Number attempts`](#option-number-attempts)
+        - [Option: `Number backoff`](#option-number-backoff)
+        - [Option: `Boolean unique`](#option-boolean-unique)
       - [`.add(dynamic job, [Object options])`](#adddynamic-job-object-options)
         - [Option: `Number priority`](#option-number-priority)
         - [Option: `Number runAt`](#option-number-runat)
