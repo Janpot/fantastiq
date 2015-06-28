@@ -11,6 +11,7 @@ describe('Queue.retrieve', function () {
   var client = redis.createClient({ host: process.env.REDIS_HOST });
   var queue = new Queue('test', client);
   var clock = null;
+  var randomStub = null;
 
   beforeEach(function () {
     return client.flushall();
@@ -20,6 +21,10 @@ describe('Queue.retrieve', function () {
     if (clock) {
       clock.restore();
       clock = null;
+    }
+    if (randomStub) {
+      randomStub.restore();
+      randomStub = null;
     }
   });
 
@@ -247,6 +252,46 @@ describe('Queue.retrieve', function () {
         assert.isNull(result.id);
         assert.propertyVal(result, 'wait', 4500);
       });
+  });
+
+  it('should retrieve random jobs', async function () {
+    randomStub = sinon.stub(Math, 'random');
+
+    var ids = await queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    randomStub.returns(7 / 10);
+    var retrieval = await queue.retrieve({ random: true });
+    assert.strictEqual(retrieval.id, ids[7]);
+
+    randomStub.returns(2 / 9);
+    retrieval = await queue.retrieve({ random: true });
+    assert.strictEqual(retrieval.id, ids[2]);
+
+    randomStub.returns(0);
+    retrieval = await queue.retrieve({ random: true });
+    assert.strictEqual(retrieval.id, ids[0]);
+
+    randomStub.returns(0.99999999999999);
+    retrieval = await queue.retrieve({ random: true });
+    assert.strictEqual(retrieval.id, ids[9]);
+  });
+
+  it('should respect priority on random jobs', async function () {
+    randomStub = sinon.stub(Math, 'random');
+
+    await queue.addN([1, 2, 3, 4, 5], { priority: 10 });
+    var ids = await queue.addN([6, 7, 8, 9, 10], { priority: 5 });
+
+    randomStub.returns(3 / 5);
+    var retrieval = await queue.retrieve({ random: true });
+    assert.strictEqual(retrieval.id, ids[3]);
+  });
+
+  it('shouldn\'t fail when random call on empty queue', async function () {
+    randomStub = sinon.stub(Math, 'random');
+    randomStub.returns(0);
+    var retrieval = await queue.retrieve({ random: true });
+    assert.isNull(retrieval.id);
   });
 
 });

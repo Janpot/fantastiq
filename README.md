@@ -87,6 +87,7 @@ Or
       - [`.removeN(Array<String> ids)`](#removenarraystring-ids)
       - [`.retrieve([Object options])`](#retrieveobject-options)
         - [Option: `Boolean unthrottle`](#option-boolean-unthrottle)
+        - [Option: `Boolean random`](#option-boolean-random)
       - [`.acknowledge(String id, [Error error], [dynamic result])`](#acknowledgestring-id-error-error-dynamic-result)
       - [`.range(String state, [Object options])`](#rangestring-state-object-options)
         - [option: `Number count`](#option-number-count)
@@ -96,6 +97,7 @@ Or
       - [`.metrics()`](#metrics)
       - [`.process(Function doWorkFn, [Object options])`](#processfunction-doworkfn-object-options)
         - [Option: `Number pollTime`](#option-number-polltime)
+        - [Option: `Boolean random`](#option-boolean-random-1)
       - [`.api()`](#api)
       - [`.ui()`](#ui)
     - [`Worker`](#worker)
@@ -374,6 +376,12 @@ queue.retrieve({ unthrottle: true })
   })
 ```
 
+###### Option: `Boolean random`
+
+Makes the queue return a random job instead of the oldest.
+This options still respects the priorities in the queue.
+A random job will selected from the most prioritized jobs.
+
 <hr>
 
 ##### `.acknowledge(String id, [Error error], [dynamic result])`
@@ -495,6 +503,10 @@ var worker = queue.process(function (job) {
 });
 ```
 
+###### Option: `Boolean random`
+
+Set this to `true` to make the worker retrieve items according to the semantics in [`retrieve`](#option-boolean-random)
+
 <hr>
 
 ##### `.api()`
@@ -608,5 +620,4 @@ Force the worker to fetch the next item ignoring the throttle.
 - Extending the REST API
 - Extending the UI
 - Separate worker, api and ui in different packages
-- Retrieve random jobs
-- Uniqueness
+- Uniqueness by key

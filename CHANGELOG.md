@@ -1,6 +1,7 @@
 ## 0.5.0
 
   - Add `unique` option to ignore duplicate jobs.
+  - Support random retrieval.
 
 ## 0.4.0
 

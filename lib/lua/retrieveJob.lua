@@ -5,9 +5,11 @@ local key_inactive,
       key_jobDetails = unpack(KEYS)
 
 local timestamp,
-      unthrottle = unpack(ARGV)
+      unthrottle,
+      random = unpack(ARGV)
 
 timestamp = tonumber(timestamp)
+random = tonumber(random)
 
 
 if unthrottle == 'true' then
@@ -30,8 +32,16 @@ if throttleTime then
   end
 end
 
+local index = 0
 
-local jobIds = redis.call('ZRANGE', key_inactive, 0, 0)
+if random > 0 then
+  local minPriority = redis.call('ZRANGEBYSCORE', key_inactive, '-inf', '+inf', 'WITHSCORES', 'LIMIT', 0, 1)[2]
+  local lowestPrioCount = redis.call('ZCOUNT', key_inactive, '-inf', minPriority)
+  index = math.floor(random * lowestPrioCount)
+end
+
+
+local jobIds = redis.call('ZRANGE', key_inactive, index, index)
 local jobId = jobIds[1]
 local jobData = 'null'
 
