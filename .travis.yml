@@ -5,6 +5,7 @@ node_js:
   - 'iojs'
 services:
   - redis-server
+script: npm run travis-test
 cache:
   directories:
     - node_modules

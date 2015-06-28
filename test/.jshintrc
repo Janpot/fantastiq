@@ -1,5 +1,0 @@
-{
-  "predef"    : [
-    "-Promise", "describe", "it", "before", "beforeEach", "after", "afterEach"
-  ]
-}
