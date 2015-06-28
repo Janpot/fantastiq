@@ -289,7 +289,7 @@ describe('Queue.retrieve', function () {
 
   it('shouldn\'t fail when random call on empty queue', async function () {
     randomStub = sinon.stub(Math, 'random');
-    randomStub.returns(0);
+    randomStub.returns(0.5);
     var retrieval = await queue.retrieve({ random: true });
     assert.isNull(retrieval.id);
   });

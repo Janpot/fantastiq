@@ -36,8 +36,10 @@ local index = 0
 
 if random > 0 then
   local minPriority = redis.call('ZRANGEBYSCORE', key_inactive, '-inf', '+inf', 'WITHSCORES', 'LIMIT', 0, 1)[2]
-  local lowestPrioCount = redis.call('ZCOUNT', key_inactive, '-inf', minPriority)
-  index = math.floor(random * lowestPrioCount)
+  if minPriority then
+    local lowestPrioCount = redis.call('ZCOUNT', key_inactive, '-inf', minPriority)
+    index = math.floor(random * lowestPrioCount)
+  end
 end
 
 
