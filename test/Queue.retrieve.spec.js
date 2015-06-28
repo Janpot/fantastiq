@@ -266,9 +266,25 @@ describe('Queue.retrieve', function () {
     randomStub.returns(2 / 9);
     retrieval = await queue.retrieve({ random: true });
     assert.strictEqual(retrieval.id, ids[2]);
+  });
+
+  it('should retrieve random jobs on 0', async function () {
+    randomStub = sinon.stub(Math, 'random');
+
+    var ids = await queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
     randomStub.returns(0);
-    retrieval = await queue.retrieve({ random: true });
+    var retrieval = await queue.retrieve({ random: true });
+    assert.strictEqual(retrieval.id, ids[0]);
+  });
+
+  it('should retrieve random jobs on edge cases', async function () {
+    randomStub = sinon.stub(Math, 'random');
+
+    var ids = await queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    randomStub.returns(0.00000000000001);
+    var retrieval = await queue.retrieve({ random: true });
     assert.strictEqual(retrieval.id, ids[0]);
 
     randomStub.returns(0.99999999999999);
