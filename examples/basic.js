@@ -19,7 +19,7 @@ queue.config({
 
 var app = express();
 
-app.use('/ui', queue.ui(), function (err, req, res, next) {
+app.use('/ui', queue.ui(), function (err, req, res, next) { //eslint-disable-line no-unused-vars
   console.error(err.stack);
   res.status(500).end();
 });
@@ -33,7 +33,7 @@ app.listen(3000, function (err) {
 
 
 
-function startQueueProducer(queue, speed) {
+function startQueueProducer(speed) {
   (function tick() {
     queue.add(faker.internet.email()).catch(function (err) {
       console.log(err.stack);
@@ -60,4 +60,4 @@ queue.process(function (job) {
     });
 });
 
-startQueueProducer(queue, 1700);
+startQueueProducer(1700);

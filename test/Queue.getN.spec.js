@@ -1,3 +1,5 @@
+'use strict';
+
 var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
@@ -28,7 +30,7 @@ describe('Queue.getN', function () {
 
   it('shouldn\'t error on empty id array', function () {
     return queue.addN([0, 1, 2, 3, 4])
-      .then(function (ids) {
+      .then(function () {
         return queue.getN([]);
       })
       .then(function (jobs) {

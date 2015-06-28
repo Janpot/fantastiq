@@ -1,3 +1,5 @@
+'use strict';
+
 var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;

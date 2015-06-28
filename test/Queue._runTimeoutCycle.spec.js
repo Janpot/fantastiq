@@ -1,3 +1,5 @@
+'use strict';
+
 var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
@@ -31,7 +33,7 @@ describe('Queue._runTimeoutCycle', function () {
       .then(function () {
         return queue.addN([1, 2, 3, 4, 5]);
       })
-      .then(function (id) {
+      .then(function () {
         return queue.retrieve();
       })
       .then(function (result) {
@@ -77,7 +79,7 @@ describe('Queue._runTimeoutCycle', function () {
       .then(function () {
         return queue.addN([1, 2, 3, 4, 5]);
       })
-      .then(function (id) {
+      .then(function () {
         return queue.retrieve();
       })
       .then(function () {
@@ -118,7 +120,7 @@ describe('Queue._runTimeoutCycle', function () {
       .then(function () {
         return queue.addN([1, 2, 3, 4, 5]);
       })
-      .then(function (id) {
+      .then(function () {
         return queue.retrieve();
       })
       .then(function () {
@@ -143,7 +145,7 @@ describe('Queue._runTimeoutCycle', function () {
       .then(function () {
         return queue.addN([1, 2, 3, 4, 5]);
       })
-      .then(function (id) {
+      .then(function () {
         return queue.retrieve();
       })
       .then(function (result) {

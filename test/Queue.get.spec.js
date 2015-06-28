@@ -1,3 +1,5 @@
+'use strict';
+
 var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
@@ -26,7 +28,7 @@ describe('Queue.get', function () {
 
   it('should return null on a non-existing job', function () {
     return queue.addN([0, 1, 2, 3, 4])
-      .then(function (ids) {
+      .then(function () {
         return queue.get('some-bogus-id');
       })
       .then(function (job) {
@@ -39,7 +41,7 @@ describe('Queue.get', function () {
       .then(function () {
         return queue.get([]);
       })
-      .then(function (job) {
+      .then(function () {
         assert(false, 'Expected to fail');
       }, function (err) {
         assert.strictEqual(err.message,

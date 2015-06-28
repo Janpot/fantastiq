@@ -1,8 +1,9 @@
+'use strict';
+
 var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
 var Promise = require('bluebird');
-var util = require('./util');
 var sinon = require('sinon');
 
 describe('Queue.retrieve', function () {
@@ -91,10 +92,10 @@ describe('Queue.retrieve', function () {
 
   it('should respect priority', function () {
     return queue.add(1, { priority: 10 })
-      .then(function (job) {
+      .then(function () {
         return queue.add(3, { priority: 0 });
       })
-      .then(function (job) {
+      .then(function () {
         return queue.add(2, { priority: 0 });
       })
       .then(function () {
@@ -119,7 +120,7 @@ describe('Queue.retrieve', function () {
 
   it('should recognize negative priority', function () {
     return queue.add(1, { priority: 0 })
-      .then(function (job) {
+      .then(function () {
         return queue.add(2, { priority: -1 });
       })
       .then(function () {
@@ -219,7 +220,6 @@ describe('Queue.retrieve', function () {
   });
 
   it('shouldn\'t throttle when no items retrieved', function () {
-    var ids = null;
     return queue.config({ throttle: 10000 })
       .then(function () {
         return queue.retrieve();
@@ -232,16 +232,14 @@ describe('Queue.retrieve', function () {
 
   it('should throttle even when no item retrieved', function () {
     clock = sinon.useFakeTimers(Date.now());
-    var id = null;
     return queue.add(0)
-      .then(function (_id) {
-        id = _id;
+      .then(function () {
         return queue.config({ throttle: 10000 });
       })
       .then(function () {
         return queue.retrieve();
       })
-      .then(function (result) {
+      .then(function () {
         clock.tick(5500);
         return queue.retrieve();
       })

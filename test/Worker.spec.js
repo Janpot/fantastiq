@@ -1,5 +1,6 @@
+'use strict';
+
 var Worker = require('../lib/Worker');
-var assert = require('chai').assert;
 var sinon = require('sinon');
 var Promise = require('bluebird');
 

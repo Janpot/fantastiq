@@ -1,9 +1,8 @@
-'use srict';
+'use strict';
 
 var redis = require('then-redis');
 var metrics = require('../lib/metrics');
 var assert = require('chai').assert;
-var Promise = require('bluebird');
 var sinon = require('sinon');
 
 describe('metrics', function () {
@@ -61,7 +60,7 @@ describe('metrics', function () {
       .then(function (data) {
         assert.deepEqual(data, [
           [ 1000, 1 ],
-          [ 2000, 1 ],
+          [ 2000, 1 ]
         ]);
       });
 

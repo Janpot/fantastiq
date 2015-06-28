@@ -1,3 +1,5 @@
+'use strict';
+
 var redis = require('then-redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
@@ -78,7 +80,7 @@ describe('Queue._runDelayedCycle', function () {
         clock.tick(1001);
         return queue._runDelayedCycle();
       })
-      .then(function (count) {
+      .then(function () {
         return queue.retrieve();
       })
       .then(function (job) {
