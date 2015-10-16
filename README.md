@@ -50,8 +50,12 @@ Or
 (function tick() {
   queue.retrieve()
     .then(function (job) {
-      // ... do something with job.data
-      return queue.acknowledge(job.id);
+      return doWork(job.data)
+        .then(function (result) {
+          return queue.acknowledge(job.id, null, result);
+        }, function (error) {
+          return queue.acknowledge(job.id, error);
+        });
     })
     .catch(function (err) { console.error(err.message); })
     .delay(1000)
