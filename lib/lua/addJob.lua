@@ -21,39 +21,40 @@ local jobIds = {}
 for i, jobData in ipairs(jobDatas) do
 
   local uniqueId = jobData
+  local existing
 
   if unique then
-    local existing = redis.call('HGET', key_index, uniqueId)
-    if existing then
-      jobIds[i] = existing
-      break
-    end
+    existing = redis.call('HGET', key_index, uniqueId)
   end
 
-  local nextId = redis.call('INCR', key_nextId)
-  local jobId = string.format('%013X', nextId)
-
-  redis.call('HSET', key_index, uniqueId, jobId)
-  jobIds[i] = jobId
-
-  local jobDetails = {
-    id = jobId,
-    priority = priority,
-    data = jobData,
-    created = timestamp,
-    attempts = 0
-  }
-
-  if runAt > timestamp then
-    redis.call('ZADD', key_delayed, runAt, jobId)
-    jobDetails['state'] = 'delayed'
-    jobDetails['runAt'] = runAt
+  if existing then
+    jobIds[i] = existing
   else
-    redis.call('ZADD', key_inactive, priority, jobId)
-    jobDetails['state'] = 'inactive'
-  end
+    local nextId = redis.call('INCR', key_nextId)
+    local jobId = string.format('%013X', nextId)
 
-  fantastiq.setJobDetails(key_jobDetails, jobId, jobDetails)
+    redis.call('HSET', key_index, uniqueId, jobId)
+    jobIds[i] = jobId
+
+    local jobDetails = {
+      id = jobId,
+      priority = priority,
+      data = jobData,
+      created = timestamp,
+      attempts = 0
+    }
+
+    if runAt > timestamp then
+      redis.call('ZADD', key_delayed, runAt, jobId)
+      jobDetails['state'] = 'delayed'
+      jobDetails['runAt'] = runAt
+    else
+      redis.call('ZADD', key_inactive, priority, jobId)
+      jobDetails['state'] = 'inactive'
+    end
+
+    fantastiq.setJobDetails(key_jobDetails, jobId, jobDetails)
+  end
 end
 
 return jobIds

@@ -61,17 +61,22 @@ describe('Queue.addN', function () {
   it('shouldn\'t add duplicate jobs when unique is configured', function () {
     return queue.config({ unique: true })
       .then(function () {
-        return queue.addN([1, 2, 1]);
+        return queue.addN([1, 2, 1, 1, 1]);
       })
       .then(function (ids) {
+        assert.notStrictEqual(ids[0], ids[1]);
         assert.strictEqual(ids[0], ids[2]);
-        assert.lengthOf(ids, 3);
+        assert.strictEqual(ids[0], ids[3]);
+        assert.strictEqual(ids[0], ids[4]);
+        assert.lengthOf(ids, 5);
         return queue.getN(ids);
       })
       .then(function (jobs) {
         assert.propertyVal(jobs[0], 'data', 1);
         assert.propertyVal(jobs[1], 'data', 2);
         assert.propertyVal(jobs[2], 'data', 1);
+        assert.propertyVal(jobs[3], 'data', 1);
+        assert.propertyVal(jobs[4], 'data', 1);
         return queue.stat();
       })
       .then(function (stats) {

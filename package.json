@@ -5,7 +5,7 @@
   "main": "lib",
   "scripts": {
     "test": "mocha ./test/.setupBabel.js ./test",
-    "test-b2d": "REDIS_HOST=192.168.59.103 npm test",
+    "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
     "toc": "doctoc --notitle ./README.md",
     "lint": "eslint .",
     "travis-test": "npm run lint && npm test"
