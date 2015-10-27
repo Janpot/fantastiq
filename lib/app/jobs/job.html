@@ -15,6 +15,9 @@
         <div flex>
           <span class="md-body-2">Priority:</span> {{::job.props.priority}}
         </div>
+        <div flex>
+          <span class="md-body-2">Attempts:</span> {{::job.props.attempts}}
+        </div>
         <div flex><span class="md-body-2">Data:</span></div>
         <hljs flex code="::job.jsonProperty('data')" format="json"></hljs>
         <div flex><span class="md-body-2">Result:</span></div>
