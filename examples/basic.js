@@ -7,7 +7,7 @@ var redis = require('then-redis');
 var Promise = require('bluebird');
 
 var client = redis.createClient({
-  host: '192.168.59.103',
+  host: '192.168.99.100',
   port: 6379
 });
 
@@ -31,8 +31,6 @@ app.listen(3000, function (err) {
   console.log('listening on port 3000');
 });
 
-
-
 function startQueueProducer(speed) {
   (function tick() {
     queue.add(faker.internet.email()).catch(function (err) {
@@ -47,7 +45,7 @@ queue.config({
 });
 
 queue.process(function (job) {
-  // console.log('processing...', job.to);
+  console.log('processing...', job);
   return Promise.delay(Math.random() * 1000)
     .then(function () {
       if (Math.random() < 0.01) {
