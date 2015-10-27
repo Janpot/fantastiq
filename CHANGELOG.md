@@ -1,3 +1,17 @@
+# Changelog
+
+## 0.5.3
+
+ - Fix issue where duplicates make `addN` stop adding values
+
+## 0.5.2
+
+ - Fix worker not passing data
+
+## 0.5.1
+
+ - Fix crash when randomly retrieving from empty queue
+
 ## 0.5.0
 
   - Add `unique` option to ignore duplicate jobs.
