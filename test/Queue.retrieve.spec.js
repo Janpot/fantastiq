@@ -1,20 +1,21 @@
 'use strict';
 
-var redis = require('redis');
-var Queue = require('../lib/Queue');
+var queueFactory = require('./queueFactory');
 var assert = require('chai').assert;
 var Promise = require('bluebird');
 var sinon = require('sinon');
 
-describe('Queue.retrieve', function () {
+describe('Queue.retrieve @http', function () {
 
-  var client = redis.createClient({ host: process.env.REDIS_HOST });
-  var queue = new Queue('test', client);
+  var queue;
   var clock = null;
   var randomStub = null;
 
-  beforeEach(function (done) {
-    return client.flushall(done);
+  before(function () {
+    return queueFactory.create()
+      .then(function (_queue) {
+        queue = _queue;
+      });
   });
 
   afterEach(function () {
@@ -78,20 +79,22 @@ describe('Queue.retrieve', function () {
 
   it('should retrieve in the right order', function () {
     var data = [];
+    var addedJobs;
     for (var i = 0; i < 100; i++) {
       data.push(i);
     }
     return queue.addN(data)
-      .then(function () {
-        return Promise.map(data, function () {
+      .then(function (_addedJobs) {
+        addedJobs = _addedJobs;
+        return Promise.mapSeries(data, function () {
           return queue.retrieve().get('id').bind(queue).then(queue.get);
         });
       })
       .then(function (jobs) {
         var retrievedData = jobs.map(function (job) {
-          return job.data;
+          return job.id;
         });
-        assert.deepEqual(retrievedData, data);
+        assert.deepEqual(retrievedData, addedJobs);
       });
   });
 

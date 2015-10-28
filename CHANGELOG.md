@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+ - Expand REST API.
+ - Make QueueClient REST client.
+
 ## 1.0.2
 
  - Clean up error display in UI

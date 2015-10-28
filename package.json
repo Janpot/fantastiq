@@ -4,7 +4,9 @@
   "description": "Job queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
-    "test": "mocha ./test/.setupBabel.js ./test",
+    "server-test": "mocha ./test/.setupBabel.js ./test",
+    "client-test": "HTTP_CLIENT=1 mocha -g @http ./test/.setupBabel.js ./test",
+    "test": "npm run server-test && npm run client-test",
     "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
     "toc": "doctoc --notitle ./README.md",
     "lint": "eslint .",
@@ -40,6 +42,7 @@
     "express": "^4.12.3",
     "passkey": "^2.0.0",
     "redis-info": "^3.0.6",
+    "request-promise": "^1.0.2",
     "then-redis-scripts": "^2.0.0"
   },
   "repository": {

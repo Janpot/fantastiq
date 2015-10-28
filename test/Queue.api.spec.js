@@ -1,22 +1,21 @@
 'use strict';
 
-var redis = require('redis');
-var Queue = require('../lib/Queue');
+var queueFactory = require('./queueFactory');
 var assert = require('chai').assert;
 var request = require('supertest-as-promised');
 var express = require('express');
 
 describe('Queue.api', function () {
 
-  var client = redis.createClient({
-    host: process.env.REDIS_HOST
-  });
-  var queue = new Queue('test', client);
+  var queue;
   var app = express();
-  app.use('/api', queue.api());
 
-  beforeEach(function (done) {
-    return client.flushall(done);
+  before(function () {
+    return queueFactory.create()
+      .then(function (_queue) {
+        queue = _queue;
+        app.use('/api', queue.api());
+      });
   });
 
   it('should 404 on non-existing job', function () {
@@ -198,5 +197,96 @@ describe('Queue.api', function () {
       });
   });
 
-});
+  it('should retrieve jobs', function () {
+    return queue.add(0)
+      .then(function (id) {
+        return request(app)
+          .post('/api/retrieval')
+          .expect(200)
+          .then(function (res) {
+            assert.propertyVal(res.body, 'id', id);
+          });
+      });
+  });
 
+  it('should acknowledge a job with a result', function () {
+    return queue.add(0)
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        return request(app)
+          .delete('/api/retrieval/' + result.id)
+          .send({
+            result: 'result'
+          })
+          .expect(200)
+          .then(function (res) {
+            return queue.get(result.id);
+          });
+      })
+      .then(function (job) {
+        assert.strictEqual(job.result, 'result');
+        assert.strictEqual(job.state, 'completed');
+      });
+  });
+
+  it('should acknowledge a job with an error', function () {
+    return queue.add(0)
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        return request(app)
+          .delete('/api/retrieval/' + result.id)
+          .send({
+            result: 'result',
+            error: {
+              message: 'err',
+              stack: 'stack'
+            }
+          })
+          .expect(200)
+          .then(function (res) {
+            return queue.get(result.id);
+          });
+      })
+      .then(function (job) {
+        assert.notOk(job.result);
+        assert.strictEqual(job.state, 'failed');
+        assert.deepPropertyVal(job.error, 'message', 'err');
+        assert.deepPropertyVal(job.error, 'stack', 'stack');
+      });
+  });
+
+  it('should change config', function () {
+    return request(app)
+      .post('/api/config')
+      .send({
+        unique: true,
+        attempts: 3
+      })
+      .expect(200)
+      .then(function (res) {
+        assert.propertyVal(res.body, 'timeout', 30000);
+        assert.propertyVal(res.body, 'attempts', 3);
+        assert.propertyVal(res.body, 'unique', true);
+      });
+  });
+
+  it('should retrieve config', function () {
+    return queue.config({
+      timeout: 5678
+    })
+      .then(function () {
+        return request(app)
+          .get('/api/config')
+          .expect(200)
+          .then(function (res) {
+            assert.propertyVal(res.body, 'timeout', 5678);
+            assert.notOk(res.body.unique);
+          });
+      });
+  });
+
+});

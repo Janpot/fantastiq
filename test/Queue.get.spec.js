@@ -1,18 +1,17 @@
 'use strict';
 
-var redis = require('redis');
-var Queue = require('../lib/Queue');
+var queueFactory = require('./queueFactory');
 var assert = require('chai').assert;
 
-describe('Queue.get', function () {
+describe('Queue.get @http', function () {
 
-  var client = redis.createClient({
-    host: process.env.REDIS_HOST
-  });
-  var queue = new Queue('test', client);
+  var queue;
 
-  beforeEach(function (done) {
-    return client.flushall(done);
+  before(function () {
+    return queueFactory.create()
+      .then(function (_queue) {
+        queue = _queue;
+      });
   });
 
 

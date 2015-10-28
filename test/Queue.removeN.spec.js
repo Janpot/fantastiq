@@ -1,19 +1,17 @@
 'use strict';
 
-var redis = require('redis');
-var Queue = require('../lib/Queue');
+var queueFactory = require('./queueFactory');
 var assert = require('chai').assert;
 
-describe('Queue.removeN', function () {
+describe('Queue.removeN @http', function () {
 
-  var client = redis.createClient({
-    host: process.env.REDIS_HOST
-  });
-  var queue = new Queue('test', client);
+  var queue;
 
-
-  beforeEach(function (done) {
-    return client.flushall(done);
+  before(function () {
+    return queueFactory.create()
+      .then(function (_queue) {
+        queue = _queue;
+      });
   });
 
   it('should remove multiple jobs', function () {
@@ -38,7 +36,7 @@ describe('Queue.removeN', function () {
   });
 
   it('shouldn\'t count non-existing jobs', function () {
-    return queue.removeN([1, 2, 3])
+    return queue.removeN(['a', '1', 'jahsgd'])
       .then(function (count) {
         assert.strictEqual(count, 0);
       });
