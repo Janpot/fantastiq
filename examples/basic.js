@@ -3,7 +3,7 @@
 var fantastiq = require('..');
 var express = require('express');
 var faker = require('faker');
-var redis = require('then-redis');
+var redis = require('redis');
 var Promise = require('bluebird');
 
 var client = redis.createClient({

@@ -1,6 +1,6 @@
 'use strict';
 
-var redis = require('then-redis');
+var redis = require('redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
 
@@ -11,8 +11,8 @@ describe('Queue.getN', function () {
   });
   var queue = new Queue('test', client);
 
-  beforeEach(function () {
-    return client.flushall();
+  beforeEach(function (done) {
+    return client.flushall(done);
   });
 
 

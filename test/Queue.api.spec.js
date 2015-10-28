@@ -1,6 +1,6 @@
 'use strict';
 
-var redis = require('then-redis');
+var redis = require('redis');
 var Queue = require('../lib/Queue');
 var assert = require('chai').assert;
 var request = require('supertest-as-promised');
@@ -15,9 +15,9 @@ describe('Queue.api', function () {
   var app = express();
   app.use('/api', queue.api());
 
-  beforeEach(function () {
-    return client.flushall();
-});
+  beforeEach(function (done) {
+    return client.flushall(done);
+  });
 
   it('should 404 on non-existing job', function () {
     return request(app)

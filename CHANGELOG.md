@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0
+
+ - move to `redis` instead of `then-redis`
+
 ## 0.5.4
 
  - Show nr of attempts in UI.

@@ -1,6 +1,6 @@
 'use strict';
 
-var redis = require('then-redis');
+var redis = require('redis');
 var metrics = require('../lib/metrics');
 var assert = require('chai').assert;
 var sinon = require('sinon');
@@ -20,8 +20,8 @@ describe('metrics', function () {
     }
   });
 
-  beforeEach(function () {
-    return client.flushall();
+  beforeEach(function (done) {
+    return client.flushall(done);
   });
 
   it('should track values', function () {

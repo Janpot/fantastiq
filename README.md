@@ -27,7 +27,7 @@ This library contains a full set of primitives to construct your own worker (`re
 ## Usage
 
 ```js
-var redis = require('then-redis');
+var redis = require('redis');
 var fantastiq = require('fantastiq');
 
 var client = redis.createClient();
@@ -118,13 +118,13 @@ Or
 
 **Returns:** [`Queue`](#queue)
 
-Construct a queue. The passed in [then-redis](https://www.npmjs.com/package/then-redis) client will be used to connect to Redis.
+Construct a queue. The passed in [redis](https://www.npmjs.com/package/redis) client will be used to connect to Redis.
 The returned object can be used to manage the queue.
 
 Example:
 
 ```js
-var redis = require('then-redis');
+var redis = require('redis');
 var fantastiq = require('fantastiq');
 
 var client = redis.createClient();
