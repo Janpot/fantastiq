@@ -1,8 +1,14 @@
 # Changelog
 
+## 1.0.1
+
+ - Fix redis info command.
+ - Remove highlight.js.
+ - prettify links in data objects in UI.
+
 ## 1.0.0
 
- - move to `redis` instead of `then-redis`
+ - move to `redis` instead of `then-redis`.
 
 ## 0.5.4
 

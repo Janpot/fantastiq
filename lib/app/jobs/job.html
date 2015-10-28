@@ -19,11 +19,17 @@
           <span class="md-body-2">Attempts:</span> {{::job.props.attempts}}
         </div>
         <div flex><span class="md-body-2">Data:</span></div>
-        <hljs flex code="::job.jsonProperty('data')" format="json"></hljs>
+        <md-content flex>
+          <pre ng-bind-html="::job.props.data | json | linky"></pre>
+        </md-content>
         <div flex><span class="md-body-2">Result:</span></div>
-        <hljs flex code="::job.jsonProperty('result')" format="json"></hljs>
+        <md-content flex>
+          <pre ng-bind-html="::job.props.result | json | linky"></pre>
+        </md-content>
         <div flex><span class="md-body-2">Error:</span></div>
-        <hljs flex code="::job.jsonProperty('error')" format="json"></hljs>
+        <md-content flex>
+          <pre ng-bind-html="::job.props.error | json | linky"></pre>
+        </md-content>
       </div>
     </md-content>
     <div class="md-actions" layout="row">
