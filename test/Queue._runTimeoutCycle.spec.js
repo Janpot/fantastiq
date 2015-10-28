@@ -63,6 +63,7 @@ describe('Queue._runTimeoutCycle', function () {
         assert.propertyVal(job, 'state', 'failed');
         assert.instanceOf(job.error, Error);
         assert.propertyVal(job.error, 'message', 'Job timed out');
+        assert.ok(job.error.stack);
         return queue.stat();
       })
       .then(function (stats) {

@@ -17,7 +17,8 @@ var client = redis.createClient({
 var queue = fantastiq(client);
 
 queue.config({
-  removeCompletedAfter: 5 * 60 * 1000
+  removeCompletedAfter: 5 * 60 * 1000,
+  timeout: 900
 });
 
 var app = express();

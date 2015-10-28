@@ -3,6 +3,7 @@
 ## 1.0.2
 
  - Clean up error display in UI
+ - Add stacktraces for timouts.
 
 ## 1.0.1
 

@@ -7,7 +7,8 @@ local key_inactive,
       key_index = unpack(KEYS)
 
 local timestamp,
-      defaultTimeout = unpack(ARGV)
+      defaultTimeout,
+      serializedError = unpack(ARGV)
 
 timestamp = tonumber(timestamp)
 
@@ -33,7 +34,7 @@ for i, jobId in ipairs(jobIds) do
     key_index,
     timestamp,
     jobId,
-    '{\"message\":\"Job timed out\"}',
+    serializedError,
     nil -- no result
   )
 end
