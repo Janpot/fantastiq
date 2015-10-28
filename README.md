@@ -26,6 +26,8 @@ This library contains a full set of primitives to construct your own worker (`re
 
 ## Usage
 
+requires redis >= 2.8.9
+
 ```js
 var redis = require('redis');
 var fantastiq = require('fantastiq');

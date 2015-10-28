@@ -18,18 +18,26 @@
         <div flex>
           <span class="md-body-2">Attempts:</span> {{::job.props.attempts}}
         </div>
+
         <div flex><span class="md-body-2">Data:</span></div>
         <md-content flex>
           <pre ng-bind-html="::job.props.data | json | linky"></pre>
         </md-content>
-        <div flex><span class="md-body-2">Result:</span></div>
-        <md-content flex>
-          <pre ng-bind-html="::job.props.result | json | linky"></pre>
-        </md-content>
-        <div flex><span class="md-body-2">Error:</span></div>
-        <md-content flex>
-          <pre ng-bind-html="::job.props.error | json | linky"></pre>
-        </md-content>
+
+        <div ng-if="::job.props.result" flex>
+          <span class="md-body-2">Result:</span>
+          <md-content>
+            <pre ng-bind-html="::job.props.result | json | linky"></pre>
+          </md-content>
+        </div>
+
+        <div ng-if="::job.props.error" flex>
+          <span class="md-body-2">Error:</span>
+          <md-content>
+            <pre ng-if="::job.props.error.stack" ng-bind-html="::job.props.error.stack | linky"></pre>
+            <pre ng-if="::!job.props.error.stack" ng-bind-html="::job.props.error | json | linky"></pre>
+          </md-content>
+        </div>
       </div>
     </md-content>
     <div class="md-actions" layout="row">

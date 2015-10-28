@@ -6,6 +6,9 @@ var faker = require('faker');
 var redis = require('redis');
 var Promise = require('bluebird');
 
+Error.stackTraceLimit = Infinity;
+Promise.longStackTraces();
+
 var client = redis.createClient({
   host: '192.168.99.100',
   port: 6379

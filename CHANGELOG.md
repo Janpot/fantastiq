@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+ - Clean up error display in UI
+
 ## 1.0.1
 
  - Fix redis info command.
