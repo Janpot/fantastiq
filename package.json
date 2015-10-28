@@ -39,6 +39,7 @@
     "defaults": "^1.0.2",
     "express": "^4.12.3",
     "passkey": "^2.0.0",
+    "redis-info": "^3.0.6",
     "then-redis-scripts": "^2.0.0"
   },
   "repository": {
