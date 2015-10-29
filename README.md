@@ -23,6 +23,7 @@ This library contains a full set of primitives to construct your own worker (`re
 - Built-in throttling
 - Delayed jobs
 - Multiple attempts
+- CLI tool
 
 ## Usage
 
@@ -648,6 +649,11 @@ Stops this worker. This returns a promise that resolves when the worker has stop
 
 Force the worker to fetch the next item ignoring the throttle.
 
+### CLI
+
+```sh
+$ fantastiq --help
+```
 
 ## Roadmap
 
