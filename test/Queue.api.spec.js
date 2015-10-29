@@ -221,7 +221,7 @@ describe('Queue.api', function () {
             result: 'result'
           })
           .expect(200)
-          .then(function (res) {
+          .then(function () {
             return queue.get(result.id);
           });
       })
@@ -247,7 +247,7 @@ describe('Queue.api', function () {
             }
           })
           .expect(200)
-          .then(function (res) {
+          .then(function () {
             return queue.get(result.id);
           });
       })
