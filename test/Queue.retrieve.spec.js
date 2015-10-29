@@ -78,6 +78,7 @@ describe('Queue.retrieve @http', function () {
   });
 
   it('should retrieve in the right order', function () {
+    this.timeout(6000);
     var data = [];
     var addedJobs;
     for (var i = 0; i < 100; i++) {

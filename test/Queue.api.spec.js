@@ -221,8 +221,8 @@ describe('Queue.api', function () {
             result: 'result'
           })
           .expect(200)
-          .then(function () {
-            return queue.get(result.id);
+          .then(function (res) {
+            return queue.get(res.body.id);
           });
       })
       .then(function (job) {
@@ -247,8 +247,8 @@ describe('Queue.api', function () {
             }
           })
           .expect(200)
-          .then(function () {
-            return queue.get(result.id);
+          .then(function (res) {
+            return queue.get(res.body.id);
           });
       })
       .then(function (job) {
@@ -257,6 +257,19 @@ describe('Queue.api', function () {
         assert.deepPropertyVal(job.error, 'message', 'err');
         assert.deepPropertyVal(job.error, 'stack', 'stack');
       });
+  });
+
+  it.skip('should acknowledge a non-existing job with a 404', function () {
+    return request(app)
+      .delete('/api/retrieval/non-existing')
+      .send({
+        result: 'result',
+        error: {
+          message: 'err',
+          stack: 'stack'
+        }
+      })
+      .expect(404);
   });
 
   it('should change config', function () {
