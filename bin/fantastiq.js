@@ -36,9 +36,11 @@ function createQueue(connectionParams) {
 var argv = require('yargs')
   .usage('$0 <command> [options]')
   .option('r', optionRedis)
-  .command('add', 'add a job to the queue', function (yargs) {
+  .command('add', 'Add a job to the queue', function (yargs) {
     var argv = yargs
       .usage('$0 add [options]')
+      .example('$0 add -p 5 -j job-1 -j job-2')
+      .example('cat ./jobs.txt | $0 add -p="-1"')
       .option('r', optionRedis)
       .option('j', {
         alias: 'job',
@@ -112,6 +114,7 @@ var argv = require('yargs')
   .command('get', 'Get a job from the queue', function (yargs) {
     var argv = yargs
       .usage('$0 get <id>')
+      .example('$0 get 0000000000F9B')
       .string('_')
       .demand(2)
       .option('r', optionRedis)
