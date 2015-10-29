@@ -4,6 +4,7 @@
 
  - Expand REST API.
  - Make QueueClient REST client.
+ - Add basic cli tool.
 
 ## 1.0.2
 

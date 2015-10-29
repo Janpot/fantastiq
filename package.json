@@ -8,9 +8,13 @@
     "client-test": "HTTP_CLIENT=1 mocha -g @http ./test/.setupBabel.js ./test",
     "test": "npm run server-test && npm run client-test",
     "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
+    "test-b2d-server": "REDIS_HOST=192.168.99.100 npm run server-test",
     "toc": "doctoc --notitle ./README.md",
     "lint": "eslint .",
     "travis-test": "npm run lint && npm test"
+  },
+  "bin": {
+    "fantastiq": "bin/fantastiq.js"
   },
   "keywords": [
     "redis",
@@ -36,6 +40,7 @@
     "supertest-as-promised": "^2.0.1"
   },
   "dependencies": {
+    "batch-stream": "^0.1.2",
     "bluebird": "^3.0.1",
     "body-parser": "^1.12.4",
     "defaults": "^1.0.2",
@@ -43,7 +48,9 @@
     "passkey": "^2.0.0",
     "redis-info": "^3.0.6",
     "request-promise": "^1.0.2",
-    "then-redis-scripts": "^2.0.0"
+    "split": "^1.0.0",
+    "then-redis-scripts": "^2.0.0",
+    "yargs": "^3.29.0"
   },
   "repository": {
     "type": "git",

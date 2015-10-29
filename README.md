@@ -142,6 +142,21 @@ By default fantastiq will namespace its keys under `{fantastiq}:`.
 
 <hr>
 
+#### `fantastiq.client(String url)`
+
+**Returns:** [`QueueClient`](#queue)
+
+Construct a queue that operates on a REST API instead of redis.
+
+Example:
+
+```js
+var fantastiq = require('fantastiq');
+var queue = fantastiq.client('http://example.com/api')
+```
+
+<hr>
+
 #### `Queue`
 
 The queue is the main object of this library. It has all the methods to interact with the queue.
@@ -567,6 +582,19 @@ Removes a job from the queue by `jobId`. See [`.remove`](#removestring-id)
 
 Returns metrics for this queue as if returned from [`.metrics`](#metrics---promiseobject-metrics)
 
+- **`POST`** `/retrieval`
+
+Retrieve a job from the queue. See [`.retrieve`](#retrieveobject-options)
+
+- **`DELETE`** `/retrieval/:jobId`
+
+Acknowledge a retrieved job. Send an object in the body with either `result` or `error` properties.
+
+- **`GET`** `/config`
+- **`POST`** `/config`
+
+Get or set queue configuration. See [`.config`](#configobject-configuration)
+
 <hr>
 
 ##### `.ui()`
@@ -623,7 +651,6 @@ Force the worker to fetch the next item ignoring the throttle.
 
 ## Roadmap
 
-- Extending the REST API
 - Extending the UI
 - Separate worker, api and ui in different packages
 - Uniqueness by key
