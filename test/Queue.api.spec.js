@@ -259,7 +259,7 @@ describe('Queue.api', function () {
       });
   });
 
-  it.skip('should acknowledge a non-existing job with a 404', function () {
+  it('should acknowledge a non-existing job with a 404', function () {
     return request(app)
       .delete('/api/retrieval/non-existing')
       .send({
