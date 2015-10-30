@@ -45,6 +45,7 @@
     "body-parser": "^1.12.4",
     "defaults": "^1.0.2",
     "express": "^4.12.3",
+    "join-stream": "0.0.0",
     "passkey": "^2.0.0",
     "redis-info": "^3.0.6",
     "request-promise": "^1.0.2",

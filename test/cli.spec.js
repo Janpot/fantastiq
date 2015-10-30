@@ -19,7 +19,7 @@ describe('cli', function () {
   it('should add a job', function () {
     return child_process.execAsync(`fantastiq -r tcp://${process.env.REDIS_HOST}:6379 add -j job-1`)
       .spread(function (stdout, stderr) {
-        var id = stdout.trim();
+        var id = stdout;
         return queue.get(id);
       })
       .then(function (job) {
@@ -32,7 +32,7 @@ describe('cli', function () {
   it('should add a json job', function () {
     return child_process.execAsync(`fantastiq -r tcp://${process.env.REDIS_HOST}:6379 add -j '{"hello": "world"}'`)
       .spread(function (stdout, stderr) {
-        var id = stdout.trim();
+        var id = stdout;
         return queue.get(id);
       })
       .then(function (job) {
@@ -44,7 +44,7 @@ describe('cli', function () {
   it('should add multiple jobs', function () {
     return child_process.execAsync(`fantastiq -r tcp://${process.env.REDIS_HOST}:6379 add -j job-2 -j='-3' -j '{"job": 4}'`)
       .spread(function (stdout, stderr) {
-        var ids = stdout.trim().split(/\s/);
+        var ids = stdout.split(/\s/);
         return queue.getN(ids);
       })
       .spread(function (job1, job2, job3) {
@@ -60,7 +60,7 @@ describe('cli', function () {
   it('should add jobs from stdin', function () {
     return child_process.execAsync(`printf "job-5\\n{\\"job\\": 6}\\njob-7" | fantastiq -r tcp://${process.env.REDIS_HOST}:6379 add`)
       .spread(function (stdout, stderr) {
-        var ids = stdout.trim().split(/\s/);
+        var ids = stdout.split(/\s/);
         return queue.getN(ids);
       })
       .spread(function (job1, job2, job3) {
@@ -76,7 +76,7 @@ describe('cli', function () {
   it('should use batch size', function () {
     return child_process.execAsync(`printf "a\\nb\\nc\\nd\\ne" | fantastiq -r tcp://${process.env.REDIS_HOST}:6379 add -b 2`)
       .spread(function (stdout, stderr) {
-        var ids = stdout.trim().split(/\s/);
+        var ids = stdout.split(/\s/);
         return queue.getN(ids);
       })
       .then(function (jobs) {
@@ -89,7 +89,7 @@ describe('cli', function () {
   it('should add a job with priority', function () {
     return child_process.execAsync(`fantastiq -r tcp://${process.env.REDIS_HOST}:6379 add -j job-8 -p 15`)
       .spread(function (stdout, stderr) {
-        var id = stdout.trim();
+        var id = stdout;
         return queue.get(id);
       })
       .then(function (job) {

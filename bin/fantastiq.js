@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var split = require('split');
 var BatchStream = require('batch-stream');
 var stream = require('stream');
+var joinStream = require('join-stream');
 
 var redis = require('redis');
 Promise.promisifyAll(redis.RedisClient.prototype);
@@ -96,10 +97,12 @@ var argv = require('yargs')
             transform: function(jobs, encoding, next) {
               queue.addN(jobs, options)
                 .then(function (ids) {
-                  next(null, ids.join('\n') + '\n');
-                }, next);
+                  next(null, ids.join('\n'));
+                })
+                .catch(next);
             }
-          }));
+          }))
+          .pipe(joinStream('\n'));
 
         result.pipe(process.stdout);
 
