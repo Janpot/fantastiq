@@ -75,6 +75,8 @@ Or
 - [API](#api)
     - [`fantastiq(RedisClient client, [Object options])`](#fantastiqredisclient-client-object-options)
         - [Option: `String prefix`](#option-string-prefix)
+    - [`fantastiq.client(RedisClient client, [Object options])`](#fantastiqclientredisclient-client-object-options)
+    - [`fantastiq.httpClient(String url)`](#fantastiqhttpclientstring-url)
     - [`Queue`](#queue)
       - [`.config([Object configuration])`](#configobject-configuration)
         - [Option: `Number timeout`](#option-number-timeout)
@@ -93,7 +95,7 @@ Or
       - [`.remove(String id)`](#removestring-id)
       - [`.removeN(Array<String> ids)`](#removenarraystring-ids)
       - [`.retrieve([Object options])`](#retrieveobject-options)
-        - [Option: `Boolean unthrottle`](#option-boolean-unthrottle)
+        - [Option: `Boolean|String unthrottle`](#option-booleanstring-unthrottle)
         - [Option: `Boolean random`](#option-boolean-random)
       - [`.acknowledge(String id, [Error error], [dynamic result])`](#acknowledgestring-id-error-error-dynamic-result)
       - [`.range(String state, [Object options])`](#rangestring-state-object-options)
@@ -111,6 +113,7 @@ Or
       - [`.start()`](#start)
       - [`.stop()`](#stop)
       - [`.unthrottle()`](#unthrottle)
+  - [CLI](#cli)
 - [Roadmap](#roadmap)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -651,21 +654,26 @@ Screenshots:
 
 **Returns:** [`Worker`](#worker)
 
+**Returns:** `Promise<Object result>`
+
 Start the worker when it's stopped. Workers return from [`.process`](#processfunction-doworkfn-object-options---worker) in running state.
+The returned promise is resolved when the worker stops processing and contains following properties:
+
+- `Number completed`: Amount of jobs this worker has finished successfully so far.
+- `Number failed`: Amount of jobs this worker has finished with a failure so far.
 
 <hr>
 
 ##### `.stop()`
 
-**Returns:** `Promise<null>`
+**Returns:** `Promise<Object result>`
 
 Stops this worker. This returns a promise that resolves when the worker has stopped.
+The returned promise is resolved when the worker has been stopped. The returned object is the same as in [`.start`](#start).
 
 <hr>
 
 ##### `.unthrottle()`
-
-**Returns:** `null`
 
 Force the worker to fetch the next item ignoring the throttle.
 
