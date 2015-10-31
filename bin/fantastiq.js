@@ -6,7 +6,7 @@ var fantastiq = require('..');
 var Promise = require('bluebird');
 var split = require('split');
 var BatchStream = require('batch-stream');
-var stream = require('stream');
+var stream = require('readable-stream');
 var joinStream = require('join-stream');
 
 var redis = require('redis');

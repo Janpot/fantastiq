@@ -47,6 +47,7 @@
     "express": "^4.12.3",
     "join-stream": "0.0.0",
     "passkey": "^2.0.0",
+    "readable-stream": "^2.0.4",
     "redis-info": "^3.0.6",
     "request-promise": "^1.0.2",
     "split": "^1.0.0",
