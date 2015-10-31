@@ -64,7 +64,7 @@ describe('Worker', function () {
 
   it('shouldn\'t fail when workfunction throws', function () {
     var id;
-    var worker = new Worker(queue, function (job) {
+    var worker = new Worker(queue, function () {
       worker.stop();
       throw new Error('Worker error');
     });

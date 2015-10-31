@@ -1,5 +1,7 @@
 #! /usr/bin/env node
 
+'use strict';
+
 var fantastiq = require('..');
 var Promise = require('bluebird');
 var split = require('split');
@@ -36,7 +38,7 @@ function createQueue(connectionParams) {
   });
 }
 
-var argv = require('yargs')
+module.exports = require('yargs')
   .usage('$0 <command> [options]')
   .option('r', optionRedis)
   .command('add', 'Add a job to the queue', function (yargs) {
@@ -96,8 +98,8 @@ var argv = require('yargs')
           .pipe(new BatchStream({size: argv.batch}))
           .pipe(new stream.Transform({
             objectMode: true,
-            transform: function(jobs, encoding, next) {
-              queue.addN(jobs, options)
+            transform: function(jobBatch, encoding, next) {
+              queue.addN(jobBatch, options)
                 .then(function (ids) {
                   next(null, ids.join('\n'));
                 })
@@ -127,11 +129,6 @@ var argv = require('yargs')
       .argv;
 
     var id = argv._[1];
-
-    if (!id) {
-      console.log('null');
-      return;
-    }
 
     return Promise.using(createQueue(argv.redis), function (queue) {
       return queue.get(id)
