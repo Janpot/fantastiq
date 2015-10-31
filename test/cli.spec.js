@@ -2,7 +2,7 @@
 
 var Promise = require('bluebird');
 var redis = require('redis');
-var childProcess = Promise.promisifyAll(require('childProcess'), {
+var childProcess = Promise.promisifyAll(require('child_process'), {
   multiArgs: true
 });
 var assert = require('chai').assert;
