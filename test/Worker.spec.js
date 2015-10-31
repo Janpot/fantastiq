@@ -103,5 +103,23 @@ describe('Worker', function () {
       });
   });
 
+  it('should only start once', function () {
+    var stop;
+    var worker = new Worker(queue, function (job) {
+      stop = worker.stop();
+      return Promise.delay(1).then(function () {
+        return job * 2;
+      });
+    });
+    queue.addN([1, 2, 3]);
+    var start1 = worker.start();
+    var start2 = worker.start();
+    assert.strictEqual(start1, start2);
+    return start1
+      .then(function () {
+        assert.strictEqual(start1, stop);
+      });
+  });
+
 });
 
