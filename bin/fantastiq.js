@@ -11,6 +11,8 @@ var redis = require('redis');
 Promise.promisifyAll(redis.RedisClient.prototype);
 Promise.promisifyAll(redis.Multi.prototype);
 
+Promise.longStackTraces();
+
 var optionRedis = {
   alias: 'redis',
   default: 'tcp://localhost:6379',
@@ -28,9 +30,9 @@ function parseJob(raw) {
 
 function createQueue(connectionParams) {
   var client = redis.createClient(connectionParams);
-  var queue = fantastiq(client);
+  var queue = fantastiq.client(client);
   return Promise.resolve(queue).disposer(function () {
-    return client.endAsync();
+    return client.quitAsync();
   });
 }
 
@@ -51,7 +53,7 @@ var argv = require('yargs')
       .option('b', {
         alias: 'batch',
         describe: 'Batch size',
-        default: 25
+        default: 100
       })
       .option('p', {
         alias: 'priority',
@@ -87,7 +89,7 @@ var argv = require('yargs')
           });
         } else {
           // read from stdin
-          jobStream = process.stdin.pipe(split(parseJob, null));
+          jobStream = process.stdin.pipe(split(null, parseJob));
         }
 
         var result = jobStream
@@ -102,6 +104,7 @@ var argv = require('yargs')
                 .catch(next);
             }
           }))
+          .on('error', callback)
           .pipe(joinStream('\n'));
 
         result.pipe(process.stdout);

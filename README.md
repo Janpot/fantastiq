@@ -143,7 +143,24 @@ By default fantastiq will namespace its keys under `{fantastiq}:`.
 
 <hr>
 
-#### `fantastiq.client(String url)`
+#### `fantastiq.client(RedisClient client, [Object options])`
+
+**Returns:** [`Queue`](#queue)
+
+Construct a passive queue with disabled maintenance cycles.
+
+Example:
+
+```js
+var redis = require('redis');
+var fantastiq = require('fantastiq');
+var client = redis.createClient();
+var queue = fantastiq.client(client)
+```
+
+<hr>
+
+#### `fantastiq.httpClient(String url)`
 
 **Returns:** [`QueueClient`](#queue)
 
@@ -153,7 +170,7 @@ Example:
 
 ```js
 var fantastiq = require('fantastiq');
-var queue = fantastiq.client('http://example.com/api')
+var queue = fantastiq.httpClient('http://example.com/api')
 ```
 
 <hr>
