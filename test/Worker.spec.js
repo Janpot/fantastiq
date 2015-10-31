@@ -1,75 +1,106 @@
 'use strict';
 
 var Worker = require('../lib/Worker');
-var sinon = require('sinon');
 var Promise = require('bluebird');
-
-
-function mockQueue(mockJobs) {
-  var i = 0;
-  return {
-    jobs: mockJobs,
-    _getJob: function (id) {
-      return mockJobs[Number(id)];
-    },
-    retrieve: function (options) {
-      var mockJob = mockJobs[i];
-      mockJob.retrieveOptions = options;
-      mockJob.id = String(i);
-      mockJob.throttle = (mockJob.throttle === undefined) ? null : mockJob.throttle;
-      if (mockJob.retrieveErr) {
-        return Promise.reject(mockJob.retrieveErr);
-      } else {
-        i += 1;
-        return Promise.resolve(mockJob);
-      }
-    },
-    get: function (id) {
-      var mockJob = this._getJob(id);
-      mockJob.data = mockJob.data || null;
-      if (mockJob.getErr) {
-        return Promise.reject(mockJob.getErr);
-      } else {
-        return Promise.resolve(mockJob);
-      }
-    },
-    acknowledge: function (id, error, result) {
-      var mockJob = this._getJob(id);
-      mockJob.error = error;
-      mockJob.result = result;
-      if (mockJob.acknowledgeErr) {
-        return Promise.reject(mockJob.acknowledgeErr);
-      } else {
-        return Promise.resolve();
-      }
-    }
-  };
-}
+var queueFactory = require('./queueFactory');
+var assert = require('chai').assert;
 
 
 describe('Worker', function () {
 
-  var clock = null;
+  var queue;
 
   before(function () {
-    clock = sinon.useFakeTimers(0);
+    return queueFactory.create()
+      .then(function (_queue) {
+        queue = _queue;
+      });
   });
 
-  after(function () {
-    clock.restore();
-  });
+  it('should execute jobs', function () {
+    var count = 0;
+    var ids;
 
-  it('should execute a job', function () {
-    var queue = mockQueue([
-      { data: 1 }
-    ]);
-    var worker = null;
+    var worker = new Worker(queue, function (job) {
+      count += 1;
+      if (count >= 5) {
+        worker.stop();
+      }
 
-    worker = new Worker(queue, function (job) {
-      return Promise.resolve(job);
+      return Promise.delay(1).then(function () {
+        if (count % 2 === 0) {
+          throw new Error('Job failed');
+        }
+        return job * 2;
+      });
     });
-    worker.start();
 
+    Promise.delay(1).then(function () {
+      queue.addN([1, 2, 3, 4, 5, 6]).then(function (_ids) {
+        ids = _ids;
+      });
+    });
+
+    return worker.start()
+      .then(function (result) {
+        assert.propertyVal(result, 'completed', 3);
+        assert.propertyVal(result, 'failed', 2);
+        return queue.getN(ids);
+      })
+      .then(function (jobs) {
+        assert.propertyVal(jobs[0], 'state', 'completed');
+        assert.propertyVal(jobs[0], 'result', 2);
+        assert.propertyVal(jobs[1], 'state', 'failed');
+        assert.strictEqual(jobs[1].error.message, 'Job failed');
+        assert.propertyVal(jobs[2], 'state', 'completed');
+        assert.propertyVal(jobs[2], 'result', 6);
+        assert.propertyVal(jobs[3], 'state', 'failed');
+        assert.strictEqual(jobs[3].error.message, 'Job failed');
+        assert.propertyVal(jobs[4], 'state', 'completed');
+        assert.propertyVal(jobs[4], 'result', 10);
+        assert.propertyVal(jobs[5], 'state', 'inactive');
+      });
+  });
+
+  it('shouldn\'t fail when workfunction throws', function () {
+    var id;
+    var worker = new Worker(queue, function (job) {
+      worker.stop();
+      throw new Error('Worker error');
+    });
+    queue.add(1).then(function (_id) {
+      id = _id;
+    });
+    return worker.start()
+      .then(function (result) {
+        assert.propertyVal(result, 'completed', 0);
+        assert.propertyVal(result, 'failed', 1);
+        return queue.get(id);
+      })
+      .then(function (job) {
+        assert.propertyVal(job, 'state', 'failed');
+        assert.strictEqual(job.error.message, 'Worker error');
+      });
+  });
+
+  it('should restart', function () {
+    var worker = new Worker(queue, function (job) {
+      worker.stop();
+      return Promise.delay(1).then(function () {
+        return job * 2;
+      });
+    });
+    queue.addN([1, 2, 3]);
+    return worker.start()
+      .then(function (result) {
+        assert.propertyVal(result, 'completed', 1);
+        assert.propertyVal(result, 'failed', 0);
+        return worker.start();
+      })
+      .then(function (result) {
+        assert.propertyVal(result, 'completed', 2);
+        assert.propertyVal(result, 'failed', 0);
+      });
   });
 
 });
