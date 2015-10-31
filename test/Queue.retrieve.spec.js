@@ -214,13 +214,23 @@ describe('Queue.retrieve @http', function () {
         assert.propertyVal(result, 'id', ids[1]);
         assert.propertyVal(result, 'wait', 10000);
         clock.tick(5000);
-        return queue.retrieve({ unthrottle: 'true-like' });
+        return queue.retrieve({ unthrottle: 'not-the-id' });
+      })
+      .then(function (result) {
+        assert.isNull(result.id);
+        assert.propertyVal(result, 'wait', 5000);
+        return queue.retrieve({ unthrottle: ids[1] });
       })
       .then(function (result) {
         assert.propertyVal(result, 'id', ids[2]);
         assert.propertyVal(result, 'wait', 10000);
         clock.tick(5500);
         return queue.retrieve({ unthrottle: false });
+      })
+      .then(function (result) {
+        assert.isNull(result.id);
+        assert.propertyVal(result, 'wait', 4500);
+        return queue.retrieve({ unthrottle: undefined });
       })
       .then(function (result) {
         assert.isNull(result.id);

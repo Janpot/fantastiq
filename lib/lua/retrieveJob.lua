@@ -2,6 +2,7 @@ local key_inactive,
       key_active,
       key_config,
       key_lastRetrieve,
+      key_lastRetrieveId,
       key_jobDetails = unpack(KEYS)
 
 local timestamp,
@@ -10,10 +11,17 @@ local timestamp,
 
 timestamp = tonumber(timestamp)
 random = tonumber(random)
+unthrottle = cjson.decode(unthrottle)
 
-
-if unthrottle == 'true' then
-  redis.call('DEL', key_lastRetrieve)
+if unthrottle then
+  if type(unthrottle) == 'string' then
+    local lastRetrieveId = redis.call('GET', key_lastRetrieveId)
+    if unthrottle == lastRetrieveId then
+      redis.call('DEL', key_lastRetrieve)
+    end
+  else
+    redis.call('DEL', key_lastRetrieve)
+  end
 end
 
 local throttleTime = tonumber(redis.call('HGET', key_config, 'throttle'))
@@ -61,6 +69,7 @@ if jobId then
 
   -- an item was retrieved so prepare throttle for the next
   redis.call('SET', key_lastRetrieve, timestamp)
+  redis.call('SET', key_lastRetrieveId, jobId)
 else
   waitTime = 0
 end

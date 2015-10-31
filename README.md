@@ -401,9 +401,12 @@ queue.retrieve()
   })
 ```
 
-###### Option: `Boolean unthrottle`
+###### Option: `Boolean|String unthrottle`
 
 Set this to `true` if you want to reset the throttle and activate a job regardless.
+
+Set this to the id of a retrieved job to reset the throttle only if it was initiated by that job.
+This is useful if the job took longer to process than the throttle.
 
 Example:
 

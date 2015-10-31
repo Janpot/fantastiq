@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+ - Make throttle only unthrottle current job.
+ - BREAKING: rename `.client()` to `.httpClient()`
+
 ## 1.1.0
 
  - Expand REST API.
@@ -9,7 +14,7 @@
 ## 1.0.2
 
  - Clean up error display in UI
- - Add stacktraces for timouts.
+ - Add stacktraces for timeouts.
 
 ## 1.0.1
 
