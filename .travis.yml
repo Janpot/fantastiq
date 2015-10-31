@@ -8,7 +8,7 @@ node_js:
   - '4.1'
 services:
   - redis-server
-script: npm run travis-test
+script: npm link && npm run travis-test
 cache:
   directories:
     - node_modules
