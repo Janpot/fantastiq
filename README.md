@@ -85,7 +85,7 @@ Or
         - [Option: `Number throttle`](#option-number-throttle)
         - [Option: `Number attempts`](#option-number-attempts)
         - [Option: `Number backoff`](#option-number-backoff)
-        - [Option: `Boolean unique`](#option-boolean-unique)
+        - [Option: `Boolean|String unique`](#option-booleanstring-unique)
       - [`.add(dynamic job, [Object options])`](#adddynamic-job-object-options)
         - [Option: `Number priority`](#option-number-priority)
         - [Option: `Number runAt`](#option-number-runat)
@@ -236,9 +236,10 @@ Number of times a job has to be retried when it fails. After failing a job will 
 
 Time in milliseconds a job has to be delayed before attempting to execute it again.
 
-###### Option: `Boolean unique`
+###### Option: `Boolean|String unique`
 
 Only allow unique jobs to be added to the queue.
+When `unique` is of type `String`, the value under `data` with that key is considered as the priary key for uniqueness.
 
 <hr>
 
@@ -687,4 +688,3 @@ $ fantastiq --help
 
 - Extending the UI
 - Separate worker, api and ui in different packages
-- Uniqueness by key

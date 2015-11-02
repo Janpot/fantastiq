@@ -41,7 +41,10 @@ describe('Queue.addN @http', function () {
   });
 
   it('should add multiple jobs with the same data', function () {
-    return queue.addN([1, 1, 1], { unique: false })
+    return queue.config({ unique: false })
+      .then(function () {
+        return queue.addN([1, 1, 1]);
+      })
       .then(function (ids) {
         assert.lengthOf(ids, 3);
         return queue.getN(ids);
@@ -80,6 +83,83 @@ describe('Queue.addN @http', function () {
       })
       .then(function (stats) {
         assert.propertyVal(stats, 'inactiveCount', 2);
+      });
+  });
+
+  it('shouldn\'t add duplicate jobs when unique by key is configured', function () {
+    var ids1;
+    return queue.config({ unique: 'key' })
+      .then(function () {
+        return queue.addN([
+          { key: '1', x: 'a' },
+          { key: '2', x: 'b' },
+          { key: 1, x: 'c' },
+          { key: '1', x: 'd' },
+          { key: '3', x: 'e' },
+          { key: '2', x: 'f' }
+        ]);
+      })
+      .then(function (ids) {
+        ids1 = ids;
+        assert.lengthOf(ids, 6);
+        assert.notStrictEqual(ids[0], ids[1]);
+        assert.strictEqual(ids[0], ids[2]);
+        assert.strictEqual(ids[0], ids[3]);
+        assert.notStrictEqual(ids[0], ids[4]);
+        assert.notStrictEqual(ids[1], ids[4]);
+        assert.strictEqual(ids[1], ids[5]);
+        return queue.addN([{ key: '1', x: 'g' }]);
+      })
+      .then(function (ids2) {
+        assert.strictEqual(ids1[0], ids2[0]);
+        return queue.getN(ids1);
+      })
+      .then(function (jobs) {
+        assert.propertyVal(jobs[0].data, 'x', 'a');
+        assert.propertyVal(jobs[1].data, 'x', 'b');
+        assert.propertyVal(jobs[2].data, 'x', 'a');
+        assert.propertyVal(jobs[3].data, 'x', 'a');
+        assert.propertyVal(jobs[4].data, 'x', 'e');
+        assert.propertyVal(jobs[5].data, 'x', 'b');
+      });
+  });
+
+  it('shouldn\'t fail unique on bad values', function () {
+    return queue.config({ unique: 'key' })
+      .then(function () {
+        return queue.addN([
+          { x: 1 },
+          { x: 1, key: 2 },
+          { x: 1, key: {} },
+          { x: 1, key: { y: 3 } },
+          { key: false },
+          5,
+          0,
+          null,
+          [],
+          'job'
+        ]);
+      })
+      .then(function (ids) {
+        ids.forEach(function (thisId) {
+          var count = ids.filter(function (id) {
+            return id === thisId;
+          }).length;
+          assert.strictEqual(count, 1);
+        });
+        return queue.getN(ids);
+      })
+      .then(function (jobs) {
+        assert.deepEqual(jobs[0].data, { x: 1 });
+        assert.deepEqual(jobs[1].data, { x: 1, key: 2 });
+        assert.deepEqual(jobs[2].data, { x: 1, key: {} });
+        assert.deepEqual(jobs[3].data, { x: 1, key: { y: 3 } });
+        assert.deepEqual(jobs[4].data, { key: false });
+        assert.deepEqual(jobs[5].data, 5);
+        assert.deepEqual(jobs[6].data, 0);
+        assert.deepEqual(jobs[7].data, null);
+        assert.deepEqual(jobs[8].data, []);
+        assert.deepEqual(jobs[9].data, 'job');
       });
   });
 

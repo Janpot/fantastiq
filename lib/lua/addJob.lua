@@ -20,10 +20,23 @@ if unique then unique = cjson.decode(unique) end
 local jobIds = {}
 for i, jobData in ipairs(jobDatas) do
 
-  local uniqueId = jobData
+  local uniqueId
   local existing
 
   if unique then
+    if type(unique) == 'string' then
+      local parsed = cjson.decode(jobData)
+      if type(parsed) == 'table' then
+        local keyType = type(parsed[unique])
+        if keyType == 'string' or keyType == 'number' or keyType == 'boolean' then
+          uniqueId = tostring(parsed[unique])
+        end
+      end
+    end
+
+    if not uniqueId then
+      uniqueId = jobData
+    end
     existing = redis.call('HGET', key_index, uniqueId)
   end
 
@@ -33,7 +46,10 @@ for i, jobData in ipairs(jobDatas) do
     local nextId = redis.call('INCR', key_nextId)
     local jobId = string.format('%013X', nextId)
 
-    redis.call('HSET', key_index, uniqueId, jobId)
+    if uniqueId then
+      redis.call('HSET', key_index, uniqueId, jobId)
+    end
+
     jobIds[i] = jobId
 
     local jobDetails = {
@@ -41,7 +57,8 @@ for i, jobData in ipairs(jobDatas) do
       priority = priority,
       data = jobData,
       created = timestamp,
-      attempts = 0
+      attempts = 0,
+      key = uniqueId
     }
 
     if runAt > timestamp then

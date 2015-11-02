@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+ - Add uniqueness by key
+
 ## 1.2.0
 
  - Make throttle only unthrottle current job.
