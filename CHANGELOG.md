@@ -2,7 +2,7 @@
 
 ## 1.3.0
 
- - Add uniqueness by key
+ - Add uniqueness by key.
 
 ## 1.2.0
 

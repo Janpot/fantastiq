@@ -62,6 +62,7 @@ describe('Queue.api', function () {
   it('should add a job', function () {
     return request(app)
       .post('/api/jobs')
+      .set('content-type', 'application/json')
       .send('"job"')
       .expect(200)
       .then(function (res) {
@@ -299,6 +300,21 @@ describe('Queue.api', function () {
             assert.propertyVal(res.body, 'timeout', 5678);
             assert.notOk(res.body.unique);
           });
+      });
+  });
+
+  it('should add multiple jobs', function () {
+    return request(app)
+      .post('/api/jobs')
+      .set('content-type', 'application/x-ldjson')
+      .send('"job-1"\n"job-2"\n{"job": 3}')
+      .expect(200)
+      .then(function (res) {
+        assert.deepEqual(res.body.map(function (job) { return job.data; }), [
+          'job-1',
+          'job-2',
+          {job: 3}
+        ]);
       });
   });
 

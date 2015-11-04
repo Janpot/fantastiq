@@ -240,6 +240,7 @@ Time in milliseconds a job has to be delayed before attempting to execute it aga
 
 Only allow unique jobs to be added to the queue.
 When `unique` is of type `String`, the value under `data` with that key is considered as the priary key for uniqueness.
+Adding jobs that don't contain this key or that don't have a string value for this key will result in an error.
 
 <hr>
 
@@ -294,6 +295,8 @@ queue.addN([
     console.log(ids);
   });
 ```
+
+When uniqueness by key is configured and one of the jobs contains an invalid key, none of the jobs are added.
 
 <hr>
 

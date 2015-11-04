@@ -9,6 +9,7 @@
     "test": "npm run server-test && npm run client-test",
     "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
     "test-b2d-server": "REDIS_HOST=192.168.99.100 npm run server-test",
+    "test-b2d-client": "REDIS_HOST=192.168.99.100 npm run client-test",
     "toc": "doctoc --notitle ./README.md",
     "lint": "eslint .",
     "travis-test": "npm run lint && npm test"

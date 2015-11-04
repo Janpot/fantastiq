@@ -24,6 +24,10 @@ describe('metrics', function () {
     return client.flushall(done);
   });
 
+  after(function (done) {
+    return client.quit(done);
+  });
+
   it('should track values', function () {
     clock = sinon.useFakeTimers(1000);
     return tracker.track('test', 1)

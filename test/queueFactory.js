@@ -14,6 +14,10 @@ beforeEach(function (done) {
   return client.flushall(done);
 });
 
+after(function (done) {
+  return client.quit(done);
+});
+
 function create() {
   var queue = new Queue('test', client);
   if (process.env.HTTP_CLIENT) {

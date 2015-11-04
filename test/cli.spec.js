@@ -16,7 +16,11 @@ describe('cli', function () {
   var client = redis.createClient({
     host: REDIS_HOST
   });
-  var queue = fantastiq(client);
+  var queue = fantastiq.client(client);
+
+  after(function (done) {
+    return client.quit(done);
+  });
 
   it('should add a job', function () {
     return childProcess.execAsync(`fantastiq -r tcp://${REDIS_HOST}:6379 add -j job-1`)
