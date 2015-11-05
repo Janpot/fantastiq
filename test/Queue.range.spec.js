@@ -4,7 +4,7 @@ var queueFactory = require('./queueFactory');
 var assert = require('chai').assert;
 var util = require('./util');
 
-describe('Queue.range', function () {
+describe('Queue.range @http', function () {
 
   var queue;
 

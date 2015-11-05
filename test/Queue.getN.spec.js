@@ -37,5 +37,25 @@ describe('Queue.getN @http', function () {
       });
   });
 
+  it('should preserve errors', function () {
+    return queue.add(1)
+      .then(function () {
+        return queue.retrieve();
+      })
+      .then(function (result) {
+        var error = new Error('Job error');
+        error.stack = 'Error stacktrace';
+        return queue.acknowledge(result.id, error);
+      })
+      .then(function (id) {
+        return queue.getN([id]);
+      })
+      .then(function (jobs) {
+        assert.instanceOf(jobs[0].error, Error);
+        assert.propertyVal(jobs[0].error, 'message', 'Job error');
+        assert.propertyVal(jobs[0].error, 'stack', 'Error stacktrace');
+      });
+  });
+
 });
 

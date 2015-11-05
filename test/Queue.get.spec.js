@@ -14,7 +14,6 @@ describe('Queue.get @http', function () {
       });
   });
 
-
   it('should return a job', function () {
     return queue.addN([0, 1, 2, 3, 4])
       .then(function (ids) {
