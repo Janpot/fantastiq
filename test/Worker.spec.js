@@ -2,19 +2,23 @@
 
 var Worker = require('../lib/Worker');
 var Promise = require('bluebird');
-var queueFactory = require('./queueFactory');
 var assert = require('chai').assert;
-
+var redis = require('redis');
+var Queue = require('../lib/Queue');
 
 describe('Worker', function () {
 
-  var queue;
+  var client = redis.createClient({
+    host: process.env.REDIS_HOST
+  });
+  var queue = new Queue('test', client);
 
-  before(function () {
-    return queueFactory.create()
-      .then(function (_queue) {
-        queue = _queue;
-      });
+  beforeEach(function (done) {
+    return client.flushall(done);
+  });
+
+  after(function (done) {
+    return client.quit(done);
   });
 
   it('should execute jobs', function () {

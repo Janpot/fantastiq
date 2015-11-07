@@ -1,72 +1,64 @@
 'use strict';
 
-var queueFactory = require('./queueFactory');
 var assert = require('chai').assert;
 var sinon = require('sinon');
 
-describe('Queue._runDelayedCycle', function () {
+module.exports = function (queue) {
+  return function () {
 
-  var queue;
-  var clock = null;
+    var clock = null;
 
-  before(function () {
-    return queueFactory.create()
-      .then(function (_queue) {
-        queue = _queue;
-      });
-  });
+    afterEach(function () {
+      if (clock) {
+        clock.restore();
+        clock = null;
+      }
+    });
 
-  afterEach(function () {
-    if (clock) {
-      clock.restore();
-      clock = null;
-    }
-  });
+    it('should move delayed jobs when delay expires', async function () {
+      var now = Date.now();
+      clock = sinon.useFakeTimers(now);
+      var id = await queue.add(1, { runAt: now + 1000 });
 
-  it('should move delayed jobs when delay expires', async function () {
-    var now = Date.now();
-    clock = sinon.useFakeTimers(now);
-    var id = await queue.add(1, { runAt: now + 1000 });
+      clock.tick(999);
+      var activatedCount = await queue._runDelayedCycle();
+      assert.strictEqual(activatedCount, 0);
 
-    clock.tick(999);
-    var activatedCount = await queue._runDelayedCycle();
-    assert.strictEqual(activatedCount, 0);
+      var job = await queue.get(id);
+      assert.propertyVal(job, 'state', 'delayed');
 
-    var job = await queue.get(id);
-    assert.propertyVal(job, 'state', 'delayed');
+      var stats = await queue.stat();
+      assert.propertyVal(stats, 'totalCount', 1);
+      assert.propertyVal(stats, 'delayedCount', 1);
 
-    var stats = await queue.stat();
-    assert.propertyVal(stats, 'totalCount', 1);
-    assert.propertyVal(stats, 'delayedCount', 1);
+      var retrieval = await queue.retrieve();
+      assert.isNull(retrieval.id);
 
-    var retrieval = await queue.retrieve();
-    assert.isNull(retrieval.id);
+      clock.tick(2);
+      activatedCount = await queue._runDelayedCycle();
+      assert.strictEqual(activatedCount, 1);
 
-    clock.tick(2);
-    activatedCount = await queue._runDelayedCycle();
-    assert.strictEqual(activatedCount, 1);
+      job = await queue.get(id);
+      assert.propertyVal(job, 'state', 'inactive');
 
-    job = await queue.get(id);
-    assert.propertyVal(job, 'state', 'inactive');
+      retrieval = await queue.retrieve();
+      assert.propertyVal(retrieval, 'id', id);
+    });
 
-    retrieval = await queue.retrieve();
-    assert.propertyVal(retrieval, 'id', id);
-  });
+    it('should preserve priority', async function () {
+      var now = Date.now();
+      clock = sinon.useFakeTimers(now);
+      var id1 = await queue.add(1, { priority: 10, runAt: now + 1000 });
+      var id2 = await queue.add(1, { priority: 0, runAt: now + 1000 });
 
-  it('should preserve priority', async function () {
-    var now = Date.now();
-    clock = sinon.useFakeTimers(now);
-    var id1 = await queue.add(1, { priority: 10, runAt: now + 1000 });
-    var id2 = await queue.add(1, { priority: 0, runAt: now + 1000 });
+      clock.tick(1001);
+      await queue._runDelayedCycle();
 
-    clock.tick(1001);
-    await queue._runDelayedCycle();
+      var retrieval = await queue.retrieve();
+      assert.propertyVal(retrieval, 'id', id2);
 
-    var retrieval = await queue.retrieve();
-    assert.propertyVal(retrieval, 'id', id2);
-
-    retrieval = await queue.retrieve();
-    assert.propertyVal(retrieval, 'id', id1);
-  });
-
-});
+      retrieval = await queue.retrieve();
+      assert.propertyVal(retrieval, 'id', id1);
+    });
+  };
+};

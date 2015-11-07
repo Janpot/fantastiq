@@ -4,15 +4,14 @@
   "description": "Job queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
-    "server-test": "mocha ./test/.setupBabel.js ./test",
-    "client-test": "HTTP_CLIENT=1 mocha -g @http ./test/.setupBabel.js ./test",
-    "test": "npm run server-test && npm run client-test",
+    "test": "mocha ./test/.setupBabel.js ./test",
     "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
-    "test-b2d-server": "REDIS_HOST=192.168.99.100 npm run server-test",
-    "test-b2d-client": "REDIS_HOST=192.168.99.100 npm run client-test",
     "toc": "doctoc --notitle ./README.md",
-    "lint": "eslint .",
-    "travis-test": "npm run lint && npm test"
+    "lint": "eslint --ignore-pattern ./lib/app/bundle.js .",
+    "travis-test": "npm run lint && npm test",
+    "prepublish": "npm run build",
+    "build": "browserify lib/app/main.js -o lib/app/bundle.js",
+    "watch:build": "watchify lib/app/main.js -o lib/app/bundle.js --verbose"
   },
   "bin": {
     "fantastiq": "bin/fantastiq.js"
@@ -30,6 +29,7 @@
   "devDependencies": {
     "babel": "^5.6.14",
     "babel-eslint": "^3.1.19",
+    "browserify": "^12.0.1",
     "chai": "^3.0.0",
     "doctoc": "^0.14.0",
     "eslint": "^0.24.0",
@@ -37,20 +37,20 @@
     "mocha": "^2.2.5",
     "redis": "^2.2.5",
     "sinon": "^1.14.1",
-    "supertest": "^1.0.1",
-    "supertest-as-promised": "^2.0.1"
+    "supertest": "^1.1.0",
+    "supertest-as-promised": "^2.0.1",
+    "watchify": "^3.6.0"
   },
   "dependencies": {
     "batch-stream": "^0.1.2",
     "bluebird": "^3.0.1",
     "body-parser": "^1.12.4",
-    "defaults": "^1.0.2",
     "express": "^4.12.3",
+    "extend": "^3.0.0",
     "join-stream": "0.0.0",
     "passkey": "^2.0.0",
     "readable-stream": "^2.0.4",
     "redis-info": "^3.0.6",
-    "request-promise": "^1.0.2",
     "split": "^1.0.0",
     "then-redis-scripts": "^2.0.0",
     "yargs": "^3.29.0"
