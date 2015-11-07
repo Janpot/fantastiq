@@ -14,6 +14,7 @@ module.exports = function (queue) {
           assert.notOk(config.attempts);
           assert.notOk(config.backoff);
           assert.notOk(config.unique);
+          assert.notOk(config.uniqueKey);
         });
     });
 
@@ -22,6 +23,16 @@ module.exports = function (queue) {
     });
 
     it('should set a configuration', function () {
+      function assertConfig(config) {
+        assert.propertyVal(config, 'timeout', 1);
+        assert.propertyVal(config, 'removeFailedAfter', 2);
+        assert.propertyVal(config, 'removeCompletedAfter', 3);
+        assert.propertyVal(config, 'throttle', 4);
+        assert.propertyVal(config, 'attempts', 5);
+        assert.propertyVal(config, 'backoff', 6);
+        assert.propertyVal(config, 'unique', true);
+        assert.propertyVal(config, 'uniqueKey', 'some-key');
+      }
       return queue.config({
         timeout: 1,
         removeFailedAfter: 2,
@@ -29,17 +40,14 @@ module.exports = function (queue) {
         throttle: 4,
         attempts: 5,
         backoff: 6,
-        unique: true
+        unique: true,
+        uniqueKey: 'some-key'
       })
-        .then(function (config) {
-          assert.propertyVal(config, 'timeout', 1);
-          assert.propertyVal(config, 'removeFailedAfter', 2);
-          assert.propertyVal(config, 'removeCompletedAfter', 3);
-          assert.propertyVal(config, 'throttle', 4);
-          assert.propertyVal(config, 'attempts', 5);
-          assert.propertyVal(config, 'backoff', 6);
-          assert.propertyVal(config, 'unique', true);
-        });
+        .then(assertConfig)
+        .then(function () {
+          return queue.config();
+        })
+        .then(assertConfig);
     });
   };
 };

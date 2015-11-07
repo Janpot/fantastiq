@@ -1,52 +1,63 @@
-<md-dialog>
-  <md-dialog-content layout="column">
-    <md-content>
-      <div layout="column" layout-margin>
-        <div flex><span class="md-body-2">Job id:</span> {{::job.props.id}}</div>
-        <div flex ng-show="job.props.created">
-          <span class="md-body-2">Created:</span> {{::job.props.created | date:'medium'}}
-        </div>
-        <div flex ng-show="job.props.started">
-          <span class="md-body-2">Started:</span> {{::job.props.started | date:'medium'}}
-        </div>
-        <div flex ng-show="job.props.finished">
-          <span class="md-body-2">Finished:</span> {{::job.props.finished | date:'medium'}}
-        </div>
-        <div flex>
-          <span class="md-body-2">Priority:</span> {{::job.props.priority}}
-        </div>
-        <div flex>
-          <span class="md-body-2">Attempts:</span> {{::job.props.attempts}}
-        </div>
-
-        <div flex><span class="md-body-2">Data:</span></div>
-        <md-content flex>
-          <pre ng-bind-html="::job.props.data | json | linky"></pre>
-        </md-content>
-
-        <div ng-if="::job.props.result" flex>
-          <span class="md-body-2">Result:</span>
-          <md-content>
-            <pre ng-bind-html="::job.props.result | json | linky"></pre>
-          </md-content>
-        </div>
-
-        <div ng-if="::job.props.error" flex>
-          <span class="md-body-2">Error:</span>
-          <md-content>
-            <pre ng-if="::job.props.error.stack" ng-bind-html="::job.props.error.stack | linky"></pre>
-            <pre ng-if="::!job.props.error.stack" ng-bind-html="::job.props.error | json | linky"></pre>
-          </md-content>
-        </div>
-      </div>
-    </md-content>
-    <div class="md-actions" layout="row">
-      <md-button ng-click="job.remove()" class="md-warn">
-        Remove
-      </md-button>
-      <md-button ng-click="job.close()">
-        Close
+<md-dialog flex>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Job: {{::job.props.id}}</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="job.close()">
+        <md-icon>close</md-icon>
       </md-button>
     </div>
+  </md-toolbar>
+  <md-dialog-content layout="column" layout-gt-md="row" layout-padding>
+    <div layout="column">
+      <div ng-show="job.props.created">
+        <span class="md-body-2">Created:</span>
+        <span>{{::job.props.created | date:'medium'}}</span>
+      </div>
+      <div ng-show="job.props.started">
+        <span class="md-body-2">Started:</span>
+        <span>{{::job.props.started | date:'medium'}}</span>
+      </div>
+      <div ng-show="job.props.finished">
+        <span class="md-body-2">Finished:</span>
+        <span>{{::job.props.finished | date:'medium'}}</span>
+      </div>
+      <div>
+        <span class="md-body-2">Priority:</span>
+        <span>{{::job.props.priority}}</span>
+      </div>
+      <div>
+        <span class="md-body-2">Attempts:</span>
+        <span>{{::job.props.attempts}}</span>
+      </div>
+    </div>
+    <div layout="column" flex >
+      <div>
+        <span class="md-body-2">Data:</span>
+        <md-content>
+          <pre ng-bind-html="::job.props.data | json | linky"></pre>
+        </md-content>
+      </div>
+
+      <div ng-if="::job.props.result">
+        <span class="md-body-2">Result:</span>
+        <md-content>
+          <pre ng-bind-html="::job.props.result | json | linky"></pre>
+        </md-content>
+      </div>
+
+      <div ng-if="::job.props.error">
+        <span class="md-body-2">Error:</span>
+        <md-content>
+          <pre ng-if="::job.props.error.stack" ng-bind-html="::job.props.error.stack | linky"></pre>
+          <pre ng-if="::!job.props.error.stack" ng-bind-html="::job.props.error | json | linky"></pre>
+        </md-content>
+      </div>
+    </div>
   </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <md-button ng-click="job.remove()" class="md-warn">
+      Remove
+    </md-button>
+  </md-dialog-actions>
 </md-dialog>

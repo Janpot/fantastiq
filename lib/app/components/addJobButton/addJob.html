@@ -1,0 +1,29 @@
+<md-dialog flex>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Add job</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="addJob.close()">
+        <md-icon>close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content layout-padding>
+    <form layout="column">
+      <md-input-container>
+        <md-icon>create</md-icon>
+        <textarea md-autofocus ng-model="addJob.data" columns="1" placeholder="Job data"></textarea>
+      </md-input-container>
+
+      <md-input-container flex>
+        <md-icon>announcement</md-icon>
+        <input ng-model="addJob.options.priority" type="number" step="1" placeholder="Priority">
+      </md-input-container>
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <md-button class="md-primary" ng-click="addJob.apply()">
+      Add
+    </md-button>
+  </md-dialog-actions>
+</md-dialog>

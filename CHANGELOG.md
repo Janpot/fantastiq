@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0
+
+ - Use separate config value `uniqueKey`.
+ - Add config dialog.
+ - Make better job details dialog.
+ - Add 'add job' dialog
+ - Use `resolve` in router for better UX.
+
 ## 1.3.0
 
  - Add uniqueness by key.

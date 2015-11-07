@@ -42,6 +42,14 @@ local fantastiq = (function ()
   end
 
 
+  function exports.getConfig(key_config, key)
+    local value = redis.call('HGET', key_config, key)
+    if not value then
+      return value
+    end
+    return cjson.decode(value)
+  end
+
 
   function exports.acknowledge(
     key_inactive, key_active, key_failed, key_completed, key_delayed,
@@ -57,11 +65,11 @@ local fantastiq = (function ()
         jobDetails['finished'] = timestamp
         redis.call('HDEL', key_index, jobDetails['data'])
       else
-        local allowedAttempts = tonumber(redis.call('HGET', key_config, 'attempts')) or 1
+        local allowedAttempts = exports.getConfig(key_config, 'attempts') or 1
 
         local jobAttempts = jobDetails['attempts']
         if jobAttempts < allowedAttempts then
-          local backoff = tonumber(redis.call('HGET', key_config, 'backoff'))
+          local backoff = exports.getConfig(key_config, 'backoff')
 
           if backoff then
             local runAt = timestamp + backoff

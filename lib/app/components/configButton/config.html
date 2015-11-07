@@ -1,0 +1,62 @@
+<md-dialog flex>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Configure</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="config.close()">
+        <md-icon>close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content layout="column" layout-padding>
+    <form>
+      <div layout="column" layout-gt-md="row">
+        <md-input-container flex>
+          <md-icon>timer</md-icon>
+          <input ng-model="config.editable.timeout" type="number" min="0" step="10" placeholder="Timeout (ms)">
+        </md-input-container>
+        <md-input-container flex>
+          <md-icon>settings_backup_restore</md-icon>
+          <input ng-model="config.editable.attempts" type="number" min="0" step="1" placeholder="Attempts">
+        </md-input-container>
+        <md-input-container flex>
+          <md-icon>restore</md-icon>
+          <input ng-model="config.editable.backoff" type="number" min="0" step="10" placeholder="Backoff after failure (ms)">
+        </md-input-container>
+      </div>
+      <div layout="row">
+        <md-input-container flex flex-gt-md="50">
+          <md-icon>snooze</md-icon>
+          <input ng-model="config.editable.throttle" type="number" min="0" step="10" placeholder="Throttle (ms)">
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-md="row">
+        <md-input-container flex>
+          <md-icon>alarm_on</md-icon>
+          <input ng-model="config.editable.removeCompletedAfter" type="number" min="0" step="10" placeholder="Remove completed after (ms)">
+        </md-input-container>
+        <md-input-container flex>
+          <md-icon>alarm_on</md-icon>
+          <input ng-model="config.editable.removeFailedAfter" type="number" min="0" step="10" placeholder="Remove failed after (ms)">
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-md="row">
+        <div>
+          <md-checkbox ng-model="config.editable.unique">Unique</md-checkbox>
+        </div>
+        <md-input-container flex="fill">
+          <md-icon>vpn_key</md-icon>
+          <input ng-disabled="!config.editable.unique" ng-model="config.editable.uniqueKey" placeholder="Unique key">
+        </md-input-container>
+      </div>
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <md-button ng-click="config.reset()" ng-disabled="config.isOriginal()">
+      Undo changes
+    </md-button>
+    <md-button class="md-primary" ng-click="config.apply()" ng-disabled="config.isOriginal()">
+      Apply
+    </md-button>
+  </md-dialog-actions>
+</md-dialog>

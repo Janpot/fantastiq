@@ -14,19 +14,19 @@ timestamp = tonumber(timestamp)
 runAt = tonumber(runAt)
 priority = tonumber(priority)
 
-local unique = redis.call('HGET', key_config, 'unique')
+local unique = fantastiq.getConfig(key_config, 'unique')
 
 local jobKeys = {}
 if unique then
-  unique = cjson.decode(unique)
-  if type(unique) == 'string' then
+  local uniqueKey = fantastiq.getConfig(key_config, 'uniqueKey')
+  if uniqueKey then
     for i, jobData in ipairs(jobDatas) do
       local parsed = cjson.decode(jobData)
       if type(parsed) ~= 'table' then
         return redis.error_reply('Job requires a key')
       end
 
-      local key = parsed[unique]
+      local key = parsed[uniqueKey]
 
       if not key then
         return redis.error_reply('Job requires a key')

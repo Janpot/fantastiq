@@ -86,6 +86,7 @@ Or
         - [Option: `Number attempts`](#option-number-attempts)
         - [Option: `Number backoff`](#option-number-backoff)
         - [Option: `Boolean|String unique`](#option-booleanstring-unique)
+        - [Options: `String uniqueKey`](#options-string-uniquekey)
       - [`.add(dynamic job, [Object options])`](#adddynamic-job-object-options)
         - [Option: `Number priority`](#option-number-priority)
         - [Option: `Number runAt`](#option-number-runat)
@@ -239,7 +240,10 @@ Time in milliseconds a job has to be delayed before attempting to execute it aga
 ###### Option: `Boolean|String unique`
 
 Only allow unique jobs to be added to the queue.
-When `unique` is of type `String`, the value under `data` with that key is considered as the priary key for uniqueness.
+
+###### Options: `String uniqueKey`
+
+The value under `data` with that key is considered as the primary key for uniqueness.
 Adding jobs that don't contain this key or that don't have a string value for this key will result in an error.
 
 <hr>

@@ -67,5 +67,14 @@ module.exports = function (queue) {
       var id2 = await queue.add(1);
       assert.notStrictEqual(id1, id2);
     });
+
+    it('should add jobs with a newline', function () {
+      return queue.add('hello\nworld')
+        .then(queue.get.bind(queue))
+        .get('data')
+        .then(function (jobData) {
+          assert.strictEqual(jobData, 'hello\nworld');
+        })
+    })
   };
 };

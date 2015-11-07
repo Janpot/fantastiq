@@ -102,7 +102,7 @@ module.exports = function (queue) {
 
     it('shouldn\'t add duplicate jobs when unique by key is configured', function () {
       var ids1;
-      return queue.config({ unique: 'key' })
+      return queue.config({ unique: true, uniqueKey: 'key' })
         .then(function () {
           return queue.addN([
             { key: '1', x: 'a' },
@@ -139,7 +139,7 @@ module.exports = function (queue) {
     });
 
     it('should fail on bad key values', function () {
-      return queue.config({ unique: 'key' })
+      return queue.config({ unique: true, uniqueKey: 'key' })
         .then(function () {
           return queue.addN([5]).then(assert.fail, function (err) {
             assert.strictEqual(err.message, 'Job requires a key');
@@ -173,7 +173,7 @@ module.exports = function (queue) {
     });
 
     it('should add all or nothing at all', function () {
-      return queue.config({ unique: 'key' })
+      return queue.config({ unique: true, uniqueKey: 'key' })
         .then(function () {
           return queue.addN([
             {key: '1'},

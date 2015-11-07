@@ -17,13 +17,13 @@ local function markOutOfDateJobs (key_source, cleanupTime)
 end
 
 
-local removeFailedAfter = tonumber(redis.call('HGET', key_config, 'removeFailedAfter'))
+local removeFailedAfter = fantastiq.getConfig(key_config, 'removeFailedAfter')
 if removeFailedAfter then
   local cleanupTime = timestamp - removeFailedAfter
   markOutOfDateJobs(key_failed, cleanupTime)
 end
 
-local removeCompletedAfter = tonumber(redis.call('HGET', key_config, 'removeCompletedAfter'))
+local removeCompletedAfter = fantastiq.getConfig(key_config, 'removeCompletedAfter')
 if removeCompletedAfter then
   local cleanupTime = timestamp - removeCompletedAfter
   markOutOfDateJobs(key_completed, cleanupTime)

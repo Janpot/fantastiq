@@ -24,7 +24,7 @@ if unthrottle then
   end
 end
 
-local throttleTime = tonumber(redis.call('HGET', key_config, 'throttle'))
+local throttleTime = fantastiq.getConfig(key_config, 'throttle')
 local waitTime = 0
 
 if throttleTime then
