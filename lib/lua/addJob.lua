@@ -70,7 +70,8 @@ for i, jobData in ipairs(jobDatas) do
       priority = priority,
       data = jobData,
       created = timestamp,
-      attempts = 0
+      attempts = 0,
+      key = jobKeys[i]
     }
 
     if runAt > timestamp then

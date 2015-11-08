@@ -87,7 +87,9 @@ local fantastiq = (function ()
           jobDetails['state'] = 'failed'
           jobDetails['error'] = err
           jobDetails['finished'] = timestamp
-          redis.call('HDEL', key_index, jobDetails['data'])
+          if jobDetails['key'] then
+            redis.call('HDEL', key_index, jobDetails['key'])
+          end
         end
       end
       exports.setJobDetails(key_jobDetails, jobId, jobDetails)

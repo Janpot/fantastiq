@@ -32,5 +32,23 @@ module.exports = function (queue) {
           assert.strictEqual(count, 0);
         });
     });
+
+    it('should deindex jobs', function () {
+      var ids;
+      return queue.config({unique: true})
+        .then(function () {
+          return queue.addN([1, 2, 3]);
+        })
+        .then(function (_ids) {
+          ids = _ids;
+          return queue.removeN(ids);
+        })
+        .then(function () {
+          return queue.addN([1, 2, 3]);
+        })
+        .then(function (ids2) {
+          assert.notDeepEqual(ids, ids2);
+        });
+    });
   };
 };
