@@ -11,43 +11,43 @@
   <md-dialog-content layout="column" layout-gt-md="row" layout-padding>
     <div layout="column">
       <div ng-show="job.props.created">
-        <span class="md-body-2">Created:</span>
+        <strong>Created:</strong>
         <span>{{::job.props.created | date:'medium'}}</span>
       </div>
       <div ng-show="job.props.started">
-        <span class="md-body-2">Started:</span>
+        <strong>Started:</strong>
         <span>{{::job.props.started | date:'medium'}}</span>
       </div>
       <div ng-show="job.props.finished">
-        <span class="md-body-2">Finished:</span>
+        <strong>Finished:</strong>
         <span>{{::job.props.finished | date:'medium'}}</span>
       </div>
       <div>
-        <span class="md-body-2">Priority:</span>
+        <strong>Priority:</strong>
         <span>{{::job.props.priority}}</span>
       </div>
       <div>
-        <span class="md-body-2">Attempts:</span>
+        <strong>Attempts:</strong>
         <span>{{::job.props.attempts}}</span>
       </div>
     </div>
     <div layout="column" flex >
       <div>
-        <span class="md-body-2">Data:</span>
+        <strong>Data:</strong>
         <md-content>
           <pre ng-bind-html="::job.props.data | json | linky"></pre>
         </md-content>
       </div>
 
       <div ng-if="::job.props.result">
-        <span class="md-body-2">Result:</span>
+        <strong>Result:</strong>
         <md-content>
           <pre ng-bind-html="::job.props.result | json | linky"></pre>
         </md-content>
       </div>
 
       <div ng-if="::job.props.error">
-        <span class="md-body-2">Error:</span>
+        <strong>Error:</strong>
         <md-content>
           <pre ng-if="::job.props.error.stack" ng-bind-html="::job.props.error.stack | linky"></pre>
           <pre ng-if="::!job.props.error.stack" ng-bind-html="::job.props.error | json | linky"></pre>

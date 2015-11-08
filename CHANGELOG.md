@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.2
+
+ - Fix bug where unique keys were never removed.
+ - Fix bug where worker polling was too agressive.
+
 ## 1.4.1
 
  - Fix bug where external bodyparser messes up rpc.
