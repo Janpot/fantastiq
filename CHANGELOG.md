@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1
+
+ - Fix bug where external bodyparser messes up rpc.
+
 ## 1.4.0
 
  - Use separate config value `uniqueKey`.
