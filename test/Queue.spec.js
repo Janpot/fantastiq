@@ -29,9 +29,9 @@ describe('Queue', function () {
   describe('.removeN', require('./Queue.removeN.spec')(queue));
   describe('.retrieve', require('./Queue.retrieve.spec')(queue));
 
-  describe('.retrieve', require('./Queue._runCleanupCycle.spec')(queue));
-  describe('.retrieve', require('./Queue._runDelayedCycle.spec')(queue));
-  describe('.retrieve', require('./Queue._runTimeoutCycle.spec')(queue));
-  describe('.retrieve', require('./Queue.api.spec')(queue));
+  describe('._runCleanupCycle', require('./Queue._runCleanupCycle.spec')(queue));
+  describe('._runDelayedCycle', require('./Queue._runDelayedCycle.spec')(queue));
+  describe('._runTimeoutCycle', require('./Queue._runTimeoutCycle.spec')(queue));
+  describe('.api', require('./Queue.api.spec')(queue));
 
 });

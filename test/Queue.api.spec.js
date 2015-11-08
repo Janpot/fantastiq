@@ -3,6 +3,7 @@
 var assert = require('chai').assert;
 var request = require('supertest-as-promised');
 var express = require('express');
+var bodyParser = require('body-parser');
 
 module.exports = function (queue) {
   return function () {
@@ -308,6 +309,17 @@ module.exports = function (queue) {
             {job: 3}
           ]);
         });
+    });
+
+    it('shouldn\'t interfere when bodyparser defined', function () {
+      var app2 = express();
+      app2.use(bodyParser.json());
+      app2.use('/api', queue.api());
+      return request(app2)
+        .post('/api/rpc')
+        .set('content-type', 'application/json')
+        .send('{"method": ":stat", "params": []}')
+        .expect(200);
     });
   };
 };

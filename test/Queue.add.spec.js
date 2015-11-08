@@ -74,7 +74,7 @@ module.exports = function (queue) {
         .get('data')
         .then(function (jobData) {
           assert.strictEqual(jobData, 'hello\nworld');
-        })
-    })
+        });
+    });
   };
 };
