@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.3
+
+ - Use FAB for adding items.
+
 ## 1.4.2
 
  - Fix bug where unique keys were never removed.
