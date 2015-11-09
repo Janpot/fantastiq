@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.4
+
+ - Fix npm copying gitignore for npmignore.
+
 ## 1.4.3
 
  - Use FAB for adding items.
