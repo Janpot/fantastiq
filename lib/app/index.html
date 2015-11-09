@@ -39,11 +39,13 @@
               layout-fill>
       <md-toolbar>
         <div class="md-toolbar-tools" layout="row">
-          <h1 class="md-toolbar-tools">
+          <h1>
             <a ng-href="#/">Fantastiq</a>
           </h1>
-          <add-job-button></add-job-button>
-          <config-button></config-button>
+          <span flex></span>
+          <md-button config-button class="md-icon-button">
+            <md-icon>settings</md-icon>
+          </md-button>
         </div>
       </md-toolbar>
       <md-content flex>
@@ -78,6 +80,10 @@
     </md-sidenav>
 
     <ng-view layout="column" flex></ng-view>
+
+    <md-button add-job-button class="md-fab md-fab-bottom-right">
+      <md-icon>add</md-icon>
+    </md-button>
 
   </body>
 </html>
