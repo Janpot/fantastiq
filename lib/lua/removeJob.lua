@@ -17,7 +17,7 @@ redis.call('ZREM', key_markForDel, unpack(ids))
 local uniqueKeys = {}
 for i, id in ipairs(ids) do
   local details = fantastiq.getJobDetails(id)
-  if details['key'] then
+  if details and details['key'] then
     table.insert(uniqueKeys, details['key'])
   end
 end

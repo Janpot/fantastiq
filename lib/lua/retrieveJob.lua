@@ -52,13 +52,10 @@ local jobId = jobIds[1]
 local jobData = 'null'
 
 if jobId then
-  redis.call('ZREM', fantastiq.key_inactive, jobId)
-  redis.call('ZADD', fantastiq.key_active, timestamp, jobId)
-
   local jobDetails = fantastiq.getJobDetails(jobId)
-  jobDetails['state'] = 'active'
   jobDetails['started'] = timestamp
   jobDetails['attempts'] = jobDetails['attempts'] + 1
+  fantastiq.updateJobState(jobId, 'active', jobDetails)
   fantastiq.setJobDetails(jobId, jobDetails)
 
   jobData = jobDetails['data']

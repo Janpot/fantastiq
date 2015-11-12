@@ -71,12 +71,10 @@ for i, jobData in ipairs(jobDatas) do
     }
 
     if runAt > timestamp then
-      redis.call('ZADD', fantastiq.key_delayed, runAt, jobId)
-      jobDetails['state'] = 'delayed'
       jobDetails['runAt'] = runAt
+      fantastiq.updateJobState(jobId, 'delayed', jobDetails)
     else
-      redis.call('ZADD', fantastiq.key_inactive, priority, jobId)
-      jobDetails['state'] = 'inactive'
+      fantastiq.updateJobState(jobId, 'inactive', jobDetails)
     end
 
     fantastiq.setJobDetails(jobId, jobDetails)
