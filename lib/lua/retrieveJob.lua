@@ -1,9 +1,5 @@
-local key_inactive,
-      key_active,
-      key_config,
-      key_lastRetrieve,
-      key_lastRetrieveId,
-      key_jobDetails = unpack(KEYS)
+local key_lastRetrieve,
+      key_lastRetrieveId = unpack(KEYS)
 
 local timestamp,
       unthrottle,
@@ -24,7 +20,7 @@ if unthrottle then
   end
 end
 
-local throttleTime = fantastiq.getConfig(key_config, 'throttle')
+local throttleTime = fantastiq.getConfig('throttle')
 local waitTime = 0
 
 if throttleTime then
@@ -43,27 +39,27 @@ end
 local index = 0
 
 if random > 0 then
-  local minPriority = redis.call('ZRANGEBYSCORE', key_inactive, '-inf', '+inf', 'WITHSCORES', 'LIMIT', 0, 1)[2]
+  local minPriority = redis.call('ZRANGEBYSCORE', fantastiq.key_inactive, '-inf', '+inf', 'WITHSCORES', 'LIMIT', 0, 1)[2]
   if minPriority then
-    local lowestPrioCount = redis.call('ZCOUNT', key_inactive, '-inf', minPriority)
+    local lowestPrioCount = redis.call('ZCOUNT', fantastiq.key_inactive, '-inf', minPriority)
     index = math.floor(random * lowestPrioCount)
   end
 end
 
 
-local jobIds = redis.call('ZRANGE', key_inactive, index, index)
+local jobIds = redis.call('ZRANGE', fantastiq.key_inactive, index, index)
 local jobId = jobIds[1]
 local jobData = 'null'
 
 if jobId then
-  redis.call('ZREM', key_inactive, jobId)
-  redis.call('ZADD', key_active, timestamp, jobId)
+  redis.call('ZREM', fantastiq.key_inactive, jobId)
+  redis.call('ZADD', fantastiq.key_active, timestamp, jobId)
 
-  local jobDetails = fantastiq.getJobDetails(key_jobDetails, jobId)
+  local jobDetails = fantastiq.getJobDetails(jobId)
   jobDetails['state'] = 'active'
   jobDetails['started'] = timestamp
   jobDetails['attempts'] = jobDetails['attempts'] + 1
-  fantastiq.setJobDetails(key_jobDetails, jobId, jobDetails)
+  fantastiq.setJobDetails(jobId, jobDetails)
 
   jobData = jobDetails['data']
 

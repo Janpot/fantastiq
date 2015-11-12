@@ -1,5 +1,21 @@
 local fantastiq = (function ()
-  local exports = {}
+  local key_inactive,
+        key_active,
+        key_failed,
+        key_completed,
+        key_delayed,
+        key_jobDetails,
+        key_config = unpack(KEYS)
+
+  local exports = {
+    key_inactive = key_inactive,
+    key_active = key_active,
+    key_failed = key_failed,
+    key_completed = key_completed,
+    key_delayed = key_delayed,
+    key_jobDetails = key_jobDetails,
+    key_config = key_config
+  }
 
   function exports.map(func, array)
     local new_array = {}
@@ -29,7 +45,7 @@ local fantastiq = (function ()
     return cjson.encode(decodeDetails(rawJobDetails))
   end
 
-  function exports.getJobDetails(key_jobDetails, jobId)
+  function exports.getJobDetails(jobId)
     local value = redis.call('HGET', key_jobDetails, jobId)
     if not value then
       return {}
@@ -37,12 +53,12 @@ local fantastiq = (function ()
     return decodeDetails(value)
   end
 
-  function exports.setJobDetails(key_jobDetails, jobId, details)
+  function exports.setJobDetails(jobId, details)
     redis.call('HSET', key_jobDetails, jobId, encodeDetails(details))
   end
 
 
-  function exports.getConfig(key_config, key)
+  function exports.getConfig(key)
     local value = redis.call('HGET', key_config, key)
     if not value then
       return value
@@ -51,13 +67,16 @@ local fantastiq = (function ()
   end
 
 
-  function exports.acknowledge(
-    key_inactive, key_active, key_failed, key_completed, key_delayed,
-    key_jobDetails, key_config, key_index, timestamp, jobId, err, result)
+  function exports.updateJob(jobId, state, updateFn)
+
+  end
+
+
+  function exports.acknowledge(key_index, timestamp, jobId, err, result)
 
     local keysRemoved = redis.call('ZREM', key_active, jobId)
     if keysRemoved == 1 then
-      local jobDetails = exports.getJobDetails(key_jobDetails, jobId)
+      local jobDetails = exports.getJobDetails(jobId)
       if err == 'null' then
         redis.call('ZADD', key_completed, timestamp, jobId)
         jobDetails['state'] = 'completed'
@@ -65,11 +84,11 @@ local fantastiq = (function ()
         jobDetails['finished'] = timestamp
         redis.call('HDEL', key_index, jobDetails['data'])
       else
-        local allowedAttempts = exports.getConfig(key_config, 'attempts') or 1
+        local allowedAttempts = exports.getConfig('attempts') or 1
 
         local jobAttempts = jobDetails['attempts']
         if jobAttempts < allowedAttempts then
-          local backoff = exports.getConfig(key_config, 'backoff')
+          local backoff = exports.getConfig('backoff')
 
           if backoff then
             local runAt = timestamp + backoff
@@ -92,7 +111,7 @@ local fantastiq = (function ()
           end
         end
       end
-      exports.setJobDetails(key_jobDetails, jobId, jobDetails)
+      exports.setJobDetails(jobId, jobDetails)
     else
       return redis.error_reply('Job not found')
     end

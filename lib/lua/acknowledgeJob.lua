@@ -1,11 +1,4 @@
-local key_inactive,
-      key_active,
-      key_failed,
-      key_completed,
-      key_delayed,
-      key_jobDetails,
-      key_config,
-      key_index = unpack(KEYS)
+local key_index = unpack(KEYS)
 
 local timestamp,
       jobId,
@@ -15,13 +8,6 @@ local timestamp,
 timestamp = tonumber(timestamp)
 
 return fantastiq.acknowledge(
-  key_inactive,
-  key_active,
-  key_failed,
-  key_completed,
-  key_delayed,
-  key_jobDetails,
-  key_config,
   key_index,
   timestamp,
   jobId,

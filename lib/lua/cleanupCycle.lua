@@ -1,8 +1,5 @@
 local key_markedForDeletion,
-      key_failed,
-      key_completed,
-      key_tmp,
-      key_config = unpack(KEYS)
+      key_tmp = unpack(KEYS)
 
 local timestamp = unpack(ARGV)
 
@@ -17,16 +14,16 @@ local function markOutOfDateJobs (key_source, cleanupTime)
 end
 
 
-local removeFailedAfter = fantastiq.getConfig(key_config, 'removeFailedAfter')
+local removeFailedAfter = fantastiq.getConfig('removeFailedAfter')
 if removeFailedAfter then
   local cleanupTime = timestamp - removeFailedAfter
-  markOutOfDateJobs(key_failed, cleanupTime)
+  markOutOfDateJobs(fantastiq.key_failed, cleanupTime)
 end
 
-local removeCompletedAfter = fantastiq.getConfig(key_config, 'removeCompletedAfter')
+local removeCompletedAfter = fantastiq.getConfig('removeCompletedAfter')
 if removeCompletedAfter then
   local cleanupTime = timestamp - removeCompletedAfter
-  markOutOfDateJobs(key_completed, cleanupTime)
+  markOutOfDateJobs(fantastiq.key_completed, cleanupTime)
 end
 
 redis.call('DEL', key_tmp)

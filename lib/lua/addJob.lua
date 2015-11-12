@@ -1,8 +1,4 @@
-local key_config,
-      key_nextId,
-      key_inactive,
-      key_delayed,
-      key_jobDetails,
+local key_nextId,
       key_index = unpack(KEYS)
 
 local timestamp,
@@ -14,11 +10,11 @@ timestamp = tonumber(timestamp)
 runAt = tonumber(runAt)
 priority = tonumber(priority)
 
-local unique = fantastiq.getConfig(key_config, 'unique')
+local unique = fantastiq.getConfig('unique')
 
 local jobKeys = {}
 if unique then
-  local uniqueKey = fantastiq.getConfig(key_config, 'uniqueKey')
+  local uniqueKey = fantastiq.getConfig('uniqueKey')
   if uniqueKey then
     for i, jobData in ipairs(jobDatas) do
       local parsed = cjson.decode(jobData)
@@ -75,15 +71,15 @@ for i, jobData in ipairs(jobDatas) do
     }
 
     if runAt > timestamp then
-      redis.call('ZADD', key_delayed, runAt, jobId)
+      redis.call('ZADD', fantastiq.key_delayed, runAt, jobId)
       jobDetails['state'] = 'delayed'
       jobDetails['runAt'] = runAt
     else
-      redis.call('ZADD', key_inactive, priority, jobId)
+      redis.call('ZADD', fantastiq.key_inactive, priority, jobId)
       jobDetails['state'] = 'inactive'
     end
 
-    fantastiq.setJobDetails(key_jobDetails, jobId, jobDetails)
+    fantastiq.setJobDetails(jobId, jobDetails)
   end
 end
 
