@@ -10,15 +10,15 @@
   </md-toolbar>
   <md-dialog-content layout="column" layout-gt-md="row" layout-padding>
     <div layout="column">
-      <div ng-show="job.props.created">
+      <div ng-if="::job.props.created">
         <strong>Created:</strong>
         <span>{{::job.props.created | date:'medium'}}</span>
       </div>
-      <div ng-show="job.props.started">
+      <div ng-if="::job.props.started">
         <strong>Started:</strong>
         <span>{{::job.props.started | date:'medium'}}</span>
       </div>
-      <div ng-show="job.props.finished">
+      <div ng-if="::job.props.finished">
         <strong>Finished:</strong>
         <span>{{::job.props.finished | date:'medium'}}</span>
       </div>

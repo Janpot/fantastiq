@@ -1,7 +1,7 @@
 <md-toolbar layout="row" layout-align="space-between center">
   <div class="md-toolbar-tools" layout="row">
     <menu-button></menu-button>
-    <md-button class="md-icon-button" ng-href="#/{{::jobs.state}}?before={{::jobs.first.id}}" ng-disabled="!jobs.first">
+    <md-button class="md-icon-button" ng-href="#/{{::jobs.state}}?before={{::jobs.first.id}}" ng-disabled="::!jobs.first">
       <md-icon>arrow_back</md-icon>
     </md-button>
     <span flex></span>
@@ -9,7 +9,7 @@
       <a ng-href="#/{{::jobs.state}}">{{::jobs.state}}</a>
     </h2>
     <span flex></span>
-    <md-button class="md-icon-button" ng-href="#/{{::jobs.state}}?after={{::jobs.last.id}}" ng-disabled="!jobs.last">
+    <md-button class="md-icon-button" ng-href="#/{{::jobs.state}}?after={{::jobs.last.id}}" ng-disabled="::!jobs.last">
       <md-icon>arrow_forward</md-icon>
     </md-button>
   </div>
