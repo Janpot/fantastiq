@@ -28,7 +28,7 @@ describe('Queue', function () {
   describe('.remove', require('./Queue.remove.spec')(queue));
   describe('.removeN', require('./Queue.removeN.spec')(queue));
   describe('.retrieve', require('./Queue.retrieve.spec')(queue));
-  describe.only('events', require('./Queue.events.spec')(queue));
+  describe('events', require('./Queue.events.spec')(queue));
 
   describe('._runCleanupCycle', require('./Queue._runCleanupCycle.spec')(queue));
   describe('._runDelayedCycle', require('./Queue._runDelayedCycle.spec')(queue));

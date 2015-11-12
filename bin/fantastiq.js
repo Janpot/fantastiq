@@ -22,7 +22,7 @@ var optionRedis = {
   type: 'string'
 };
 
-function parseJob(raw) {
+function parseJob (raw) {
   try {
     return JSON.parse(raw);
   } catch (e) {
@@ -30,7 +30,7 @@ function parseJob(raw) {
   }
 }
 
-function createQueue(connectionParams) {
+function createQueue (connectionParams) {
   var client = redis.createClient(connectionParams);
   var queue = fantastiq.client(client);
   return Promise.resolve(queue).disposer(function () {
@@ -84,7 +84,7 @@ module.exports = require('yargs')
         if (jobs) {
           jobStream = new stream.Readable({
             objectMode: true,
-            read: function() {
+            read: function () {
               var nextJob = jobs.length > 0 ? parseJob(jobs.shift()) : null;
               this.push(nextJob);
             }
@@ -98,7 +98,7 @@ module.exports = require('yargs')
           .pipe(new BatchStream({size: argv.batch}))
           .pipe(new stream.Transform({
             objectMode: true,
-            transform: function(jobBatch, encoding, next) {
+            transform: function (jobBatch, encoding, next) {
               queue.addN(jobBatch, options)
                 .then(function (ids) {
                   next(null, ids.join('\n'));

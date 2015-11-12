@@ -26,7 +26,7 @@ queue.config({
 
 var app = express();
 
-app.use('/ui', queue.ui(), function (err, req, res, next) { //eslint-disable-line no-unused-vars
+app.use('/ui', queue.ui(), function (err, req, res, next) { // eslint-disable-line no-unused-vars
   console.error(err.stack);
   res.status(500).end();
 });
@@ -38,8 +38,8 @@ app.listen(3000, function (err) {
   console.log('listening on port 3000');
 });
 
-function startQueueProducer(speed) {
-  (function tick() {
+function startQueueProducer (speed) {
+  (function tick () {
     queue.add(faker.internet.email()).catch(function (err) {
       console.log(err.stack);
     });

@@ -6,11 +6,15 @@
 [depstat-url]: https://david-dm.org/Janpot/fantastiq
 [depstat-image]: https://img.shields.io/david/Janpot/fantastiq.svg?style=flat
 
+[semistandard-url]: https://github.com/Flet/semistandard
+[semistandard-image]: https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat
+
+
 Reliable job queue in Redis, guaranteed atomic handling of all operations, promises based, provides a REST API and a user interface.
 Inspired heavily by [kue](https://www.npmjs.com/package/kue) but with different semantics.
 This library contains a full set of primitives to construct your own worker (`retrieve` + `acknowledge`) as well as a `process` function to automatically handle the queue.
 
-[![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+[![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] [![Code style][semistandard-image]][semistandard-url]
 
 ## Features
 
