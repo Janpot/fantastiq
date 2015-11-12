@@ -7,7 +7,10 @@ var redis = require('redis');
 var Promise = require('bluebird');
 
 Error.stackTraceLimit = Infinity;
-Promise.longStackTraces();
+Promise.config({
+  longStackTraces: true,
+  warnings: true
+});
 
 var client = redis.createClient({
   host: '192.168.99.100',
