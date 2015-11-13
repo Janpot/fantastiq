@@ -40,6 +40,7 @@ describe('QueueClient', function () {
   describe('.remove', require('./Queue.remove.spec')(_queueClient));
   describe('.removeN', require('./Queue.removeN.spec')(_queueClient));
   describe('.retrieve', require('./Queue.retrieve.spec')(_queueClient));
+  describe.skip('events', require('./Queue.events.spec')(queue));
 
   it('should reject on non existing endpoint', function () {
     var queueClient = new QueueClient('http://nothing-here');

@@ -3,7 +3,7 @@
 var redis = require('redis');
 var Queue = require('../lib/Queue');
 
-describe.only('Queue', function () {
+describe('Queue', function () {
 
   var client = redis.createClient({
     host: process.env.REDIS_HOST
