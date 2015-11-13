@@ -115,8 +115,7 @@ local fantastiq = (function ()
     if err == 'null' then
       jobDetails['result'] = result
       jobDetails['finished'] = timestamp
-      -- TODO URGENT!!! this is a bug, must be jobDetails['key'] WRITE A FAILING TEST FIRST
-      redis.call('HDEL', key_index, jobDetails['data'])
+      redis.call('HDEL', key_index, jobDetails['key'])
       exports.updateJobState(jobId, 'completed', jobDetails)
     else
       local allowedAttempts = exports.getConfig('attempts') or 1
@@ -137,9 +136,7 @@ local fantastiq = (function ()
       else
         jobDetails['error'] = err
         jobDetails['finished'] = timestamp
-        if jobDetails['key'] then
-          redis.call('HDEL', key_index, jobDetails['key'])
-        end
+        redis.call('HDEL', key_index, jobDetails['key'])
         exports.updateJobState(jobId, 'failed', jobDetails)
       end
     end

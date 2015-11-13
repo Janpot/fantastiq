@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0
+
+ - Fix bug where completed items didn't get deindexed.
+
 ## 1.4.4
 
  - Fix npm copying gitignore for npmignore.

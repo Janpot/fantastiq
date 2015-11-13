@@ -186,5 +186,26 @@ module.exports = function (queue) {
           assert.strictEqual(result.data, 'data-1');
         });
     });
+
+    it('deindexes unique items when completed', function () {
+      var id;
+      return queue.config({ unique: true, uniqueKey: 'key' })
+        .then(function () {
+          return queue.add({ key: '1' });
+        })
+        .then(function (_id) {
+          id = _id;
+          return queue.retrieve();
+        })
+        .then(function (result) {
+          return queue.acknowledge(result.id, null, 1);
+        })
+        .then(function () {
+          return queue.add({ key: '1' })
+        })
+        .then(function (newId) {
+          assert.notStrictEqual(id, newId)
+        });
+    });
   };
 };
