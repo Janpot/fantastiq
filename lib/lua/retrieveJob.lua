@@ -55,7 +55,7 @@ if jobId then
   local jobDetails = fantastiq.getJobDetails(jobId)
   jobDetails['started'] = timestamp
   jobDetails['attempts'] = jobDetails['attempts'] + 1
-  fantastiq.updateJobState(jobId, 'active', jobDetails)
+  fantastiq.updateJobState(jobDetails, 'active')
   fantastiq.setJobDetails(jobId, jobDetails)
 
   jobData = jobDetails['data']

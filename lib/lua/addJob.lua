@@ -72,9 +72,9 @@ for i, jobData in ipairs(jobDatas) do
 
     if runAt > timestamp then
       jobDetails['runAt'] = runAt
-      fantastiq.updateJobState(jobId, 'delayed', jobDetails)
+      fantastiq.updateJobState(jobDetails, 'delayed')
     else
-      fantastiq.updateJobState(jobId, 'inactive', jobDetails)
+      fantastiq.updateJobState(jobDetails, 'inactive')
     end
 
     fantastiq.setJobDetails(jobId, jobDetails)

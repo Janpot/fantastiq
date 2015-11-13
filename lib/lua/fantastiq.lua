@@ -84,7 +84,8 @@ local fantastiq = (function ()
   end
 
 
-  function exports.updateJobState(jobId, state, jobDetails)
+  function exports.updateJobState(jobDetails, state)
+    local jobId = jobDetails['id']
     local oldState = jobDetails['state']
 
     if state then
@@ -116,7 +117,7 @@ local fantastiq = (function ()
       jobDetails['result'] = result
       jobDetails['finished'] = timestamp
       redis.call('HDEL', key_index, jobDetails['key'])
-      exports.updateJobState(jobId, 'completed', jobDetails)
+      exports.updateJobState(jobDetails, 'completed')
     else
       local allowedAttempts = exports.getConfig('attempts') or 1
 
@@ -127,17 +128,17 @@ local fantastiq = (function ()
         if backoff then
           local runAt = timestamp + backoff
           jobDetails['runAt'] = runAt
-          exports.updateJobState(jobId, 'delayed', jobDetails)
+          exports.updateJobState(jobDetails, 'delayed')
         else
           local priority = jobDetails['priority']
-          exports.updateJobState(jobId, 'inactive', jobDetails)
+          exports.updateJobState(jobDetails, 'inactive')
         end
         jobDetails['started'] = nil
       else
         jobDetails['error'] = err
         jobDetails['finished'] = timestamp
         redis.call('HDEL', key_index, jobDetails['key'])
-        exports.updateJobState(jobId, 'failed', jobDetails)
+        exports.updateJobState(jobDetails, 'failed')
       end
     end
     exports.setJobDetails(jobId, jobDetails)

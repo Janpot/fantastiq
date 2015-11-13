@@ -15,7 +15,7 @@ for i, jobId in ipairs(expired) do
   redis.call('ZREM', fantastiq.key_delayed, jobId)
   local jobDetails = fantastiq.getJobDetails(jobId)
   jobDetails['runAt'] = nil
-  fantastiq.updateJobState(jobId, 'inactive', jobDetails)
+  fantastiq.updateJobState(jobDetails, 'inactive')
   fantastiq.setJobDetails(jobId, jobDetails)
 end
 
