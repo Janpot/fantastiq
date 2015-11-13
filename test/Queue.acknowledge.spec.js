@@ -201,10 +201,10 @@ module.exports = function (queue) {
           return queue.acknowledge(result.id, null, 1);
         })
         .then(function () {
-          return queue.add({ key: '1' })
+          return queue.add({ key: '1' });
         })
         .then(function (newId) {
-          assert.notStrictEqual(id, newId)
+          assert.notStrictEqual(id, newId);
         });
     });
   };
