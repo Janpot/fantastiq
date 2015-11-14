@@ -1,8 +1,9 @@
 # Changelog
 
-## 1.5.0
+## 1.4.5
 
  - Fix bug where completed items didn't get deindexed.
+ - Correct angular version from CDN
 
 ## 1.4.4
 
