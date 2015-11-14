@@ -1,16 +1,15 @@
 {
   "name": "fantastiq",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Job queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
     "test": "npm run lint && npm run mocha",
-    "lint": "semistandard --verbose | snazzy",
+    "lint": "eslint --ignore-pattern ./lib/app/bundle.js .",
     "mocha": "mocha ./test/.setupBabel.js ./test",
     "nyc": "nyc --all npm run mocha",
     "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
     "toc": "doctoc --notitle ./README.md",
-    "lint": "eslint --ignore-pattern ./lib/app/bundle.js .",
     "travis-test": "npm run lint && npm test",
     "prepublish": "npm run build",
     "build": "browserify lib/app/main.js -o lib/app/bundle.js",
