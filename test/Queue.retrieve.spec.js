@@ -260,60 +260,60 @@ module.exports = function (queue) {
         });
     });
 
-    it('should retrieve random jobs', async function () {
+    it('should retrieve random jobs', Promise.coroutine(function * () {
       randomStub = sinon.stub(Math, 'random');
 
-      var ids = await queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      var ids = yield queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
       randomStub.returns(7 / 10);
-      var retrieval = await queue.retrieve({ random: true });
+      var retrieval = yield queue.retrieve({ random: true });
       assert.strictEqual(retrieval.id, ids[7]);
 
       randomStub.returns(2 / 9);
-      retrieval = await queue.retrieve({ random: true });
+      retrieval = yield queue.retrieve({ random: true });
       assert.strictEqual(retrieval.id, ids[2]);
-    });
+    }));
 
-    it('should retrieve random jobs on 0', async function () {
+    it('should retrieve random jobs on 0', Promise.coroutine(function * () {
       randomStub = sinon.stub(Math, 'random');
 
-      var ids = await queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      var ids = yield queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
       randomStub.returns(0);
-      var retrieval = await queue.retrieve({ random: true });
+      var retrieval = yield queue.retrieve({ random: true });
       assert.strictEqual(retrieval.id, ids[0]);
-    });
+    }));
 
-    it('should retrieve random jobs on edge cases', async function () {
+    it('should retrieve random jobs on edge cases', Promise.coroutine(function * () {
       randomStub = sinon.stub(Math, 'random');
 
-      var ids = await queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      var ids = yield queue.addN([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
       randomStub.returns(0.00000000000001);
-      var retrieval = await queue.retrieve({ random: true });
+      var retrieval = yield queue.retrieve({ random: true });
       assert.strictEqual(retrieval.id, ids[0]);
 
       randomStub.returns(0.99999999999999);
-      retrieval = await queue.retrieve({ random: true });
+      retrieval = yield queue.retrieve({ random: true });
       assert.strictEqual(retrieval.id, ids[9]);
-    });
+    }));
 
-    it('should respect priority on random jobs', async function () {
+    it('should respect priority on random jobs', Promise.coroutine(function * () {
       randomStub = sinon.stub(Math, 'random');
 
-      await queue.addN([1, 2, 3, 4, 5], { priority: 10 });
-      var ids = await queue.addN([6, 7, 8, 9, 10], { priority: 5 });
+      yield queue.addN([1, 2, 3, 4, 5], { priority: 10 });
+      var ids = yield queue.addN([6, 7, 8, 9, 10], { priority: 5 });
 
       randomStub.returns(3 / 5);
-      var retrieval = await queue.retrieve({ random: true });
+      var retrieval = yield queue.retrieve({ random: true });
       assert.strictEqual(retrieval.id, ids[3]);
-    });
+    }));
 
-    it('shouldn\'t fail when random call on empty queue', async function () {
+    it('shouldn\'t fail when random call on empty queue', Promise.coroutine(function * () {
       randomStub = sinon.stub(Math, 'random');
       randomStub.returns(0.5);
-      var retrieval = await queue.retrieve({ random: true });
+      var retrieval = yield queue.retrieve({ random: true });
       assert.isNull(retrieval.id);
-    });
+    }));
   };
 };
