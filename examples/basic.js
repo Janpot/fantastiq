@@ -12,10 +12,7 @@ Promise.config({
   warnings: true
 });
 
-var client = redis.createClient({
-  host: '192.168.99.100',
-  port: 6379
-});
+var client = redis.createClient();
 
 var queue = fantastiq(client);
 
@@ -65,4 +62,12 @@ queue.process(function (job) {
     });
 });
 
+queue.on('error', function (err) {
+  console.error(err);
+});
+
 startQueueProducer(10000);
+
+setTimeout(function () {
+  queue.quit();
+}, 5000);

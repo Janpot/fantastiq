@@ -8,14 +8,21 @@ describe('Queue', function () {
   var client = redis.createClient({
     host: process.env.REDIS_HOST
   });
-  var queue = new Queue('test', client);
+
+  function createQueue() {
+    return new Queue('test', client);
+  }
+
+  var queue = createQueue(client);
 
   beforeEach(function (done) {
     return client.flushall(done);
   });
 
   after(function (done) {
-    return client.quit(done);
+    queue.quit().then(function () {
+      return client.quit(done);
+    });
   });
 
   describe('.acknowledge', require('./Queue.acknowledge.spec')(queue));
@@ -28,7 +35,7 @@ describe('Queue', function () {
   describe('.remove', require('./Queue.remove.spec')(queue));
   describe('.removeN', require('./Queue.removeN.spec')(queue));
   describe('.retrieve', require('./Queue.retrieve.spec')(queue));
-  describe('events', require('./Queue.events.spec')(queue));
+  describe('events', require('./Queue.events.spec')(createQueue));
 
   describe('._runCleanupCycle', require('./Queue._runCleanupCycle.spec')(queue));
   describe('._runDelayedCycle', require('./Queue._runDelayedCycle.spec')(queue));

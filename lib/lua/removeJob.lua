@@ -15,10 +15,13 @@ totalRemoved = totalRemoved + redis.call('ZREM', fantastiq.key_delayed, unpack(i
 redis.call('ZREM', key_markForDel, unpack(ids))
 
 local uniqueKeys = {}
-for i, id in ipairs(ids) do
-  local details = fantastiq.getJobDetails(id)
-  if details and details['key'] then
-    table.insert(uniqueKeys, details['key'])
+for i, jobId in ipairs(ids) do
+  local details = fantastiq.getJobDetails(jobId)
+  if details then
+    fantastiq.emitUpdate(jobId, details['state'], nil)
+    if details['key'] then
+      table.insert(uniqueKeys, details['key'])
+    end
   end
 end
 

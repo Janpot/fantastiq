@@ -31,10 +31,9 @@ function parseJob (raw) {
 }
 
 function createQueue (connectionParams) {
-  var client = redis.createClient(connectionParams);
-  var queue = fantastiq.client(client);
-  return Promise.resolve(queue).disposer(function () {
-    return client.quitAsync();
+  var queue = fantastiq.client(connectionParams);
+  return Promise.resolve(queue).disposer(function (toDispose) {
+    return toDispose.quit();
   });
 }
 

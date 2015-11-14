@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.0
+
+ - Accept more construction options.
+ - Add events.
+
 ## 1.4.5
 
  - Fix bug where completed items didn't get deindexed.

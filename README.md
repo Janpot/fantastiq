@@ -34,11 +34,9 @@ This library contains a full set of primitives to construct your own worker (`re
 requires redis >= 2.8.9
 
 ```js
-var redis = require('redis');
 var fantastiq = require('fantastiq');
 
-var client = redis.createClient();
-var queue = fantastiq(client);
+var queue = fantastiq({ host: '127.0.0.1' }, client);
 
 // Use pocess function to automatically handle jobs
 queue.process(function (job) {
@@ -77,7 +75,7 @@ Or
 
 
 - [API](#api)
-    - [`fantastiq(RedisClient client, [Object options])`](#fantastiqredisclient-client-object-options)
+    - [`fantastiq([Object redisOpts], [Object options])`](#fantastiqobject-redisopts-object-options)
         - [Option: `String prefix`](#option-string-prefix)
     - [`fantastiq.client(RedisClient client, [Object options])`](#fantastiqclientredisclient-client-object-options)
     - [`fantastiq.httpClient(String url)`](#fantastiqhttpclientstring-url)
@@ -103,6 +101,7 @@ Or
         - [Option: `Boolean|String unthrottle`](#option-booleanstring-unthrottle)
         - [Option: `Boolean random`](#option-boolean-random)
       - [`.acknowledge(String id, [Error error], [dynamic result])`](#acknowledgestring-id-error-error-dynamic-result)
+      - [`.quit()`](#quit)
       - [`.range(String state, [Object options])`](#rangestring-state-object-options)
         - [option: `Number count`](#option-number-count)
         - [option: `String start`](#option-string-start)
@@ -114,6 +113,8 @@ Or
         - [Option: `Boolean random`](#option-boolean-random-1)
       - [`.api()`](#api)
       - [`.ui()`](#ui)
+      - [Event `error`](#event-error)
+      - [Event `jobUpdate`](#event-jobupdate)
     - [`Worker`](#worker)
       - [`.start()`](#start)
       - [`.stop()`](#stop)
@@ -125,24 +126,24 @@ Or
 
 ## API
 
-#### `fantastiq(RedisClient client, [Object options])`
+#### `fantastiq([Object redisOpts], [Object options])`
 
 **Returns:** [`Queue`](#queue)
 
-Construct a queue. The passed in [redis](https://www.npmjs.com/package/redis) client will be used to connect to Redis.
-The returned object can be used to manage the queue.
+Construct a queue.
+For the first argument you can pass in anything that is accepted by [`redis.createClient()`](https://www.npmjs.com/package/redis#redis-createclient).
 
 Example:
 
 ```js
-var redis = require('redis');
 var fantastiq = require('fantastiq');
 
-var client = redis.createClient();
-var queue = fantastiq(client, {
+var queue = fantastiq('tcp://127.0.0.1:6379', {
   prefix: 'my-queue'
 });
 ```
+
+The second argument specifies options for the queue:
 
 ###### Option: `String prefix`
 
@@ -160,10 +161,8 @@ Construct a passive queue with disabled maintenance cycles.
 Example:
 
 ```js
-var redis = require('redis');
 var fantastiq = require('fantastiq');
-var client = redis.createClient();
-var queue = fantastiq.client(client)
+var queue = fantastiq.client('tcp://127.0.0.1:6379')
 ```
 
 <hr>
@@ -457,6 +456,14 @@ queue.acknowledge('0000000000001', null, { path: __dirname + '/finished/image.pn
 
 <hr>
 
+##### `.quit()`
+
+**Returns:** `Promise`
+
+Releases all resources associated with this queue.
+
+<hr>
+
 ##### `.range(String state, [Object options])`
 
 **Returns:** `Promise<Array<String id>>`
@@ -655,6 +662,23 @@ Screenshots:
 
 ![jobs](./screenshots/jobs.png)
 
+
+<hr>
+
+##### Event `error`
+
+Event is emitted when one of the underlying redis connections fails.
+The listener is called with the `Error` object fron the original event.
+
+<hr>
+
+##### Event `jobUpdate`
+
+Emitted whenever a job changes state. The provided object contains following properties:
+
+- `id`: id of the job that was updated
+- `oldState`: previous state of the job or `undefined` if the job was created.
+- `newState`: new state of the job or `undefined` if the job was removed.
 
 <hr>
 

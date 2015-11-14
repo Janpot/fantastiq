@@ -5,7 +5,8 @@ local fantastiq = (function ()
         key_completed,
         key_delayed,
         key_jobDetails,
-        key_config = unpack(KEYS)
+        key_config,
+        channel_events = unpack(KEYS)
 
   local exports = {
     key_inactive = key_inactive,
@@ -84,25 +85,32 @@ local fantastiq = (function ()
   end
 
 
-  function exports.updateJobState(jobDetails, state)
+  function exports.emitUpdate(jobId, oldState, newState)
+    redis.call('PUBLISH', channel_events, cjson.encode({
+      id = jobId,
+      oldState = oldState,
+      newState = newState
+    }))
+  end
+
+
+  function exports.updateJobState(jobDetails, newState)
     local jobId = jobDetails['id']
     local oldState = jobDetails['state']
-
-    if state then
-      local score
-      if state == 'inactive' then
-        score = jobDetails['priority']
-      elseif state == 'active' then
-        score = jobDetails['started']
-      elseif state == 'completed' or state == 'failed' then
-        score = jobDetails['finished']
-      elseif state == 'delayed' then
-        score = jobDetails['runAt']
-      end
-      redis.call('ZREM', getKeyForState(oldState), jobId)
-      redis.call('ZADD', getKeyForState(state), score, jobId)
-      jobDetails['state'] = state
+    local score
+    if newState == 'inactive' then
+      score = jobDetails['priority']
+    elseif newState == 'active' then
+      score = jobDetails['started']
+    elseif newState == 'completed' or newState == 'failed' then
+      score = jobDetails['finished']
+    elseif newState == 'delayed' then
+      score = jobDetails['runAt']
     end
+    redis.call('ZREM', getKeyForState(oldState), jobId)
+    redis.call('ZADD', getKeyForState(newState), score, jobId)
+    jobDetails['state'] = newState
+    exports.emitUpdate(jobId, oldState, newState)
   end
 
 
