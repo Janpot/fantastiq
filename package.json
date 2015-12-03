@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run lint && npm run mocha",
     "lint": "eslint --ignore-pattern ./lib/app/bundle.js .",
-    "mocha": "mocha ./test/.setupBabel.js ./test",
+    "mocha": "mocha -r babel-polyfill -r babel-register ./test",
     "nyc": "nyc --all npm run mocha",
     "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
     "toc": "doctoc --notitle ./README.md",
@@ -39,7 +39,7 @@
     "eslint": "^1.9.0",
     "faker": "^3.0.1",
     "mocha": "^2.2.5",
-    "nyc": "^3.2.2",
+    "nyc": "^4.0.0",
     "redis": "^2.2.5",
     "semistandard": "^7.0.2",
     "sinon": "^1.14.1",
