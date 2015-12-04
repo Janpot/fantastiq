@@ -10,7 +10,6 @@
     "nyc": "nyc --all npm run mocha",
     "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
     "toc": "doctoc --notitle ./README.md",
-    "travis-test": "npm run lint && npm test",
     "prepublish": "npm run build",
     "build": "browserify lib/app/main.js -o lib/app/bundle.js",
     "watch:build": "watchify lib/app/main.js -o lib/app/bundle.js --verbose"

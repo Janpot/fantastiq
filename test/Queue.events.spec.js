@@ -8,7 +8,6 @@ function captureEvents (emitter, event, count) {
     var events = [];
     var i = 0;
     function listener (event) {
-      console.log(event)
       events.push(event);
       i += 1;
       if (i >= count) {
