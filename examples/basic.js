@@ -49,8 +49,10 @@ queue.config({
 });
 
 queue.process(function (job) {
-  console.log('processing...', job);
-  return Promise.delay(Math.random() * 1000)
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+  process.stdout.write('processing... ' + job);
+  return Promise.delay(Math.random() * 100)
     .then(function () {
       if (Math.random() < 0.01) {
         throw new Error('Job failed');
@@ -66,8 +68,4 @@ queue.on('error', function (err) {
   console.error(err);
 });
 
-startQueueProducer(10000);
-
-setTimeout(function () {
-  queue.quit();
-}, 5000);
+startQueueProducer(1000);
