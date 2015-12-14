@@ -1,0 +1,55 @@
+<div layout="row" style="height: 100%">
+  <md-sidenav class="md-sidenav-left md-whiteframe-z2"
+          md-component-id="left"
+          md-is-locked-open="$mdMedia('gt-md')"
+          layout="column"
+          layout-fill>
+    <md-toolbar>
+      <div class="md-toolbar-tools" layout="row">
+        <h1>
+          <a ng-href="#/">Fantastiq</a>
+        </h1>
+        <span flex></span>
+        <md-button config-button class="md-icon-button">
+          <md-icon>settings</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-content flex>
+      <md-list>
+        <md-list-item layout="row" ng-click="app.showJobs('inactive')">
+          <strong>Inactive</strong>
+          <span flex></span>
+          {{app.stats.inactiveCount | number}}
+        </md-list-item>
+        <md-list-item layout="row" ng-click="app.showJobs('active')">
+          <strong>Active</strong>
+          <span flex></span>
+          {{app.stats.activeCount | number}}
+        </md-list-item>
+        <md-list-item layout="row" ng-click="app.showJobs('failed')">
+          <strong>Failed</strong>
+          <span flex></span>
+          {{app.stats.failedCount | number}}
+        </md-list-item>
+        <md-list-item layout="row" ng-click="app.showJobs('completed')">
+          <strong>Completed</strong>
+          <span flex></span>
+          {{app.stats.completedCount | number}}
+        </md-list-item>
+        <md-list-item layout="row" ng-click="app.showJobs('delayed')">
+          <strong>Delayed</strong>
+          <span flex></span>
+          {{app.stats.delayedCount | number}}
+        </md-list-item>
+      </md-list>
+    </md-content>
+  </md-sidenav>
+
+  <ng-view flex style="height: 100%;"></ng-view>
+
+  <md-button add-job-button class="md-fab md-fab-bottom-right">
+    <md-icon>add</md-icon>
+  </md-button>
+</div>

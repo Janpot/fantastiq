@@ -3,7 +3,7 @@
     <div class="md-toolbar-tools">
       <h2>Configure</h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-click="config.close()">
+      <md-button class="md-icon-button" ng-click="configDialog.close()">
         <md-icon>close</md-icon>
       </md-button>
     </div>
@@ -13,49 +13,49 @@
       <div layout="column" layout-gt-md="row">
         <md-input-container flex>
           <md-icon>timer</md-icon>
-          <input ng-model="config.editable.timeout" type="number" min="0" step="10" placeholder="Timeout (ms)">
+          <input ng-model="configDialog.editable.timeout" type="number" min="0" step="10" placeholder="Timeout (ms)">
         </md-input-container>
         <md-input-container flex>
           <md-icon>settings_backup_restore</md-icon>
-          <input ng-model="config.editable.attempts" type="number" min="0" step="1" placeholder="Attempts">
+          <input ng-model="configDialog.editable.attempts" type="number" min="0" step="1" placeholder="Attempts">
         </md-input-container>
         <md-input-container flex>
           <md-icon>restore</md-icon>
-          <input ng-model="config.editable.backoff" type="number" min="0" step="10" placeholder="Backoff after failure (ms)">
+          <input ng-model="configDialog.editable.backoff" type="number" min="0" step="10" placeholder="Backoff after failure (ms)">
         </md-input-container>
       </div>
       <div layout="row">
         <md-input-container flex flex-gt-md="50">
           <md-icon>snooze</md-icon>
-          <input ng-model="config.editable.throttle" type="number" min="0" step="10" placeholder="Throttle (ms)">
+          <input ng-model="configDialog.editable.throttle" type="number" min="0" step="10" placeholder="Throttle (ms)">
         </md-input-container>
       </div>
       <div layout="column" layout-gt-md="row">
         <md-input-container flex>
           <md-icon>alarm_on</md-icon>
-          <input ng-model="config.editable.removeCompletedAfter" type="number" min="0" step="10" placeholder="Remove completed after (ms)">
+          <input ng-model="configDialog.editable.removeCompletedAfter" type="number" min="0" step="10" placeholder="Remove completed after (ms)">
         </md-input-container>
         <md-input-container flex>
           <md-icon>alarm_on</md-icon>
-          <input ng-model="config.editable.removeFailedAfter" type="number" min="0" step="10" placeholder="Remove failed after (ms)">
+          <input ng-model="configDialog.editable.removeFailedAfter" type="number" min="0" step="10" placeholder="Remove failed after (ms)">
         </md-input-container>
       </div>
       <div layout="column" layout-gt-md="row">
         <div>
-          <md-checkbox ng-model="config.editable.unique">Unique</md-checkbox>
+          <md-checkbox ng-model="configDialog.editable.unique">Unique</md-checkbox>
         </div>
         <md-input-container flex="fill">
           <md-icon>vpn_key</md-icon>
-          <input ng-disabled="!config.editable.unique" ng-model="config.editable.uniqueKey" placeholder="Unique key">
+          <input ng-disabled="!configDialog.editable.unique" ng-model="configDialog.editable.uniqueKey" placeholder="Unique key">
         </md-input-container>
       </div>
     </form>
   </md-dialog-content>
   <md-dialog-actions layout="row">
-    <md-button ng-click="config.reset()" ng-disabled="config.isOriginal()">
+    <md-button ng-click="configDialog.reset()" ng-disabled="configDialog.isOriginal()">
       Undo changes
     </md-button>
-    <md-button class="md-primary" ng-click="config.apply()" ng-disabled="config.isOriginal()">
+    <md-button class="md-primary" ng-click="configDialog.apply()" ng-disabled="configDialog.isOriginal()">
       Apply
     </md-button>
   </md-dialog-actions>
