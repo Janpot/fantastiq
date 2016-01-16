@@ -2,15 +2,15 @@
   <md-toolbar layout="row" layout-align="space-between center">
     <div class="md-toolbar-tools" layout="row">
       <menu-button></menu-button>
-      <md-button class="md-icon-button" ng-href="#/{{::jobList.state}}?before={{::jobList.first.id}}" ng-disabled="::!jobList.first">
+      <md-button class="md-icon-button" ng-href="#/{{::$ctrl.state}}?before={{::$ctrl.first.id}}" ng-disabled="::!$ctrl.first">
         <md-icon>arrow_back</md-icon>
       </md-button>
       <span flex></span>
       <h2>
-        <a ng-href="#/{{::jobList.state}}">{{::jobList.state}}</a>
+        <a ng-href="#/{{::$ctrl.state}}">{{::$ctrl.state}}</a>
       </h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-href="#/{{::jobList.state}}?after={{::jobList.last.id}}" ng-disabled="::!jobList.last">
+      <md-button class="md-icon-button" ng-href="#/{{::$ctrl.state}}?after={{::$ctrl.last.id}}" ng-disabled="::!$ctrl.last">
         <md-icon>arrow_forward</md-icon>
       </md-button>
     </div>
@@ -18,7 +18,7 @@
 
   <md-content>
     <md-list>
-      <md-list-item class="md-3-line" ng-repeat="job in jobList.list track by job.id" ng-click="jobList.showDetails(job, $event)">
+      <md-list-item class="md-3-line" ng-repeat="job in $ctrl.list track by job.id" ng-click="$ctrl.showDetails(job, $event)">
         <div class="md-list-item-text">
           <h3>{{::job.id}}</h3>
           <h4>{{::job.created | date:'medium'}}</h4>
