@@ -17,9 +17,10 @@ describe('QueueClient', function () {
 
   var app = express();
   app.use('/api', queue.api());
+  var server = null;
 
   before(function (done) {
-    return app.listen(3001, done);
+    server = app.listen(3001, done);
   });
 
   beforeEach(function (done) {
@@ -27,12 +28,13 @@ describe('QueueClient', function () {
   });
 
   after(function (done) {
+    server.close();
     return client.quit(done);
   });
 
   describe('.acknowledge', require('./Queue.acknowledge.spec')(_queueClient));
   describe('.add', require('./Queue.add.spec')(_queueClient));
-  describe('. addN', require('./Queue.addN.spec')(_queueClient));
+  describe('.addN', require('./Queue.addN.spec')(_queueClient));
   describe('.config', require('./Queue.config.spec')(_queueClient));
   describe('.get', require('./Queue.get.spec')(_queueClient));
   describe('.getN', require('./Queue.getN.spec')(_queueClient));
