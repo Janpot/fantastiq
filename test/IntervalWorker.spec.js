@@ -155,10 +155,22 @@ describe('IntervalWorker', function () {
       });
   });
 
-  it('shouldn\t error when stopped idle', function () {
+  it('shouldn\'t error when stopped idle', function () {
     var worker = new IntervalWorker(function () {
       return 0
     });
     return worker.stop();
+  });
+
+  it('should return same promise on multiple starts', function () {
+    var worker = new IntervalWorker(function () {
+      return 0
+    });
+    var start1 = worker.start();
+    var start2 = worker.start();
+    return worker.stop()
+      .then(function () {
+        assert.strictEqual(start1, start2);
+      });
   });
 });
