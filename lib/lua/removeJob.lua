@@ -1,5 +1,4 @@
-local key_markForDel,
-      key_index = unpack(KEYS)
+local key_index = unpack(KEYS)
 
 local timestamp = unpack(ARGV)
 local ids = {select(2, unpack(ARGV))}
@@ -12,7 +11,6 @@ totalRemoved = totalRemoved + redis.call('ZREM', fantastiq.key_active, unpack(id
 totalRemoved = totalRemoved + redis.call('ZREM', fantastiq.key_completed, unpack(ids))
 totalRemoved = totalRemoved + redis.call('ZREM', fantastiq.key_failed, unpack(ids))
 totalRemoved = totalRemoved + redis.call('ZREM', fantastiq.key_delayed, unpack(ids))
-redis.call('ZREM', key_markForDel, unpack(ids))
 
 local uniqueKeys = {}
 for i, jobId in ipairs(ids) do

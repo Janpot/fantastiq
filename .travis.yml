@@ -9,9 +9,5 @@ node_js:
 services:
   - redis-server
 script: "npm link && npm test"
-cache:
-  directories:
-    - node_modules
 notifications:
   email: false
-

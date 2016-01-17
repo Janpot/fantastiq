@@ -64,7 +64,7 @@
     "extend": "^3.0.0",
     "highcharts": "^4.2.0",
     "join-stream": "0.0.0",
-    "passkey": "^2.0.0",
+    "passkey": "^3.0.0",
     "readable-stream": "^2.0.4",
     "redis-info": "^3.0.6",
     "split": "^1.0.0",
