@@ -103,30 +103,6 @@ module.exports = function (queue) {
         });
     });
 
-    it('should return 0 when locked', function () {
-      // lock is based on redis expire, timeout based on node Date.now()
-      clock = sinon.useFakeTimers(Date.now());
-      return queue.config({
-        timeout: 1000
-      })
-        .then(function () {
-          return queue.addN([1, 2, 3, 4, 5]);
-        })
-        .then(function () {
-          return queue.retrieve();
-        })
-        .then(function () {
-          return queue._runTimeoutCycle(1000);
-        })
-        .then(function () {
-          clock.tick(1001);
-          return queue._runTimeoutCycle(1000);
-        })
-        .then(function (canceled) {
-          assert.strictEqual(canceled, 0);
-        });
-    });
-
     it('should handle multiple attempts', function () {
       clock = sinon.useFakeTimers(Date.now());
       var jobId;
