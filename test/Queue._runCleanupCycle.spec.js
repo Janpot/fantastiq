@@ -59,5 +59,13 @@ module.exports = function (queue) {
       assert.propertyVal(stats, 'completedCount', 0);
       assert.propertyVal(stats, 'failedCount', 0);
     }));
+    
+    it('shouldn\'t crash when no cleanuptimes are defined', Promise.coroutine(function * () {
+      yield queue.config({
+        removeFailedAfter: null,
+        removeCompletedAfter: null
+      });
+      return queue._runCleanupCycle();
+    }));
   };
 };
