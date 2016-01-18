@@ -1,4 +1,6 @@
 language: node_js
+before_install:
+  'npm install -g npm'
 node_js:
   - '0.10'
   - '0.11'
@@ -8,6 +10,6 @@ node_js:
   - '4.1'
 services:
   - redis-server
-script: "npm link && npm test"
+script: 'npm link && npm test'
 notifications:
   email: false
