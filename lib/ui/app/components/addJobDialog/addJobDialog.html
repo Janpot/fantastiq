@@ -3,26 +3,26 @@
     <div class="md-toolbar-tools">
       <h2>Add job</h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-click="addJobDialog.close()">
+      <md-button class="md-icon-button" ng-click="$ctrl.close()">
         <md-icon>close</md-icon>
       </md-button>
     </div>
   </md-toolbar>
   <md-dialog-content layout-padding>
     <form layout="column">
-      <md-input-container>
+      <md-input-container flex>
         <md-icon>create</md-icon>
-        <textarea md-autofocus ng-model="addJobDialog.data" rows="5" columns="1" placeholder="Job data"></textarea>
+        <textarea md-autofocus ng-model="$ctrl.data" rows="5" placeholder="Job data"></textarea>
       </md-input-container>
 
       <md-input-container flex>
         <md-icon>announcement</md-icon>
-        <input ng-model="addJobDialog.options.priority" type="number" step="1" placeholder="Priority">
+        <input ng-model="$ctrl.options.priority" type="number" step="1" placeholder="Priority">
       </md-input-container>
     </form>
   </md-dialog-content>
   <md-dialog-actions layout="row">
-    <md-button class="md-primary" ng-click="addJobDialog.apply()">
+    <md-button class="md-primary" ng-click="$ctrl.apply()">
       Add
     </md-button>
   </md-dialog-actions>
