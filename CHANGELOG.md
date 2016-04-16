@@ -3,6 +3,7 @@
 ## 1.5.1
 
  - Fix deprecated message in node-redis
+ - Fix maintenance cycles interval not passed.
 
 ## 1.5.0
 
