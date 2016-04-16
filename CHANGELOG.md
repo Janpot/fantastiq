@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1
+
+ - Fix deprecated message in node-redis
+
 ## 1.5.0
 
  - Accept more construction options.
