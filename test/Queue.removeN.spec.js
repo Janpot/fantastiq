@@ -1,10 +1,11 @@
+/* global it */
+
 'use strict';
 
 var assert = require('chai').assert;
 
 module.exports = function (queue) {
   return function () {
-
     it('should remove multiple jobs', function () {
       return queue.addN([1, 2, 3])
         .then(function (ids) {

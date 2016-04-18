@@ -1,3 +1,5 @@
+/* global describe, it, before, after, beforeEach */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -7,7 +9,6 @@ var QueueClient = require('../lib/QueueClient');
 var express = require('express');
 
 describe('QueueClient', function () {
-
   var client = redis.createClient({
     host: process.env.REDIS_HOST
   });
@@ -51,5 +52,4 @@ describe('QueueClient', function () {
         assert.strictEqual(err.code, 'ENOTFOUND');
       });
   });
-
 });

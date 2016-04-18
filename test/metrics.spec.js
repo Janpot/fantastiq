@@ -1,3 +1,5 @@
+/* global describe, it, after, beforeEach, afterEach */
+
 'use strict';
 
 var redis = require('redis');
@@ -6,7 +8,6 @@ var assert = require('chai').assert;
 var sinon = require('sinon');
 
 describe('metrics', function () {
-
   var client = redis.createClient({
     host: process.env.REDIS_HOST
   });
@@ -46,7 +47,6 @@ describe('metrics', function () {
           [ 2000, 2 ]
         ]);
       });
-
   });
 
   it('should track the same value twice', function () {
@@ -67,7 +67,5 @@ describe('metrics', function () {
           [ 2000, 1 ]
         ]);
       });
-
   });
-
 });

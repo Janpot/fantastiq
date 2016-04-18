@@ -1,3 +1,5 @@
+/* global it, afterEach */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -6,7 +8,6 @@ var sinon = require('sinon');
 
 module.exports = function (queue) {
   return function () {
-
     var clock = null;
 
     afterEach(function () {
@@ -59,7 +60,7 @@ module.exports = function (queue) {
       assert.propertyVal(stats, 'completedCount', 0);
       assert.propertyVal(stats, 'failedCount', 0);
     }));
-    
+
     it('shouldn\'t crash when no cleanuptimes are defined', Promise.coroutine(function * () {
       yield queue.config({
         removeFailedAfter: null,

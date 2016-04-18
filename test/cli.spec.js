@@ -1,3 +1,5 @@
+/* global describe, it, after */
+
 'use strict';
 
 var Promise = require('bluebird');
@@ -118,5 +120,4 @@ describe('cli', function () {
         assert.propertyVal(job, 'data', 'the-job');
       });
   });
-
 });

@@ -1,3 +1,5 @@
+/* global it, afterEach */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -5,7 +7,6 @@ var sinon = require('sinon');
 
 module.exports = function (queue) {
   return function () {
-
     var clock = null;
 
     afterEach(function () {

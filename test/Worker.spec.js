@@ -1,3 +1,5 @@
+/* global describe, it, beforeEach, after */
+
 'use strict';
 
 var Worker = require('../lib/Worker');
@@ -7,7 +9,6 @@ var redis = require('redis');
 var Queue = require('../lib/Queue');
 
 describe('Worker', function () {
-
   var client = redis.createClient({
     host: process.env.REDIS_HOST
   });

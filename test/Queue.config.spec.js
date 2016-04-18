@@ -1,3 +1,5 @@
+/* global it */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -23,7 +25,7 @@ module.exports = function (queue) {
     });
 
     it('should set a configuration', function () {
-      function assertConfig(config) {
+      function assertConfig (config) {
         assert.propertyVal(config, 'timeout', 1);
         assert.propertyVal(config, 'removeFailedAfter', 2);
         assert.propertyVal(config, 'removeCompletedAfter', 3);

@@ -1,3 +1,5 @@
+/* global it, afterEach */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -6,7 +8,6 @@ var sinon = require('sinon');
 
 module.exports = function (queue) {
   return function () {
-
     var clock = null;
     var randomStub = null;
 
@@ -115,7 +116,6 @@ module.exports = function (queue) {
         .get('id').bind(queue).then(queue.get)
         .then(function (job) {
           assert.strictEqual(job.data, 1);
-
         });
     });
 

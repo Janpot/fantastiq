@@ -1,15 +1,16 @@
+/* global describe, after, beforeEach */
+
 'use strict';
 
 var redis = require('redis');
 var Queue = require('../lib/Queue');
 
 describe('Queue', function () {
-
   var client = redis.createClient({
     host: process.env.REDIS_HOST
   });
 
-  function createQueue() {
+  function createQueue () {
     return new Queue('test', client);
   }
 
@@ -41,5 +42,4 @@ describe('Queue', function () {
   describe('._runDelayedCycle', require('./Queue._runDelayedCycle.spec')(queue));
   describe('._runTimeoutCycle', require('./Queue._runTimeoutCycle.spec')(queue));
   describe('.api', require('./Queue.api.spec')(queue));
-
 });

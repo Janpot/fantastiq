@@ -1,3 +1,5 @@
+/* global describe, it, afterEach */
+
 'use strict';
 
 var IntervalWorker = require('../lib/IntervalWorker');
@@ -7,9 +9,8 @@ var sinon = require('sinon');
 
 describe('IntervalWorker', function () {
   var delayStub = null;
-  var t = 0;
-  
-  function stubDelay() {
+
+  function stubDelay () {
     var result = {
       total: 0
     };
@@ -19,14 +20,14 @@ describe('IntervalWorker', function () {
     });
     return result;
   }
-  
+
   afterEach(function () {
     if (delayStub) {
       delayStub.restore();
       delayStub = null;
     }
-  })
-  
+  });
+
   it('should work synchronously', function () {
     var i = 0;
     var worker = new IntervalWorker(function () {
@@ -40,9 +41,9 @@ describe('IntervalWorker', function () {
     return worker.start()
       .then(function () {
         assert.strictEqual(i, 3);
-      })
+      });
   });
-  
+
   it('should work asynchronously', function () {
     var i = 0;
     var worker = new IntervalWorker(function () {
@@ -56,9 +57,9 @@ describe('IntervalWorker', function () {
     return worker.start()
       .then(function () {
         assert.strictEqual(i, 3);
-      })
+      });
   });
-  
+
   it('should stop when throwing', function () {
     var i = 0;
     var expectedErr = new Error('Some error');
@@ -73,9 +74,9 @@ describe('IntervalWorker', function () {
       .then(assert.fail, function (err) {
         assert.strictEqual(i, 3);
         assert.strictEqual(err, expectedErr);
-      })
+      });
   });
-  
+
   it('should stop when rejected', function () {
     var i = 0;
     var expectedErr = new Error('Some error');
@@ -90,9 +91,9 @@ describe('IntervalWorker', function () {
       .then(assert.fail, function (err) {
         assert.strictEqual(i, 3);
         assert.strictEqual(err, expectedErr);
-      })
+      });
   });
-  
+
   it('should restart', function () {
     var i = 0;
     var goal = 3;
@@ -113,10 +114,10 @@ describe('IntervalWorker', function () {
         assert.strictEqual(i, 7);
       });
   });
-  
+
   it('should delay between runs', function () {
     var delayStub = stubDelay();
-    
+
     var i = 0;
     var times = [];
     var worker = new IntervalWorker(function () {
@@ -132,23 +133,23 @@ describe('IntervalWorker', function () {
     return worker.start()
       .then(function () {
         assert.strictEqual(i, 5);
-        assert.deepEqual(times, [ 0, 101, 202, 502, 802 ])
+        assert.deepEqual(times, [ 0, 101, 202, 502, 802 ]);
       });
   });
 
   it('should cancel workfunction', function () {
     var isCanceled = false;
     var worker = new IntervalWorker(function () {
-      return new Promise(function(resolve, reject, onCancel) {
+      return new Promise(function (resolve, reject, onCancel) {
         onCancel(function () {
           isCanceled = true;
         });
       });
     });
-    worker.start()
+    worker.start();
     return Promise.delay(10)
       .then(function () {
-        return worker.stop()
+        return worker.stop();
       })
       .then(function () {
         assert.isTrue(isCanceled);
@@ -157,14 +158,14 @@ describe('IntervalWorker', function () {
 
   it('shouldn\'t error when stopped idle', function () {
     var worker = new IntervalWorker(function () {
-      return 0
+      return 0;
     });
     return worker.stop();
   });
 
   it('should return same promise on multiple starts', function () {
     var worker = new IntervalWorker(function () {
-      return 0
+      return 0;
     });
     var start1 = worker.start();
     var start2 = worker.start();

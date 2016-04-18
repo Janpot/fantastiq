@@ -1,3 +1,5 @@
+/* global it */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -7,7 +9,6 @@ var bodyParser = require('body-parser');
 
 module.exports = function (queue) {
   return function () {
-
     var app = express();
     app.use('/api', queue.api());
 

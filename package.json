@@ -4,8 +4,7 @@
   "description": "Job queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
-    "test": "npm run lint-old && npm run mocha",
-    "lint-old": "eslint .",
+    "test": "npm run lint && npm run mocha",
     "lint": "semistandard --verbose | snazzy",
     "mocha": "mocha -r babel-polyfill -r babel-register ./test",
     "watch:mocha": "mocha -w -r babel-polyfill -r babel-register ./test",
@@ -39,7 +38,6 @@
     "browserify": "^13.0.0",
     "chai": "^3.0.0",
     "doctoc": "^1.0.0",
-    "eslint": "^2.8.0",
     "faker": "^3.0.1",
     "mocha": "^2.2.5",
     "nyc": "^6.4.0",
@@ -76,6 +74,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janpot/fantastiq"
+  },
+  "semistandard": {
+    "parser": "babel-eslint"
   },
   "config": {
     "nyc": {

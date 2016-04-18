@@ -1,4 +1,7 @@
+/* global it */
+
 'use strict';
+
 var { EventEmitter } = require('events');
 var assert = require('chai').assert;
 var Promise = require('bluebird');

@@ -1,3 +1,5 @@
+/* global it, afterEach */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -6,7 +8,6 @@ var Promise = require('bluebird');
 
 module.exports = function (queue) {
   return function () {
-
     var clock = null;
 
     afterEach(function () {

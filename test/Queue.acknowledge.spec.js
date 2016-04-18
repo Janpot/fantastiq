@@ -1,3 +1,5 @@
+/* global it, afterEach */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -140,7 +142,6 @@ module.exports = function (queue) {
         .then(function (result) {
           assert.isNull(result.id);
         });
-
     });
 
     it('should acknowledge with backoff time', function () {
