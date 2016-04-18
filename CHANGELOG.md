@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.4
+
+ - Update dev dependencies
+ - migrate eslint to semistandard
+
 ## 1.5.1
 
  - Fix deprecated message in node-redis
