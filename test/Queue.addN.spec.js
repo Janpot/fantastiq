@@ -5,7 +5,7 @@
 var assert = require('chai').assert;
 var sinon = require('sinon');
 
-module.exports = function (queue) {
+module.exports = function (queue, client) {
   return function () {
     var clock = null;
 
@@ -13,6 +13,9 @@ module.exports = function (queue) {
       if (clock) {
         clock.restore();
         clock = null;
+      }
+      if (client) {
+        client.send.restore();
       }
     });
 
@@ -222,6 +225,19 @@ module.exports = function (queue) {
           assert(false, 'Expected to fail');
         }, function (err) {
           assert.strictEqual(err.message, '.addN() expects an Array');
+        });
+    });
+
+    it('should return immediately on empty array', function () {
+      if (client) {
+        sinon.spy(client, 'send');
+      }
+      return queue.addN([])
+        .then(function (jobs) {
+          assert.deepEqual(jobs, []);
+          if (client) {
+            assert.strictEqual(client.send.calledOnce, false);
+          }
         });
     });
 

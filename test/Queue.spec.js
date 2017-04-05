@@ -28,7 +28,7 @@ describe('Queue', function () {
 
   describe('.acknowledge', require('./Queue.acknowledge.spec')(queue));
   describe('.add', require('./Queue.add.spec')(queue));
-  describe('.addN', require('./Queue.addN.spec')(queue));
+  describe('.addN', require('./Queue.addN.spec')(queue, client));
   describe('.config', require('./Queue.config.spec')(queue));
   describe('.get', require('./Queue.get.spec')(queue));
   describe('.getN', require('./Queue.getN.spec')(queue));
