@@ -14,8 +14,8 @@ module.exports = function (queue, client) {
         clock.restore();
         clock = null;
       }
-      if (client) {
-        client.send.restore();
+      if (client && client.send_command.restore) {
+        client.send_command.restore();
       }
     });
 
@@ -230,13 +230,13 @@ module.exports = function (queue, client) {
 
     it('should return immediately on empty array', function () {
       if (client) {
-        sinon.spy(client, 'send');
+        sinon.spy(client, 'send_command');
       }
       return queue.addN([])
         .then(function (jobs) {
           assert.deepEqual(jobs, []);
           if (client) {
-            assert.strictEqual(client.send.calledOnce, false);
+            assert.strictEqual(client.send_command.calledOnce, false);
           }
         });
     });
