@@ -236,7 +236,7 @@ module.exports = function (queue, client) {
         .then(function (jobs) {
           assert.deepEqual(jobs, []);
           if (client) {
-            assert.strictEqual(client.send_command.called, 0);
+            assert.strictEqual(client.send_command.called, false);
           }
         });
     });
