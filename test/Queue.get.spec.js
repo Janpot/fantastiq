@@ -1,11 +1,17 @@
-/* global it */
+/* eslint-env mocha */
 
 'use strict';
 
 var assert = require('chai').assert;
 
-module.exports = function (queue) {
+module.exports = function (createQueue) {
   return function () {
+    var queue = null;
+
+    before(() => {
+      queue = createQueue();
+    });
+
     it('should return a job', function () {
       return queue.addN([0, 1, 2, 3, 4])
         .then(function (ids) {

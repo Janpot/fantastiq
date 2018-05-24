@@ -1,4 +1,4 @@
-/* global describe, it, after, beforeEach, afterEach */
+/* eslint-env mocha */
 
 'use strict';
 
@@ -8,21 +8,26 @@ var assert = require('chai').assert;
 var sinon = require('sinon');
 
 describe('metrics', function () {
-  var client = redis.createClient({
-    host: process.env.REDIS_HOST
-  });
-  var tracker = metrics(client);
+  var client = null;
+  var tracker = null;
   var clock = null;
+
+  before(() => {
+    client = redis.createClient({
+      host: process.env.REDIS_HOST
+    });
+    tracker = metrics(client);
+  });
+
+  beforeEach(function (done) {
+    return client.flushall(done);
+  });
 
   afterEach(function () {
     if (clock) {
       clock.restore();
       clock = null;
     }
-  });
-
-  beforeEach(function (done) {
-    return client.flushall(done);
   });
 
   after(function (done) {

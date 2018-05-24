@@ -1,11 +1,17 @@
-/* global it */
+/* eslint-env mocha */
 
 'use strict';
 
 var assert = require('chai').assert;
 
-module.exports = function (queue) {
+module.exports = function (createQueue) {
   return function () {
+    var queue = null;
+
+    before(() => {
+      queue = createQueue();
+    });
+
     it('should remove multiple jobs', function () {
       return queue.addN([1, 2, 3])
         .then(function (ids) {
@@ -16,7 +22,7 @@ module.exports = function (queue) {
             });
         })
         .then(function (jobs) {
-          assert.sameMembers(jobs, [null]);
+          assert.sameMembers(jobs, [null, null, null]);
         });
     });
 

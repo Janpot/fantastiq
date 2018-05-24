@@ -1,4 +1,4 @@
-/* global it */
+/* eslint-env mocha */
 
 'use strict';
 
@@ -7,10 +7,15 @@ var request = require('supertest');
 var express = require('express');
 var bodyParser = require('body-parser');
 
-module.exports = function (queue) {
+module.exports = function (createQueue) {
   return function () {
+    var queue = null;
     var app = express();
-    app.use('/api', queue.api());
+
+    before(() => {
+      queue = createQueue();
+      app.use('/api', queue.api());
+    });
 
     it('should 404 on non-existing job', function () {
       return request(app)
@@ -179,7 +184,7 @@ module.exports = function (queue) {
             .get('/api/jobs/' + id)
             .expect(200)
             .then(function (res) {
-              assert.deepPropertyVal(res.body, 'error.message', 'Job error');
+              assert.nestedPropertyVal(res.body, 'error.message', 'Job error');
             });
         })
         .then(function () {
@@ -187,7 +192,7 @@ module.exports = function (queue) {
             .get('/api/failed')
             .expect(200)
             .then(function (res) {
-              assert.deepPropertyVal(res.body, 'jobs[0].error.message', 'Job error');
+              assert.nestedPropertyVal(res.body, 'jobs[0].error.message', 'Job error');
             });
         });
     });
@@ -249,8 +254,8 @@ module.exports = function (queue) {
         .then(function (job) {
           assert.notOk(job.result);
           assert.strictEqual(job.state, 'failed');
-          assert.deepPropertyVal(job.error, 'message', 'err');
-          assert.deepPropertyVal(job.error, 'stack', 'stack');
+          assert.nestedPropertyVal(job.error, 'message', 'err');
+          assert.nestedPropertyVal(job.error, 'stack', 'stack');
         });
     });
 

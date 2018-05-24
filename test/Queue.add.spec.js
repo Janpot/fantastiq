@@ -1,12 +1,18 @@
-/* global it */
+/* eslint-env mocha */
 
 'use strict';
 
 var assert = require('chai').assert;
 var Promise = require('bluebird');
 
-module.exports = function (queue) {
+module.exports = function (createQueue) {
   return function () {
+    var queue = null;
+
+    before(() => {
+      queue = createQueue();
+    });
+
     it('should add jobs', Promise.coroutine(function * () {
       var idJob1 = yield queue.add('job-data-1');
       var job1 = yield queue.get(idJob1);

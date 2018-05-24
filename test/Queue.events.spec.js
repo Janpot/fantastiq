@@ -1,4 +1,4 @@
-/* global it */
+/* eslint-env mocha */
 
 'use strict';
 
@@ -22,14 +22,14 @@ function captureEvents (emitter, event, count) {
   });
 }
 
-module.exports = function (makeQueue) {
+module.exports = function (createQueue) {
   return function () {
     it('should be an event emitter', function () {
-      assert.instanceOf(makeQueue(), EventEmitter);
+      assert.instanceOf(createQueue(), EventEmitter);
     });
 
     it('should emit normal lifecycle events', function () {
-      var queue = makeQueue();
+      var queue = createQueue();
       var ids;
       var eventsPromise = captureEvents(queue, 'jobUpdate', 7);
 
@@ -75,15 +75,12 @@ module.exports = function (makeQueue) {
         assert.strictEqual(events[6].id, ids[1]);
         assert.strictEqual(events[6].oldState, 'failed');
         assert.notOk(events[6].newState);
-      })
-        .finally(function () {
-          return queue.quit();
-        });
+      });
     });
 
     it('should emit events on other instances as well', function (done) {
-      var queue1 = makeQueue();
-      var queue2 = makeQueue();
+      var queue1 = createQueue();
+      var queue2 = createQueue();
 
       var eventsPromise = captureEvents(queue1, 'jobUpdate', 1);
       queue1._pubSubClient.on('subscribe', function () {
@@ -94,12 +91,6 @@ module.exports = function (makeQueue) {
           .spread(function (events, id) {
             assert.strictEqual(events[0].id, id);
             assert.strictEqual(events[0].newState, 'inactive');
-          })
-          .finally(function () {
-            return Promise.all([
-              queue1.quit(),
-              queue2.quit()
-            ]);
           })
           .asCallback(done);
       });

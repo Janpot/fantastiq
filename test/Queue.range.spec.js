@@ -1,12 +1,18 @@
-/* global it */
+/* eslint-env mocha */
 
 'use strict';
 
 var assert = require('chai').assert;
 var util = require('./util');
 
-module.exports = function (queue) {
+module.exports = function (createQueue) {
   return function () {
+    var queue = null;
+
+    before(() => {
+      queue = createQueue();
+    });
+
     it('should return range 10 asc by default', function () {
       return queue.addN([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         .then(function () {

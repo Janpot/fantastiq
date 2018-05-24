@@ -1,4 +1,4 @@
-/* global describe, it, after */
+/* eslint-env mocha */
 
 'use strict';
 
@@ -18,13 +18,20 @@ var command = pathUtil.resolve(__dirname, '../bin/fantastiq.js');
 describe('cli', function () {
   this.timeout(10000);
 
-  var client = redis.createClient({
-    host: REDIS_HOST
+  var client = null;
+  var queue = null;
+
+  before(() => {
+    client = redis.createClient({
+      host: REDIS_HOST
+    });
+    queue = fantastiq.client(client);
   });
-  var queue = fantastiq.client(client);
 
   after(function (done) {
-    return client.quit(done);
+    queue.quit().then(function () {
+      return client.quit(done);
+    });
   });
 
   it('should add a job', function () {

@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach, after */
+/* eslint-env mocha */
 
 'use strict';
 
@@ -9,17 +9,24 @@ var redis = require('redis');
 var Queue = require('../lib/Queue');
 
 describe('Worker', function () {
-  var client = redis.createClient({
-    host: process.env.REDIS_HOST
+  var client = null;
+  var queue = null;
+
+  before(() => {
+    client = redis.createClient({
+      host: process.env.REDIS_HOST
+    });
+    queue = new Queue('test', client);
   });
-  var queue = new Queue('test', client);
 
   beforeEach(function (done) {
     return client.flushall(done);
   });
 
   after(function (done) {
-    return client.quit(done);
+    queue.quit().then(function () {
+      return client.quit(done);
+    });
   });
 
   it('should execute jobs', function () {

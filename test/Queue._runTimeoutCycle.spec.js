@@ -1,13 +1,18 @@
-/* global it, afterEach */
+/* eslint-env mocha */
 
 'use strict';
 
 var assert = require('chai').assert;
 var sinon = require('sinon');
 
-module.exports = function (queue) {
+module.exports = function (createQueue) {
   return function () {
     var clock = null;
+    var queue = null;
+
+    before(() => {
+      queue = createQueue();
+    });
 
     afterEach(function () {
       if (clock) {
