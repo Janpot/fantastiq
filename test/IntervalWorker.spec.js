@@ -14,7 +14,7 @@ describe('IntervalWorker', function () {
     var result = {
       total: 0
     };
-    delayStub = sinon.stub(global, 'setTimeout', function (fn, time) {
+    delayStub = sinon.stub(global, 'setTimeout').callsFake(function (fn, time) {
       result.total += time;
       setImmediate(fn);
     });
