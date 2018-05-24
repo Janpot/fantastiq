@@ -123,7 +123,7 @@ module.exports = require('yargs')
       .usage('$0 get <id>')
       .example('$0 get 0000000000F9B')
       .string('_')
-      .demand(2)
+      .demand(1)
       .option('r', optionRedis)
       .argv;
 
