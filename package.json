@@ -6,11 +6,9 @@
   "scripts": {
     "test": "npm run lint && npm run mocha",
     "lint": "semistandard --verbose | snazzy",
-    "mocha": "mocha -r babel-polyfill -r babel-register ./test",
-    "watch:mocha": "mocha -w -r babel-polyfill -r babel-register ./test",
+    "mocha": "mocha ./test",
+    "watch:mocha": "npm run mocha -- --watch",
     "nyc": "nyc --all npm run mocha",
-    "nyc-tmp": "nyc --require babel-polyfill --require babel-register mocha ./test",
-    "test-b2d": "REDIS_HOST=192.168.99.100 npm test",
     "toc": "doctoc --notitle ./README.md",
     "prepublish": "npm run build",
     "build": "browserify -t [ babelify --presets [ es2015 ] ] lib/ui/main.js -o lib/ui/bundle.js",
@@ -30,17 +28,14 @@
   "author": "Jan Potoms",
   "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "^5.0.4",
-    "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
-    "babel-register": "^6.26.0",
     "babelify": "^7.3.0",
     "browserify": "^13.3.0",
     "chai": "^3.0.0",
     "doctoc": "^1.3.1",
     "faker": "^3.0.1",
     "mocha": "^2.5.3",
-    "nyc": "^6.6.1",
+    "nyc": "^11.8.0",
     "redis": "^2.8.0",
     "semistandard": "^7.0.2",
     "sinon": "^1.17.7",
@@ -74,9 +69,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janpot/fantastiq"
-  },
-  "semistandard": {
-    "parser": "babel-eslint"
   },
   "config": {
     "nyc": {
