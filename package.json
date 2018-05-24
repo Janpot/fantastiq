@@ -11,8 +11,8 @@
     "nyc": "nyc --all npm run mocha",
     "toc": "doctoc --notitle ./README.md",
     "prepublish": "npm run build",
-    "build": "browserify -t [ babelify --presets [ es2015 ] ] lib/ui/main.js -o lib/ui/bundle.js",
-    "watch:build": "watchify -t [ babelify --presets [ es2015 ] ] lib/ui/main.js -o lib/ui/bundle.js --verbose"
+    "build": "browserify -t [ babelify --presets [ env ] ] lib/ui/main.js -o lib/ui/bundle.js",
+    "watch:build": "watchify -t [ babelify --presets [ env ] ] lib/ui/main.js -o lib/ui/bundle.js --verbose"
   },
   "bin": {
     "fantastiq": "bin/fantastiq.js"
@@ -28,7 +28,7 @@
   "author": "Jan Potoms",
   "license": "MIT",
   "devDependencies": {
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "babelify": "^7.3.0",
     "browserify": "^13.3.0",
     "chai": "^3.0.0",
@@ -41,7 +41,6 @@
     "sinon": "^1.17.7",
     "snazzy": "^3.0.1",
     "supertest": "^1.1.0",
-    "supertest-as-promised": "^3.2.0",
     "watchify": "^3.11.0"
   },
   "dependencies": {
