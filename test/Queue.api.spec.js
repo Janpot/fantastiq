@@ -3,7 +3,7 @@
 'use strict';
 
 var assert = require('chai').assert;
-var request = require('supertest-as-promised');
+var request = require('supertest');
 var express = require('express');
 var bodyParser = require('body-parser');
 
