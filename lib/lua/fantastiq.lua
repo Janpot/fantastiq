@@ -107,7 +107,9 @@ local fantastiq = (function ()
     elseif newState == 'delayed' then
       score = jobDetails['runAt']
     end
-    redis.call('ZREM', getKeyForState(oldState), jobId)
+    if oldState then
+      redis.call('ZREM', getKeyForState(oldState), jobId)
+    end
     redis.call('ZADD', getKeyForState(newState), score, jobId)
     jobDetails['state'] = newState
     exports.emitUpdate(jobId, oldState, newState)
@@ -124,7 +126,9 @@ local fantastiq = (function ()
     if err == 'null' then
       jobDetails['result'] = result
       jobDetails['finished'] = timestamp
-      redis.call('HDEL', key_index, jobDetails['key'])
+      if jobDetails['key'] then
+        redis.call('HDEL', key_index, jobDetails['key'])
+      end
       exports.updateJobState(jobDetails, 'completed')
     else
       local allowedAttempts = exports.getConfig('attempts') or 1
@@ -145,7 +149,9 @@ local fantastiq = (function ()
       else
         jobDetails['error'] = err
         jobDetails['finished'] = timestamp
-        redis.call('HDEL', key_index, jobDetails['key'])
+        if jobDetails['key'] then
+          redis.call('HDEL', key_index, jobDetails['key'])
+        end
         exports.updateJobState(jobDetails, 'failed')
       end
     end
