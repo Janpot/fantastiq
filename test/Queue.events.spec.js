@@ -76,9 +76,9 @@ module.exports = function (makeQueue) {
         assert.strictEqual(events[6].oldState, 'failed');
         assert.notOk(events[6].newState);
       })
-      .finally(function () {
-        return queue.quit();
-      });
+        .finally(function () {
+          return queue.quit();
+        });
     });
 
     it('should emit events on other instances as well', function (done) {

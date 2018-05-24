@@ -68,7 +68,6 @@ describe('IntervalWorker', function () {
       if (i >= 3) {
         throw expectedErr;
       }
-      return;
     }, 0);
     return worker.start()
       .then(assert.fail, function (err) {
@@ -85,7 +84,6 @@ describe('IntervalWorker', function () {
       if (i >= 3) {
         return Promise.delay(10).throw(expectedErr);
       }
-      return;
     }, 0);
     return worker.start()
       .then(assert.fail, function (err) {
