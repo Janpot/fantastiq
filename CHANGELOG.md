@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0
+
+ - Support redis 4
+ - BREAKING: discontinue support for node 4
+
 ## 1.5.4
 
  - Update dev dependencies
