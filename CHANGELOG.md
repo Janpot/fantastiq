@@ -2,8 +2,10 @@
 
 ## 2.0.0
 
- - Support redis 4
+ - Support redis 3+
  - BREAKING: discontinue support for node 4
+ - Update all dependencies
+ - Fix large amounts of redis calls on empty queues
 
 ## 1.5.4
 
