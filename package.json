@@ -1,6 +1,6 @@
 {
   "name": "fantastiq",
-  "version": "1.5.4",
+  "version": "2.0.0",
   "description": "Job queue implementation on top of Redis",
   "main": "lib",
   "scripts": {
