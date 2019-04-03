@@ -18,6 +18,7 @@ var queue = fantastiq(client);
 
 queue.config({
   removeCompletedAfter: 5 * 60 * 1000,
+  throttle: 3000,
   timeout: 900
 });
 
@@ -44,17 +45,15 @@ function startQueueProducer (speed) {
   }());
 }
 
-queue.config({
-  throttle: null
-});
-
-queue.process(function (job) {
+const worker = queue.process(function (job) {
   process.stdout.clearLine();
   process.stdout.cursorTo(0);
   process.stdout.write('processing... ' + job);
   return Promise.delay(Math.random() * 100)
     .then(function () {
-      if (Math.random() < 0.01) {
+      if (Math.random() < 0.1) {
+        worker.unthrottle();
+      } else if (Math.random() < 0.1) {
         throw new Error('Job failed');
       }
       return {
