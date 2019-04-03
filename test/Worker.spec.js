@@ -114,4 +114,23 @@ describe('Worker', function () {
         assert.propertyVal(result, 'failed', 0);
       });
   });
+
+  it('should unthrottle properly', async () => {
+    await queue.config({ throttle: 10000 });
+    let calls = 0;
+    async function doWork (job) {
+      calls += 1;
+      if (calls === 1) {
+        worker.unthrottle();
+      } else {
+        return 'hello';
+      }
+    }
+    var worker = new Worker(queue, doWork, { pollTime: 50 });
+    queue.addN([1, 2, 3]);
+    worker.start();
+    await Promise.delay(200);
+    assert.strictEqual(calls, 2);
+    worker.stop();
+  });
 });
