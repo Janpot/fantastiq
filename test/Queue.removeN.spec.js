@@ -42,7 +42,7 @@ module.exports = function (createQueue) {
 
     it('should deindex jobs', function () {
       var ids;
-      return queue.config({unique: true})
+      return queue.config({ unique: true })
         .then(function () {
           return queue.addN([1, 2, 3]);
         })

@@ -94,7 +94,7 @@ module.exports = require('yargs')
         }
 
         var result = jobStream
-          .pipe(new BatchStream({size: argv.batch}))
+          .pipe(new BatchStream({ size: argv.batch }))
           .pipe(new stream.Transform({
             objectMode: true,
             transform: function (jobBatch, encoding, next) {

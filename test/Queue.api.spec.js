@@ -312,7 +312,7 @@ module.exports = function (createQueue) {
           assert.deepEqual(res.body.map(function (job) { return job.data; }), [
             'job-1',
             'job-2',
-            {job: 3}
+            { job: 3 }
           ]);
         });
     });

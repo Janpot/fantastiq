@@ -55,7 +55,7 @@ describe('cli', function () {
       })
       .then(function (job) {
         assert.ok(job);
-        assert.deepEqual(job.data, {hello: 'world'});
+        assert.deepEqual(job.data, { hello: 'world' });
       });
   });
 
@@ -71,7 +71,7 @@ describe('cli', function () {
         assert.ok(job3);
         assert.propertyVal(job1, 'data', 'job-2');
         assert.propertyVal(job2, 'data', -3);
-        assert.deepEqual(job3.data, {job: 4});
+        assert.deepEqual(job3.data, { job: 4 });
       });
   });
 
@@ -86,7 +86,7 @@ describe('cli', function () {
         assert.ok(job2);
         assert.ok(job3);
         assert.propertyVal(job1, 'data', 'job-5');
-        assert.deepEqual(job2.data, {job: 6});
+        assert.deepEqual(job2.data, { job: 6 });
         assert.propertyVal(job3, 'data', 'job-7');
       });
   });

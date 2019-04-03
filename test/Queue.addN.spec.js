@@ -90,7 +90,7 @@ module.exports = function (createQueue, client) {
     it('shouldn\'t add duplicate object type jobs', function () {
       return queue.config({ unique: true })
         .then(function () {
-          return queue.addN([{x: 1}, {x: 1}]);
+          return queue.addN([{ x: 1 }, { x: 1 }]);
         })
         .then(function (ids) {
           assert.lengthOf(ids, 2);
@@ -165,17 +165,17 @@ module.exports = function (createQueue, client) {
           });
         })
         .then(function () {
-          return queue.addN([{key: {}}]).then(assert.fail, function (err) {
+          return queue.addN([{ key: {} }]).then(assert.fail, function (err) {
             assert.strictEqual(err.message, 'Invalid key');
           });
         })
         .then(function () {
-          return queue.addN([{key: 5}]).then(assert.fail, function (err) {
+          return queue.addN([{ key: 5 }]).then(assert.fail, function (err) {
             assert.strictEqual(err.message, 'Invalid key');
           });
         })
         .then(function () {
-          return queue.addN([{key: true}]).then(assert.fail, function (err) {
+          return queue.addN([{ key: true }]).then(assert.fail, function (err) {
             assert.strictEqual(err.message, 'Invalid key');
           });
         });
@@ -185,8 +185,8 @@ module.exports = function (createQueue, client) {
       return queue.config({ unique: true, uniqueKey: 'key' })
         .then(function () {
           return queue.addN([
-            {key: '1'},
-            {key: '2'},
+            { key: '1' },
+            { key: '2' },
             5
           ]).then(assert.fail, function (err) {
             assert.strictEqual(err.message, 'Job requires a key');
