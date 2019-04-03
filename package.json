@@ -8,11 +8,10 @@
     "lint": "semistandard --verbose | snazzy",
     "mocha": "mocha ./test",
     "watch:mocha": "npm run mocha -- --watch",
-    "nyc": "nyc --all npm run mocha",
     "toc": "doctoc --notitle ./README.md",
     "prepublish": "npm run build",
-    "build": "browserify -t [ babelify --presets [ env ] ] lib/ui/main.js -o lib/ui/bundle.js",
-    "watch:build": "watchify -t [ babelify --presets [ env ] ] lib/ui/main.js -o lib/ui/bundle.js --verbose"
+    "build": "browserify -t [ babelify --presets [ @babel/preset-env ] ] lib/ui/main.js -o lib/ui/bundle.js",
+    "watch:build": "watchify -t [ babelify --presets [ @babel/preset-env ] ] lib/ui/main.js -o lib/ui/bundle.js --verbose"
   },
   "bin": {
     "fantastiq": "bin/fantastiq.js"
@@ -28,20 +27,19 @@
   "author": "Jan Potoms",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "babelify": "^8.0.0",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
     "doctoc": "^1.4.0",
     "faker": "^4.1.0",
-    "mocha": "^5.2.0",
-    "nyc": "^13.3.0",
+    "mocha": "^6.0.2",
     "redis": "^2.8.0",
     "semistandard": "^13.0.1",
-    "sinon": "^5.1.1",
+    "sinon": "^7.3.1",
     "snazzy": "^8.0.0",
-    "supertest": "^3.4.2",
+    "supertest": "^4.0.2",
     "watchify": "^3.11.1"
   },
   "dependencies": {
@@ -57,7 +55,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "extend": "^3.0.2",
-    "highcharts": "^6.2.0",
+    "highcharts": "^7.1.0",
     "join-stream": "0.0.0",
     "passkey": "^3.0.0",
     "readable-stream": "^2.3.6",

@@ -41,9 +41,9 @@
         </md-input-container>
       </div>
       <div layout="column" layout-gt-md="row">
-        <div>
-          <md-checkbox ng-model="configDialog.editable.unique">Unique</md-checkbox>
-        </div>
+        <md-checkbox ng-model="configDialog.editable.unique">Unique</md-checkbox>
+      </div>
+      <div layout="column" layout-gt-md="row">
         <md-input-container flex="fill">
           <md-icon>vpn_key</md-icon>
           <input ng-disabled="!configDialog.editable.unique" ng-model="configDialog.editable.uniqueKey" placeholder="Unique key">
